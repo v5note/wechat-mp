@@ -5,6 +5,8 @@
 [![GitHub stars](https://img.shields.io/github/stars/v5note/wechat-mp.svg)](https://github.com/v5note/wechat-mp/stargazers)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/v5note/wechat-mp/pulls)
 
+![wechat-mp · 微信公众号内容工坊](assets/banner.svg)
+
 **把一个主题做成「能直接发」的公众号内容**：贴图套图 + 图文长文，**2 个版本 × 2 种格式 = 4 个样例**。
 所有配图走同一套**图片设计规范**，所有长文走同一套**文章格式规范**——风格稳定、可复现，不靠临场发挥。
 
@@ -14,9 +16,9 @@
 
 ---
 
-![贴图套图预览](examples/demo/overview.jpg)
+![贴图套图预览](examples/demo/overview.png)
 
-![文章预览](examples/demo/overview-article.jpg)
+![文章预览](examples/demo/overview-article.png)
 
 ---
 
@@ -62,8 +64,9 @@
 
 - ✅ **一键四样例**：2 版本（深色科技版 / 浅色清新版）× 2 格式（贴图 / 文章）= 4 个公众号样例。
 - ✅ **内容与版式分离**：改一个 `spec.json` 即可整体重出，文案与图片同源。
-- ✅ **规格受控**：贴图固定 1080×1440（3:4），封面 1080×460（2.35:1），正文配图宽 1080。
+- ✅ **规格受控**：贴图固定 1080×1440（3:4），封面 1080×460（2.35:1）+ 1:1 方版 1080×1080，正文配图宽 1080。
 - ✅ **微信可直接粘贴**：文章 HTML 只用内联样式，无外链 CSS / 脚本，粘贴不丢样式。
+- ✅ **自动校验 + 预览**：`check.mjs` 检查尺寸/字数/图片引用/图注/md-html 同源，`preview.mjs` 生成总览图，坏产物不交付。
 - ✅ **内置视觉组件**：浏览器框、代码窗、流程图、分层图、图标卡、对比卡等，开箱即用。
 - ✅ **零额外依赖**：仅需 Node.js 18+ 与本机 Chrome / Chromium，不装任何 npm 包。
 - ✅ **交付自检**：每个样例附带「文案.md」与「发布清单.md」，照单执行即可上线。
@@ -91,11 +94,17 @@
 | # | 样例 | 内容 |
 |---|---|---|
 | 1 | V1 深色科技版 · 贴图 | 7 张 3:4 卡片 → [cards](examples/demo/v1-dark/cards/) |
-| 2 | V1 深色科技版 · 文章 | 1736 字长文 + 封面 + 4 张配图 → [article.md](examples/demo/v1-dark/article/article.md) |
+| 2 | V1 深色科技版 · 文章 | 1738 字长文 + 封面 + 4 张配图 → [article.md](examples/demo/v1-dark/article/article.md) |
 | 3 | V2 浅色清新版 · 贴图 | 7 张 3:4 卡片 → [cards](examples/demo/v2-light/cards/) |
-| 4 | V2 浅色清新版 · 文章 | 876 字长文 + 封面 + 3 张配图 → [article.md](examples/demo/v2-light/article/article.md) |
+| 4 | V2 浅色清新版 · 文章 | 878 字长文 + 封面 + 3 张配图 → [article.md](examples/demo/v2-light/article/article.md) |
 
 演示详情与复现命令见 [examples/demo/README.md](examples/demo/README.md)。
+
+### 可选增强：风格样张与方向提案
+
+![主题样张总览](assets/style-specimens/overview.png)
+
+**这些是可选增强，不跑也能正常产出两版四样例。** 4 套主题样张由 `node scripts/gen-specimens.mjs` 真实渲染生成；三方向提案示例见 [directions.png](examples/demo/directions/directions.png)，半自动生成示例见 [directions-auto/directions.png](examples/demo/directions-auto/directions.png)。
 
 ## 安装
 
@@ -139,6 +148,14 @@ node scripts/build.mjs --spec examples/demo/v1-dark.spec.json  --out examples/de
 node scripts/build.mjs --spec examples/demo/v2-light.spec.json --out examples/demo/v2-light
 ```
 
+（可选增强）生成 4 套主题样张 / 三方向提案：
+
+```bash
+node scripts/gen-specimens.mjs
+node scripts/directions.mjs --topic "Atlas 开源架构图" --out design-demos   # 半自动
+node scripts/directions.mjs --config examples/demo/directions.json --out examples/demo/directions
+```
+
 每个版本文件夹产出：
 
 ```text
@@ -146,26 +163,28 @@ v1-dark/
 ├── cards/                 card-01.png … card-07.png   （贴图，1080×1440）
 ├── article/
 │   ├── cover.png          （文章封面，1080×460）
+│   ├── cover-square.png   （文章封面 1:1 方版，1080×1080）
 │   ├── images/fig1..N.png （正文配图，≥3 张）
 │   ├── article.md         （Markdown 正文）
 │   └── article.html       （微信可粘贴的内联样式 HTML）
 ├── 文案.md                （标题备选 · 摘要 · 逐图文案脚本）
 ├── 发布清单.md            （图片张数 / 顺序 / 图注 / 上传检查）
-├── index.md               （该版本索引）
-└── *.spec.json            （内容源，改这里即可复现 / 迭代）
+└── index.md               （该版本索引）
 ```
+
+生成用的内容源 `v1-dark.spec.json` / `v2-light.spec.json` 放在 `examples/demo/` 下（与版本目录同级），改它即可复现 / 迭代。
 
 ### 标准工作流
 
 把主题交给 Agent（或自己动手）时，按 7 步走：
 
-1. **立项卡 Brief**——收敛主题、读者、定位、卖点、栏目品牌、两版语气差异与体裁。
-2. **定版式**——定卡片序列、文章小节大纲、深/浅主题令牌。
+1. **立项卡 Brief**——收敛主题、读者、定位、卖点、栏目品牌、两版语气差异与体裁；涉及真实信息先做事实核查/品牌资产。
+2. **定版式**——定卡片序列、文章小节大纲、深/浅主题令牌。（可选：先用 `directions.mjs` 出 3 个方向给用户选）
 3. **写文案**——标题备选、≤54 字摘要、文章 Markdown 成稿、逐图卡片文案。
 4. **生成图片**——HTML 模板 + 脚本渲染成 PNG，逐张目检安全区 / 断行 / 遮挡。
 5. **文章排版**——产出内联样式 HTML + 同源 Markdown，图注齐全。
 6. **发布清单**——按 [publish-checklist](references/publish-checklist.md) 逐项生成。
-7. **自检**——核对尺寸、字数、图注、两版差异、四样例齐全。
+7. **自检**——跑 `check.mjs` + `preview.mjs`，再核对尺寸、字数、图注、两版差异、四样例齐全。
 
 完整契约见 [SKILL.md](SKILL.md)。
 
@@ -204,33 +223,50 @@ v1-dark/
 wechat-mp/
 ├── SKILL.md               # 技能主文件：触发条件、输出契约、工作流、硬性约定
 ├── assets/
+│   ├── banner.svg         # README banner（另有 banner.png）
 │   ├── tokens.css         # 深浅两套主题令牌（颜色 / 字号 / 间距）
 │   ├── icons.svg          # 图标 sprite
-│   └── icons/README.md    # 图标用法与清单
+│   ├── icons/README.md    # 图标用法与清单
+│   └── style-specimens/   # 主题样张（方向提案用）
 ├── templates/
 │   ├── card.html          # 贴图卡片外壳（1080×1440）
 │   ├── article-cover.html # 文章封面（1080×460）
+│   ├── article-cover-square.html # 文章封面 1:1 方版（1080×1080）
 │   ├── diagram.html       # 正文配图（宽 1080，高自定）
 │   ├── article-body.html  # 微信内联样式配方参考
 │   └── README.md          # 模板占位符与卡片数据说明
 ├── scripts/
 │   ├── render.mjs         # HTML → PNG（无头 Chrome）
-│   ├── build.mjs          # 按 spec.json 批量出整套
-│   ├── chrome.mjs         # Chrome 探测 + 资源注入
+│   ├── build.mjs          # 按 spec.json 批量出整套（含自检与预览）
+│   ├── check.mjs          # 交付前自动校验（尺寸/字数/图注/同源）
+│   ├── preview.mjs        # 生成卡片墙 / 封面+配图总览
+│   ├── chrome.mjs         # Chrome 探测 + 资源注入 + 沙箱重试
 │   ├── visuals.mjs        # 卡片 / 视觉组件库
-│   └── article.mjs        # 文章 Markdown / HTML 生成
-├── references/            # 四份规范与手册
+│   ├── article.mjs        # 文章 Markdown / HTML 生成
+│   ├── article-tokens.mjs # 文章样式唯一来源
+│   ├── gen-article-body.mjs # 由 tokens 生成配方参考
+│   ├── card-render.mjs    # 单卡渲染（样张 / 方向缩略图共用）
+│   ├── sheet.mjs          # 多图拼对照图
+│   ├── gen-specimens.mjs  # 生成 4 套主题样张
+│   ├── directions.mjs     # 三方向缩略图 + 方向确认.md
+│   ├── directions-plan.mjs # 主题 → 3 套候选配置（半自动）
+│   ├── theme-registry.mjs # 从 tokens.css + 样张读主题
+│   └── tests/             # node --test 不变量测试
+├── references/            # 规范与手册（含事实核查 / 品牌资产 / 方向 / 打磨环）
 └── examples/demo/         # 两版四样例示范产出
 ```
 
 ## 环境要求
 
 - **Node.js 18+**（脚本使用 ES Modules，无 npm 依赖）。
-- **Chrome 或 Chromium**（macOS / Linux）。脚本会自动探测常见路径，也可手动指定：
+- **Chrome / Chromium / Edge**（macOS、Linux、Windows）。脚本会自动探测常见路径；沙箱/CI 会自动重试 `--no-sandbox` + 临时 `--user-data-dir`。也可手动指定：
 
 ```bash
 export CHROME_BIN="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+# 或：export CHROME_FLAGS="--no-sandbox --user-data-dir=/tmp/chrome-profile"
 ```
+
+- 自检与测试：`node scripts/check.mjs examples/demo/v1-dark examples/demo/v2-light`；`node --test`
 
 ## 规范文档
 
@@ -240,6 +276,12 @@ export CHROME_BIN="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 | [article-format.md](references/article-format.md) | 文章格式规范：微信排版参数 / 结构 / 四类体裁 / 内联 HTML 规则 |
 | [content-playbook.md](references/content-playbook.md) | 文案公式：标题 / 摘要 / 导语 / CTA / 四类大纲 |
 | [publish-checklist.md](references/publish-checklist.md) | 发布清单 + 交付前自检 |
+| [fact-check.md](references/fact-check.md) | 事实核查流程与 `facts.md` 模板 |
+| [brand-asset.md](references/brand-asset.md) | 品牌资产五步与 `brand-spec.md` 模板 |
+| [directions.md](references/directions.md) | 方向提案门与 `方向确认.md` |
+| [polish-loop.md](references/polish-loop.md) | 截图打磨环与 `polish-log.md` |
+| [materials.md](references/materials.md) | 素材分档（程序化 / 真实资产 / 生成图） |
+| [styles.md](references/styles.md) | 主题扩展与 4 套建议预设 |
 
 ## 常见问题
 

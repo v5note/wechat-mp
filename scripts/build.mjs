@@ -2,11 +2,13 @@
 // scripts/build.mjs — 按 spec.json 生成整套：贴图卡片 + 文章封面 + 正文配图 + 文案 + 发布清单
 // 用法: node scripts/build.mjs --spec examples/demo/v1-dark.spec.json --out examples/demo/v1-dark
 import { parseArgs } from 'node:util';
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { join, resolve, dirname } from 'node:path';
 import { renderHtml, ROOT } from './chrome.mjs';
 import { buildCard, hero, esc, hl, chip } from './visuals.mjs';
 import { buildArticleHtml, buildArticleMd } from './article.mjs';
+import { checkVersion } from './check.mjs';
+import { buildDemoOverviews } from './preview.mjs';
 
 const { values } = parseArgs({ options: { spec: { type: 'string' }, out: { type: 'string' } } });
 if (!values.spec || !values.out) { console.error('用法: node scripts/build.mjs --spec <spec.json> --out <dir>'); process.exit(1); }
@@ -61,8 +63,7 @@ var figIndex = 0;
       THEME: 't-' + theme,
       KICKER: esc(sec.figure.kicker || '图示'),
       TITLE: hl(sec.figure.title || '', sec.figure.accent || ''),
-      VISUAL: hero(sec.figure.hero),
-      CAPTION: esc(sec.figure.cap || '')
+      VISUAL: hero(sec.figure.hero)
     });
     var h = sec.figure.height || 780;
     renderHtml(tpl, join(outDir,'article',src), 1080, h, extraCss);
@@ -183,5 +184,20 @@ I.push('');
 I.push('## 文案');
 I.push('- [文案.md](文案.md) · [发布清单.md](发布清单.md)');
 writeFileSync(join(outDir,'index.md'), I.join('\n'), 'utf8');
+
+// 8) 自动自检（失败即非零退出，避免把坏产物交出去）
+console.log('\n=== 自检 ===');
+const check = checkVersion(outDir, values.spec);
+check.oks.forEach(function(m){ console.log('  ✓ ' + m); });
+check.warns.forEach(function(m){ console.log('  ⚠ ' + m); });
+check.errs.forEach(function(m){ console.log('  ✗ ' + m); });
+console.log('  → ' + check.oks.length + ' pass / ' + check.warns.length + ' warn / ' + check.errs.length + ' fail');
+if(check.errs.length) { console.error('自检失败，已中止。'); process.exit(1); }
+
+// 9) 两版都在时，顺手刷新总览图（overview.png / overview-article.png）
+const parent = dirname(outDir);
+if(existsSync(join(parent, 'v1-dark')) && existsSync(join(parent, 'v2-light'))) {
+  buildDemoOverviews(parent);
+}
 
 console.log('DONE ->', outDir);

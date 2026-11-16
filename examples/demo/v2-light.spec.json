@@ -1,6 +1,6 @@
 {
   "slug": "v2-light",
-  "name": "Atlas · 浅色清新版",
+  "name": "Atlas 浅色清新版",
   "theme": "light",
   "accent": "#12B76A",
   "accent2": "#2563EB",
@@ -26,7 +26,7 @@
   "cards": [
     {
       "variant": "cover",
-      "kicker": "ATLAS · 团队工具",
+      "kicker": "ATLAS 团队工具",
       "title": [
         "三分钟",
         "看懂一个项目"
@@ -39,15 +39,13 @@
         "ui": "dashboard"
       },
       "tags": [
-        "★ 17.6k Star",
+        "★ 开源项目",
         "零配置",
         "团队协作"
-      ],
-      "badge": "免费"
+      ]
     },
     {
       "variant": "point",
-      "num": "01",
       "label": "场景",
       "title": "新人第一天的难题",
       "body": "文档过期、目录陌生，问谁都耽误别人时间。",
@@ -128,7 +126,6 @@
     },
     {
       "variant": "point",
-      "num": "02",
       "label": "亮点",
       "title": "一张图，四种看法",
       "body": "架构、调用、依赖、入口，按需切换，不再来回翻文件。",
@@ -186,16 +183,16 @@
         "顺手导出放进文档"
       ],
       "cta": "atlas.dev",
-      "ctaKicker": "免费开始 · 无需安装",
+      "ctaKicker": "免费开始 / 无需安装",
       "qr": true
     }
   ],
   "article": {
     "title": "3 分钟看懂一个陌生项目，Atlas 帮你画出来",
     "summary": "给团队和新人用的架构地图：导入仓库，自动生成能点开的架构图，新人也能 3 分钟上手。",
-    "topbar": "团队效率工具箱 · 每个工具都附上手指南",
+    "topbar": "团队效率工具箱｜每个工具都附上手指南",
     "cover": {
-      "kicker": "ATLAS · 团队工具",
+      "kicker": "ATLAS 团队工具",
       "title": [
         "三分钟",
         "看懂一个项目"

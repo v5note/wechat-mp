@@ -1,0 +1,53 @@
+{
+  "project": "Atlas",
+  "brand": { "name": "Atlas", "logo": "A", "column": "开源精选", "site": "atlas.dev" },
+  "directions": [
+    {
+      "id": "A",
+      "name": "清单体 · 深色科技",
+      "note": "清单体：封面 → 3 个要点 → 结尾；语气硬核、讲边界。",
+      "theme": "dark",
+      "accent": "#4F8CFF",
+      "accent2": "#38E1D6",
+      "kicker": "ATLAS 开源精选",
+      "title": ["把仓库", "画成一张图"],
+      "accentWord": "一张图",
+      "sub": "一句话读懂整个项目结构",
+      "hero": { "type": "tiles", "items": [
+        { "icon": "layers", "t": "分层架构" },
+        { "icon": "branch", "t": "调用链路" },
+        { "icon": "grid", "t": "依赖关系" },
+        { "icon": "play", "t": "入口动线" }
+      ] }
+    },
+    {
+      "id": "B",
+      "name": "图解体 · 浅色清新",
+      "note": "图解体：一张流程图贯穿；语气轻快、讲场景。",
+      "theme": "light",
+      "accent": "#12B76A",
+      "accent2": "#2563EB",
+      "kicker": "ATLAS 团队工具",
+      "title": ["三分钟", "看懂一个项目"],
+      "accentWord": "三分钟",
+      "sub": "给新人和团队用的架构地图",
+      "hero": { "type": "flow", "nodes": [
+        { "num": "1", "t": "粘贴地址", "d": "公有 / 私有" },
+        { "num": "2", "t": "自动解析", "d": "模块 / 依赖 / 入口" },
+        { "num": "3", "t": "生成架构图", "d": "四种视图" },
+        { "num": "4", "t": "分享团队", "d": "PNG / SVG / 链接" }
+      ] }
+    },
+    {
+      "id": "C",
+      "name": "杂志叙事 · 米色编辑",
+      "note": "杂志叙事：封面 → 图文长段 → 引用；语气编辑感。",
+      "theme": "magazine",
+      "kicker": "ATLAS 编辑手记",
+      "title": ["一张图", "改变交接"],
+      "accentWord": "改变交接",
+      "sub": "把项目结构讲成一篇报道",
+      "hero": { "type": "browser", "url": "atlas.dev/studio", "ui": "list" }
+    }
+  ]
+}

@@ -1,13 +1,14 @@
 # templates · 模板说明
 
-四个模板都用同一套 [../assets/tokens.css](../assets/tokens.css) 与 [../assets/icons.svg](../assets/icons.svg)（渲染时由脚本自动注入）。
+五个模板都用同一套 [../assets/tokens.css](../assets/tokens.css) 与 [../assets/icons.svg](../assets/icons.svg)（渲染时由脚本自动注入）。
 
 | 文件 | 用途 | 画布 |
 |---|---|---|
 | card.html | 贴图单卡外壳（品牌头 / 正文区 / 页脚） | 1080×1440（3:4） |
 | article-cover.html | 文章封面 banner | 1080×460（2.35:1） |
+| article-cover-square.html | 文章封面 1:1 方版 | 1080×1080 |
 | diagram.html | 文章正文配图（架构图 / 流程图 / 对比等） | 宽 1080，高自定 |
-| article-body.html | 微信文章内联样式**配方参考**（每种元素的写法） | 流式 |
+| article-body.html | 微信文章内联样式**配方参考**（由 scripts/gen-article-body.mjs 生成） | 流式 |
 
 ## card.html 占位符
 

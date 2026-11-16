@@ -33,6 +33,48 @@ body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-f
   --shadow:0 24px 60px rgba(16,24,40,.10);
 }
 
+/* 可选主题预设（见 references/styles.md），按需在 spec.json 里把 theme 改成对应名字 */
+.t-magazine{
+  --bg1:#F7F3EC; --bg2:#FBF8F2; --bg3:#F7F3EC;
+  --surface:#FFFFFF; --surface-2:#F1EADF;
+  --border:#E3D9C8; --border-strong:#D3C4AC;
+  --text:#1F1B16; --text-2:#5B5147; --text-3:#8B7E6E;
+  --accent:#B4472F; --accent-2:#C98A3C;
+  --accent-soft:rgba(180,71,47,.10); --accent-line:rgba(180,71,47,.35);
+  --badge:#B4472F; --ok:#2F7D4F; --no:#8B7E6E;
+  --shadow:0 24px 60px rgba(31,27,22,.12);
+}
+.t-guofeng{
+  --bg1:#1B1712; --bg2:#241F19; --bg3:#1B1712;
+  --surface:rgba(255,255,255,.05); --surface-2:rgba(255,255,255,.08);
+  --border:rgba(240,225,200,.14); --border-strong:rgba(240,225,200,.24);
+  --text:#F2E8D8; --text-2:#C9B79C; --text-3:#8E7E68;
+  --accent:#B23A2E; --accent-2:#D8A657;
+  --accent-soft:rgba(178,58,46,.18); --accent-line:rgba(178,58,46,.45);
+  --badge:#B23A2E; --ok:#5FA36A; --no:#8E7E68;
+  --shadow:0 30px 80px rgba(0,0,0,.50);
+}
+.t-mono{
+  --bg1:#FFFFFF; --bg2:#F6F6F6; --bg3:#FFFFFF;
+  --surface:#FFFFFF; --surface-2:#F2F2F2;
+  --border:#E2E2E2; --border-strong:#C9C9C9;
+  --text:#111111; --text-2:#555555; --text-3:#8A8A8A;
+  --accent:#111111; --accent-2:#666666;
+  --accent-soft:rgba(17,17,17,.06); --accent-line:rgba(17,17,17,.30);
+  --badge:#111111; --ok:#1F7A3D; --no:#8A8A8A;
+  --shadow:0 20px 50px rgba(0,0,0,.08);
+}
+.t-night-cyan{
+  --bg1:#0A0F14; --bg2:#121B22; --bg3:#0A0F14;
+  --surface:rgba(255,255,255,.05); --surface-2:rgba(255,255,255,.08);
+  --border:rgba(255,255,255,.12); --border-strong:rgba(255,255,255,.20);
+  --text:#EAF6F6; --text-2:#A6BDC0; --text-3:#6E858A;
+  --accent:#2FD6C4; --accent-2:#4F8CFF;
+  --accent-soft:rgba(47,214,196,.14); --accent-line:rgba(47,214,196,.45);
+  --badge:#FF6B6B; --ok:#35D07F; --no:#6E858A;
+  --shadow:0 30px 80px rgba(0,0,0,.50);
+}
+
 /* ---------- card canvas ---------- */
 .card{width:1080px;height:1440px;position:relative;overflow:hidden;
   background:linear-gradient(160deg,var(--bg1),var(--bg2) 58%,var(--bg3));color:var(--text)}
@@ -56,7 +98,7 @@ body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-f
 .badge.ghost{background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent-line)}
 
 /* ---------- text ---------- */
-.kicker{font-size:26px;font-weight:600;letter-spacing:4px;color:var(--text-3);text-transform:uppercase}
+.kicker{font-size:26px;font-weight:600;letter-spacing:2px;color:var(--text-3)}
 .headline{font-size:92px;font-weight:800;line-height:1.07;letter-spacing:-2px}
 .headline.sm{font-size:76px}
 .headline.xs{font-size:64px}

@@ -1,6 +1,6 @@
 {
   "slug": "v1-dark",
-  "name": "Atlas · 深色科技版",
+  "name": "Atlas 深色科技版",
   "theme": "dark",
   "accent": "#4F8CFF",
   "accent2": "#38E1D6",
@@ -23,11 +23,11 @@
     ],
     "recommend": 0
   },
-  "summary": "把 Git 仓库丢进去，自动画出模块、依赖与调用关系，一张可点击的架构图，支持导出 PNG/SVG。",
+  "summary": "把 Git 仓库丢进去，自动画出模块、依赖与调用关系；一张会自己更新的架构地图，让新人三分钟看懂项目。",
   "cards": [
     {
       "variant": "cover",
-      "kicker": "ATLAS · 开源精选",
+      "kicker": "ATLAS 开源精选",
       "title": [
         "把任意仓库",
         "画成一张图"
@@ -40,15 +40,13 @@
         "ui": "dashboard"
       },
       "tags": [
-        "★ 17.6k Star",
+        "★ 开源项目",
         "MIT 开源",
         "PNG / SVG 导出"
-      ],
-      "badge": "NEW"
+      ]
     },
     {
       "variant": "point",
-      "num": "01",
       "label": "痛点",
       "title": "接手新项目，先迷路三天",
       "body": "模块、依赖、入口散在几十个目录里，新人只能靠 grep 和猜。",
@@ -154,7 +152,6 @@
     },
     {
       "variant": "point",
-      "num": "02",
       "label": "能力",
       "title": "四种视图，各看各的",
       "body": "架构看分层，调用看链路，依赖看耦合，入口看动线。",
@@ -212,16 +209,16 @@
         "导出 PNG / SVG 放进文档"
       ],
       "cta": "atlas.dev",
-      "ctaKicker": "OPEN SOURCE · MIT",
+      "ctaKicker": "OPEN SOURCE / MIT",
       "qr": true
     }
   ],
   "article": {
     "title": "把任意代码仓库，画成一张能点开的架构图",
     "summary": "把 Git 仓库丢进去，自动画出模块、依赖与调用关系；一张会自己更新的架构地图，让新人三分钟看懂项目。",
-    "topbar": "每天推荐一个能上手的开源项目 · 栏目「开源精选」",
+    "topbar": "每天推荐一个能上手的开源项目｜栏目「开源精选」",
     "cover": {
-      "kicker": "ATLAS · 开源精选",
+      "kicker": "ATLAS 开源精选",
       "title": [
         "把任意仓库",
         "画成一张图"

@@ -7,9 +7,9 @@
 | # | 样例 | 内容 | 入口 |
 |---|---|---|---|
 | 1 | V1 深色科技版 · 贴图 | 7 张 3:4 卡片 | [v1-dark/cards/](v1-dark/cards/) |
-| 2 | V1 深色科技版 · 文章 | **深度长文（1736 字，目录 + 7 节）+ 封面 + 4 张配图** | [v1-dark/article/article.md](v1-dark/article/article.md) |
+| 2 | V1 深色科技版 · 文章 | **深度长文（1738 字，目录 + 7 节）+ 封面 + 4 张配图** | [v1-dark/article/article.md](v1-dark/article/article.md) |
 | 3 | V2 浅色清新版 · 贴图 | 7 张 3:4 卡片 | [v2-light/cards/](v2-light/cards/) |
-| 4 | V2 浅色清新版 · 文章 | 长文（876 字）+ 封面 + 3 张配图 | [v2-light/article/article.md](v2-light/article/article.md) |
+| 4 | V2 浅色清新版 · 文章 | 长文（878 字）+ 封面 + 3 张配图 | [v2-light/article/article.md](v2-light/article/article.md) |
 
 每个版本文件夹都包含：
 
@@ -23,8 +23,9 @@
     │   └── article.html        （微信可粘贴的内联样式 HTML）
     ├── 文案.md       （标题备选 · 摘要 · 贴图配文 · 逐图文案脚本）
     ├── 发布清单.md   （图片张数 / 顺序 / 图注 / 上传检查）
-    ├── index.md      （该版本索引）
-    └── *.spec.json   （生成用的内容源，改这里即可复现/迭代）
+    └── index.md      （该版本索引）
+
+生成用的内容源在 `examples/demo/` 下：`v1-dark.spec.json`、`v2-light.spec.json`（不在版本目录内）。
 
 ## 两版的差异
 
@@ -36,7 +37,26 @@
     node scripts/build.mjs --spec examples/demo/v1-dark.spec.json  --out examples/demo/v1-dark
     node scripts/build.mjs --spec examples/demo/v2-light.spec.json --out examples/demo/v2-light
 
+    node scripts/check.mjs examples/demo/v1-dark examples/demo/v2-light   # 自动校验
+    node scripts/preview.mjs --demo examples/demo                        # 刷新 overview*.png
+
+`build.mjs` 结束时会自动跑 `check.mjs`，并在两版都在时刷新总览图。
+
+## 方向提案示例
+
+    node scripts/directions.mjs --config examples/demo/directions.json --out examples/demo/directions
+
+产出 `A.png / B.png / C.png`、对照图 `directions.png` 和 `方向确认.md`。示例对照图：
+
+![方向提案](directions/directions.png)
+
+半自动模式示例（主题「公众号排版」直接生成 3 套候选）：
+
+    node scripts/directions.mjs --topic "公众号排版" --project "排版笔记" --points "标题,摘要,正文,配图" --out examples/demo/directions-auto
+
+![半自动方向提案](directions-auto/directions.png)
+
 ## 换成自己的主题
 
-打开 spec.json，改这几处即可：name / brand / titles / summary / imageCaption / cards[].title·body / article.* 。
+打开 spec.json，改这几处即可：name / brand / titles / summary / imageCaption / cards[].title / cards[].body / article.* 。
 图片会按同一套规范重新生成。

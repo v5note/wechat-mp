@@ -5,6 +5,8 @@
 [![GitHub stars](https://img.shields.io/github/stars/v5note/wechat-mp.svg)](https://github.com/v5note/wechat-mp/stargazers)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/v5note/wechat-mp/pulls)
 
+![wechat-mp · WeChat Official Account Content Studio](assets/banner.svg)
+
 **Turn any topic into publish-ready WeChat content**: image-card series + long-form articles — **2 versions × 2 formats = 4 samples**.
 Every image follows the same **image design system**, every article follows the same **article format spec** — stable, reproducible, no improvisation.
 
@@ -14,9 +16,9 @@ Every image follows the same **image design system**, every article follows the 
 
 ---
 
-![Image-card series preview](examples/demo/overview.jpg)
+![Image-card series preview](examples/demo/overview.png)
 
-![Article preview](examples/demo/overview-article.jpg)
+![Article preview](examples/demo/overview-article.png)
 
 ---
 
@@ -62,8 +64,9 @@ As a result, the output stays stylistically consistent no matter who or when gen
 
 - ✅ **Four samples in one run**: 2 versions (Dark Tech / Light Clean) × 2 formats (cards / article) = 4 samples.
 - ✅ **Content separated from layout**: change one `spec.json` to regenerate everything; copy and images share one source.
-- ✅ **Controlled specs**: cards fixed at 1080×1440 (3:4), cover 1080×460 (2.35:1), in-body figures 1080 wide.
+- ✅ **Controlled specs**: cards fixed at 1080×1440 (3:4), cover 1080×460 (2.35:1) plus a 1:1 square version 1080×1080, in-body figures 1080 wide.
 - ✅ **WeChat paste-ready**: article HTML uses inline styles only — no external CSS or scripts — so pasting keeps the styling.
+- ✅ **Automated check + preview**: `check.mjs` validates sizes/words/image refs/captions/md-html parity; `preview.mjs` builds overview sheets; broken output fails the build.
 - ✅ **Built-in visual components**: browser frame, code window, flow diagram, layered diagram, icon tiles, comparison card, and more.
 - ✅ **Zero extra dependencies**: only Node.js 18+ and a local Chrome / Chromium; no npm packages.
 - ✅ **Delivery self-check**: every sample ships with a copy deck (`文案.md`) and a publish checklist (`发布清单.md`).
@@ -91,11 +94,17 @@ The repo ships one complete demonstration (the "Atlas" topic is fictional demo d
 | # | Sample | Content |
 |---|---|---|
 | 1 | V1 Dark Tech · cards | 7 cards at 3:4 → [cards](examples/demo/v1-dark/cards/) |
-| 2 | V1 Dark Tech · article | 1,736-char article + cover + 4 figures → [article.md](examples/demo/v1-dark/article/article.md) |
+| 2 | V1 Dark Tech · article | 1,738-char article + cover + 4 figures → [article.md](examples/demo/v1-dark/article/article.md) |
 | 3 | V2 Light Clean · cards | 7 cards at 3:4 → [cards](examples/demo/v2-light/cards/) |
-| 4 | V2 Light Clean · article | 876-char article + cover + 3 figures → [article.md](examples/demo/v2-light/article/article.md) |
+| 4 | V2 Light Clean · article | 878-char article + cover + 3 figures → [article.md](examples/demo/v2-light/article/article.md) |
 
 See [examples/demo/README.md](examples/demo/README.md) for details and reproduce commands.
+
+### Optional extras: theme specimens & directions
+
+![Theme specimens](assets/style-specimens/overview.png)
+
+**These are optional extras; the 4 core samples still work without them.** The 4 theme specimens are real renders from `node scripts/gen-specimens.mjs`; see [directions.png](examples/demo/directions/directions.png) for a direction-proposal example and [directions-auto/directions.png](examples/demo/directions-auto/directions.png) for the semi-auto version.
 
 ## Installation
 
@@ -139,6 +148,14 @@ node scripts/build.mjs --spec examples/demo/v1-dark.spec.json  --out examples/de
 node scripts/build.mjs --spec examples/demo/v2-light.spec.json --out examples/demo/v2-light
 ```
 
+(Optional) Generate 4 theme specimens / 3 direction thumbnails:
+
+```bash
+node scripts/gen-specimens.mjs
+node scripts/directions.mjs --topic "Atlas open-source architecture map" --out design-demos   # semi-auto
+node scripts/directions.mjs --config examples/demo/directions.json --out examples/demo/directions
+```
+
 Each version folder contains:
 
 ```text
@@ -146,26 +163,28 @@ v1-dark/
 ├── cards/                 card-01.png … card-07.png   (image cards, 1080×1440)
 ├── article/
 │   ├── cover.png          (article cover, 1080×460)
+│   ├── cover-square.png   (article cover, 1:1 square, 1080×1080)
 │   ├── images/fig1..N.png (in-body figures, ≥3)
 │   ├── article.md         (Markdown body)
 │   └── article.html       (WeChat-pasteable inline-styled HTML)
 ├── 文案.md                (title options · summary · per-image caption script)
 ├── 发布清单.md            (image count / order / captions / upload checks)
-├── index.md               (index for this version)
-└── *.spec.json            (content source — edit to reproduce / iterate)
+└── index.md               (index for this version)
 ```
+
+The content source `v1-dark.spec.json` / `v2-light.spec.json` lives under `examples/demo/` (next to each version folder); edit it to reproduce / iterate.
 
 ### Standard workflow
 
 When handing a topic to your Agent (or doing it yourself), follow these 7 steps:
 
-1. **Brief** — distill topic, audience, positioning, selling points, brand/column, tone differences, and content genre.
-2. **Layout** — decide the card sequence, article outline, and dark/light theme tokens.
+1. **Brief** — distill topic, audience, positioning, selling points, brand/column, tone differences, and content genre; fact-check / brand assets first when real info is involved.
+2. **Layout** — decide the card sequence, article outline, and theme tokens. (Optional: use `directions.mjs` to show 3 directions first.)
 3. **Copy** — title options, ≤54-char summary, article Markdown draft, and per-card caption script.
 4. **Images** — render HTML templates into PNGs and visually check safe area / line breaks / overlaps.
 5. **Article formatting** — produce inline-styled HTML + matching Markdown, with complete figure captions.
 6. **Publish checklist** — generate an itemized checklist per [publish-checklist](references/publish-checklist.md).
-7. **Self-check** — verify sizes, character counts, captions, version differences, and that all four samples are complete.
+7. **Self-check** — run `check.mjs` + `preview.mjs`, then verify sizes, character counts, captions, version differences, and that all four samples are complete.
 
 See [SKILL.md](SKILL.md) for the full contract.
 
@@ -204,33 +223,50 @@ See [assets/icons/README.md](assets/icons/README.md) for the icon list.
 wechat-mp/
 ├── SKILL.md               # Skill entry: triggers, output contract, workflow, hard rules
 ├── assets/
+│   ├── banner.svg         # README banner (plus banner.png)
 │   ├── tokens.css         # Dark & light theme tokens (colors / type / spacing)
 │   ├── icons.svg          # Icon sprite
-│   └── icons/README.md    # Icon usage & list
+│   ├── icons/README.md    # Icon usage & list
+│   └── style-specimens/   # Theme specimens (for direction proposals)
 ├── templates/
 │   ├── card.html          # Card shell (1080×1440)
 │   ├── article-cover.html # Article cover (1080×460)
+│   ├── article-cover-square.html # Article cover, 1:1 square (1080×1080)
 │   ├── diagram.html       # In-body figure (1080 wide, custom height)
 │   ├── article-body.html  # Inline-style recipe reference for WeChat
 │   └── README.md          # Template placeholders & card data reference
 ├── scripts/
 │   ├── render.mjs         # HTML → PNG (headless Chrome)
-│   ├── build.mjs          # Batch-build a full set from spec.json
-│   ├── chrome.mjs         # Chrome detection + asset injection
+│   ├── build.mjs          # Batch-build a full set (with check + preview)
+│   ├── check.mjs          # Pre-delivery validation (sizes/words/captions/parity)
+│   ├── preview.mjs        # Card-wall / cover+figure overview images
+│   ├── chrome.mjs         # Chrome detection + asset injection + sandbox retry
 │   ├── visuals.mjs        # Card / visual component library
-│   └── article.mjs        # Article Markdown / HTML generation
-├── references/            # The four specs & playbooks
+│   ├── article.mjs        # Article Markdown / HTML generation
+│   ├── article-tokens.mjs # Single source for article styles
+│   ├── gen-article-body.mjs # Generate the recipe from tokens
+│   ├── card-render.mjs    # Single-card renderer (specimens / directions)
+│   ├── sheet.mjs          # Compose labelled contact sheets
+│   ├── gen-specimens.mjs  # Generate 4 theme specimens
+│   ├── directions.mjs     # 3 direction thumbnails + direction gate
+│   ├── directions-plan.mjs # topic → 3 candidate configs (semi-auto)
+│   ├── theme-registry.mjs # Read themes from tokens.css + specimens
+│   └── tests/             # node --test invariant tests
+├── references/            # Specs & playbooks (fact-check / brand / directions / polish)
 └── examples/demo/         # Two-version, four-sample demo output
 ```
 
 ## Requirements
 
 - **Node.js 18+** (scripts use ES Modules; no npm dependencies).
-- **Chrome or Chromium** (macOS / Linux). Scripts auto-detect common paths; you can also specify one manually:
+- **Chrome / Chromium / Edge** (macOS, Linux, Windows). Scripts auto-detect common paths; in sandboxes/CI they retry with `--no-sandbox` + a temp `--user-data-dir`. You can also specify one manually:
 
 ```bash
 export CHROME_BIN="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+# or: export CHROME_FLAGS="--no-sandbox --user-data-dir=/tmp/chrome-profile"
 ```
+
+- Validation & tests: `node scripts/check.mjs examples/demo/v1-dark examples/demo/v2-light`; `node --test`
 
 ## Specs & Playbooks
 
@@ -240,6 +276,12 @@ export CHROME_BIN="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 | [article-format.md](references/article-format.md) | Article format spec: WeChat typography / structure / four genres / inline HTML rules |
 | [content-playbook.md](references/content-playbook.md) | Copywriting formulas: titles / summaries / leads / CTAs / four genre outlines |
 | [publish-checklist.md](references/publish-checklist.md) | Publish checklist + pre-delivery self-check |
+| [fact-check.md](references/fact-check.md) | Fact-check workflow + `facts.md` template |
+| [brand-asset.md](references/brand-asset.md) | Brand-asset protocol + `brand-spec.md` template |
+| [directions.md](references/directions.md) | Direction proposal gate + `方向确认.md` |
+| [polish-loop.md](references/polish-loop.md) | Screenshot polish loop + `polish-log.md` |
+| [materials.md](references/materials.md) | Asset tiers (programmatic / real / generated) |
+| [styles.md](references/styles.md) | Theme extension + 4 suggested presets |
 
 ## FAQ
 

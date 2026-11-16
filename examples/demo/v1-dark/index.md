@@ -1,4 +1,4 @@
-# Atlas · 深色科技版
+# Atlas 深色科技版
 
 ## 贴图
 - [cards/card-01.png](cards/card-01.png) — cover

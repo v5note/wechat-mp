@@ -1,0 +1,105 @@
+<svg width="1200" height="400" viewBox="0 0 1200 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="wechat-mp · 微信公众号内容工坊 banner">
+  <defs>
+    <radialGradient id="glowBlue" cx="82%" cy="-10%" r="80%">
+      <stop offset="0%" stop-color="#4F8CFF" stop-opacity="0.28"/>
+      <stop offset="55%" stop-color="#4F8CFF" stop-opacity="0.06"/>
+      <stop offset="100%" stop-color="#0B1020" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowCyan" cx="4%" cy="118%" r="55%">
+      <stop offset="0%" stop-color="#38E1D6" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#38E1D6" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="accentGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#4F8CFF"/>
+      <stop offset="100%" stop-color="#38E1D6"/>
+    </linearGradient>
+    <linearGradient id="cardLight" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F4F7FF"/>
+      <stop offset="100%" stop-color="#E6EDFF"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="400" fill="#0B1020"/>
+  <rect width="1200" height="400" fill="url(#glowBlue)"/>
+  <rect width="1200" height="400" fill="url(#glowCyan)"/>
+
+  <!-- editorial rules -->
+  <rect x="60" y="48" width="3" height="304" fill="url(#accentGrad)"/>
+  <rect x="60" y="48" width="760" height="2" fill="#FFFFFF" opacity="0.14"/>
+  <rect x="60" y="350" width="760" height="1" fill="#FFFFFF" opacity="0.14"/>
+  <rect x="860" y="80" width="1" height="240" fill="#FFFFFF" opacity="0.08"/>
+
+  <!-- ================= LEFT: TEXT ================= -->
+  <text x="80" y="88" font-family="'Inter','PingFang SC','Helvetica Neue',Arial,sans-serif" font-size="11" font-weight="700" letter-spacing="3" fill="#38E1D6">AGENT SKILL · WECHAT CONTENT</text>
+
+  <text x="80" y="178" font-family="'Inter','PingFang SC','Helvetica Neue',Arial,sans-serif" font-size="86" font-weight="900" letter-spacing="-2.5" fill="#FFFFFF">WeChat <tspan fill="#4F8CFF">MP</tspan></text>
+
+  <text x="80" y="224" font-family="'Songti SC','Noto Serif SC','Source Han Serif SC',serif" font-size="24" font-weight="700" fill="#DCE6FF" letter-spacing="1">微信公众号内容工坊</text>
+
+  <text x="80" y="284" font-family="'Inter','PingFang SC',sans-serif" font-size="15" font-weight="500" fill="#AFC0E0" letter-spacing="0.5">贴图套图</text>
+  <text x="148" y="284" font-family="'Inter',sans-serif" font-size="15" font-weight="700" fill="#38E1D6">·</text>
+  <text x="160" y="284" font-family="'Inter','PingFang SC',sans-serif" font-size="15" font-weight="500" fill="#AFC0E0" letter-spacing="0.5">图文长文</text>
+  <text x="228" y="284" font-family="'Inter',sans-serif" font-size="15" font-weight="700" fill="#38E1D6">·</text>
+  <text x="240" y="284" font-family="'Inter','PingFang SC',sans-serif" font-size="15" font-weight="500" fill="#AFC0E0" letter-spacing="0.5">双版本</text>
+  <text x="294" y="284" font-family="'Inter',sans-serif" font-size="15" font-weight="700" fill="#38E1D6">·</text>
+  <text x="306" y="284" font-family="'Inter','PingFang SC',sans-serif" font-size="15" font-weight="500" fill="#AFC0E0" letter-spacing="0.5">发布清单</text>
+
+  <text x="80" y="314" font-family="'Inter','PingFang SC',sans-serif" font-size="14" font-weight="400" fill="#7E8FB0" letter-spacing="0.4">2 版本 × 2 格式 = 4 个样例   ·   自动校验   ·   总览预览</text>
+
+  <text x="80" y="370" font-family="'Inter','PingFang SC',sans-serif" font-size="12" font-weight="400" fill="#5A6A8A" letter-spacing="0.4">Node.js 18+  ·  Headless Chrome  ·  zero npm deps</text>
+
+  <!-- ================= RIGHT: OUTPUT SURFACES ================= -->
+  <text x="890" y="108" font-family="'Inter',sans-serif" font-size="10" font-weight="700" letter-spacing="2.4" fill="#38E1D6" opacity="0.9">OUTPUT SURFACES</text>
+
+  <!-- TILE 1 · CARDS -->
+  <rect x="890" y="122" width="128" height="100" rx="6" fill="#111A33" stroke="#26334F" stroke-width="1"/>
+  <rect x="902" y="136" width="40" height="54" rx="2" fill="#1B2847" stroke="#33456E" stroke-width="0.8"/>
+  <rect x="909" y="140" width="40" height="54" rx="2" fill="#22335A"/>
+  <rect x="916" y="144" width="40" height="54" rx="2" fill="url(#cardLight)"/>
+  <rect x="921" y="151" width="24" height="4" rx="1" fill="#0B1020"/>
+  <rect x="921" y="160" width="28" height="2" rx="1" fill="#94A3C4"/>
+  <rect x="921" y="165" width="22" height="2" rx="1" fill="#94A3C4"/>
+  <rect x="921" y="174" width="30" height="16" rx="2" fill="#4F8CFF" opacity="0.22"/>
+  <rect x="921" y="174" width="10" height="16" rx="2" fill="#4F8CFF"/>
+  <text x="902" y="216" font-family="'Inter',sans-serif" font-size="9" font-weight="600" letter-spacing="2" fill="#7C8AA8">CARDS</text>
+
+  <!-- TILE 2 · ARTICLE -->
+  <rect x="1034" y="122" width="128" height="100" rx="6" fill="#111A33" stroke="#26334F" stroke-width="1"/>
+  <rect x="1046" y="136" width="48" height="62" rx="2" fill="#F1F5FF"/>
+  <rect x="1050" y="142" width="28" height="4" rx="1" fill="#0B1020"/>
+  <rect x="1050" y="150" width="8" height="2" rx="1" fill="#38A0A0"/>
+  <rect x="1050" y="158" width="40" height="14" rx="2" fill="#4F8CFF" opacity="0.20"/>
+  <rect x="1054" y="162" width="32" height="2" rx="1" fill="#4F8CFF"/>
+  <rect x="1054" y="167" width="22" height="2" rx="1" fill="#6C86BC"/>
+  <rect x="1050" y="178" width="40" height="2" rx="1" fill="#B7C2D8"/>
+  <rect x="1050" y="183" width="34" height="2" rx="1" fill="#B7C2D8"/>
+  <rect x="1050" y="188" width="38" height="2" rx="1" fill="#B7C2D8"/>
+  <text x="1046" y="216" font-family="'Inter',sans-serif" font-size="9" font-weight="600" letter-spacing="2" fill="#7C8AA8">ARTICLE</text>
+
+  <!-- TILE 3 · COVER (2.35:1 + 1:1) -->
+  <rect x="890" y="238" width="128" height="100" rx="6" fill="#111A33" stroke="#26334F" stroke-width="1"/>
+  <rect x="900" y="252" width="74" height="32" rx="2" fill="#1B2847" stroke="#33456E" stroke-width="0.8"/>
+  <rect x="905" y="258" width="30" height="4" rx="1" fill="#EAF0FF"/>
+  <rect x="905" y="265" width="42" height="2" rx="1" fill="#8FA3CC"/>
+  <rect x="905" y="274" width="16" height="4" rx="1" fill="#38E1D6"/>
+  <rect x="982" y="252" width="34" height="32" rx="2" fill="url(#accentGrad)" opacity="0.9"/>
+  <rect x="987" y="258" width="16" height="3" rx="1" fill="#0B1020" opacity="0.75"/>
+  <rect x="987" y="264" width="22" height="2" rx="1" fill="#FFFFFF" opacity="0.65"/>
+  <text x="902" y="318" font-family="'Inter',sans-serif" font-size="9" font-weight="600" letter-spacing="2" fill="#7C8AA8">COVER</text>
+
+  <!-- TILE 4 · CHECKLIST -->
+  <rect x="1034" y="238" width="128" height="100" rx="6" fill="#111A33" stroke="#26334F" stroke-width="1"/>
+  <g stroke="#38E1D6" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M1047 256 l3 3 l6 -6"/>
+    <path d="M1047 274 l3 3 l6 -6"/>
+    <path d="M1047 292 l3 3 l6 -6"/>
+    <path d="M1047 310 l3 3 l6 -6"/>
+  </g>
+  <g fill="#33456E">
+    <rect x="1062" y="254" width="58" height="3" rx="1.5"/>
+    <rect x="1062" y="272" width="48" height="3" rx="1.5"/>
+    <rect x="1062" y="290" width="54" height="3" rx="1.5"/>
+    <rect x="1062" y="308" width="40" height="3" rx="1.5"/>
+  </g>
+  <text x="1046" y="334" font-family="'Inter',sans-serif" font-size="9" font-weight="600" letter-spacing="2" fill="#7C8AA8">CHECKLIST</text>
+</svg>

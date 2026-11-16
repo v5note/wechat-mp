@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <!-- diagram.html · 文章正文配图 (宽 1080, 高由 render --height 指定)
-     占位符: BASE_CSS / THEME / ICON_SPRITE / KICKER / TITLE / VISUAL / CAPTION -->
+     占位符: BASE_CSS / THEME / ICON_SPRITE / KICKER / TITLE / VISUAL
+     图注不画进图片，由文章正文的 <figcaption> 统一渲染（见 article.mjs） -->
 <style>
 {{BASE_CSS}}
 html,body{height:100%;margin:0}
@@ -13,7 +14,6 @@ html,body{height:100%;margin:0}
 .dgm .ttl{font-size:56px;font-weight:800;line-height:1.15;letter-spacing:-1px}
 .dgm .kicker{font-size:24px}
 .dgm .vis{flex:1;display:flex;align-items:center;justify-content:center}
-.dgm .cap{font-size:24px;color:var(--text-3);border-top:1px solid var(--border);padding-top:20px}
 </style>
 </head>
 <body class="dgm {{THEME}}">
@@ -23,7 +23,6 @@ html,body{height:100%;margin:0}
   <div class="kicker">{{KICKER}}</div>
   <div class="ttl">{{TITLE}}</div>
   <div class="vis">{{VISUAL}}</div>
-  <div class="cap">{{CAPTION}}</div>
 </div>
 </body>
 </html>

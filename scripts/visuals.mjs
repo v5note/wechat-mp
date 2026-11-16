@@ -31,11 +31,12 @@ export function sidebar(n){
   return s + '</div>';
 }
 export function mockDashboard(){
-  var card = function(num,w){ return '<div class="mcard"><div class="mnum">' + num + '</div><div class="ml ' + w + '"></div></div>'; };
+  // 诚实的骨架占位：不放任何编造的指标数字
+  var card = function(w){ return '<div class="mcard"><div class="ml ' + w + '"></div><div class="ml w1"></div></div>'; };
   var heights = [42,64,50,78,58,88,70];
   var bars = heights.map(function(h){ return '<div class="mbar" style="height:' + h + '%"></div>'; }).join('');
   return '<div class="mock">' + sidebar(6) + '<div class="mmain">' +
-    '<div class="mrow">' + card('128','w2') + card('24','w3') + card('96%','w1') + '</div>' +
+    '<div class="mrow">' + card('w2') + card('w3') + card('w1') + '</div>' +
     '<div class="mchart">' + bars + '</div></div></div>';
 }
 export function mockList(){
@@ -163,7 +164,7 @@ export function buildEnding(c){
     out += '<div class="recap mt-l">' + li + '</div>';
   }
   var rowStyle = 'display:flex;align-items:center;justify-content:space-between;gap:32px;margin-top:56px;padding-top:32px;border-top:1px solid var(--border)';
-  out += '<div style="' + rowStyle + '"><div><div class="kicker">' + esc(c.ctaKicker||'GET STARTED') + '</div>' +
+  out += '<div style="' + rowStyle + '"><div><div class="kicker">' + esc(c.ctaKicker||'') + '</div>' +
     '<div class="headline xs mt-s" style="font-size:40px">' + esc(c.cta||'') + '</div></div>' +
     (c.qr ? '<div class="qr"></div>' : '') + '</div>';
   return out;

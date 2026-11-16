@@ -1,4 +1,4 @@
-# Atlas · 浅色清新版
+# Atlas 浅色清新版
 
 ## 贴图
 - [cards/card-01.png](cards/card-01.png) — cover
