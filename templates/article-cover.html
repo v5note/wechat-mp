@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<!-- article-cover.html · 文章封面 (1080×460, 2.35:1)
+     占位符: BASE_CSS / THEME / ICON_SPRITE / KICKER / TITLE / SUB / VISUAL / BRAND -->
+<style>
+{{BASE_CSS}}
+.cover{width:1080px;height:460px;position:relative;overflow:hidden;
+  background:linear-gradient(140deg,var(--bg1),var(--bg2) 70%,var(--bg3));color:var(--text)}
+.cover .page{padding:56px 72px;flex-direction:row;align-items:center;gap:48px}
+.cover .txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:18px}
+.cover .kicker{font-size:24px}
+.cover .ttl{font-size:60px;font-weight:800;line-height:1.12;letter-spacing:-1.5px;white-space:nowrap}
+.cover .sub{font-size:26px;color:var(--text-2)}
+.cover .vis{flex:0 0 40%;min-width:0;display:flex;align-items:center;justify-content:center}
+.cover .browser{max-width:100%}
+</style>
+</head>
+<body class="cover {{THEME}}">
+{{ICON_SPRITE}}
+<div class="bg"></div>
+<div class="page">
+  <div class="txt">
+    <div class="kicker">{{KICKER}}</div>
+    <div class="ttl">{{TITLE}}</div>
+    <div class="sub">{{SUB}}</div>
+  </div>
+  <div class="vis">{{VISUAL}}</div>
+</div>
+</body>
+</html>

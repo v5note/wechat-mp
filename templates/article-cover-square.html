@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<!-- article-cover-square.html · 文章封面方版 (1080×1080, 1:1) 用于信息流缩略/小绿书首图
+     占位符: BASE_CSS / THEME / ICON_SPRITE / KICKER / TITLE / SUB / VISUAL / BRAND / TAGS -->
+<style>
+{{BASE_CSS}}
+.coversq{width:1080px;height:1080px;position:relative;overflow:hidden;
+  background:linear-gradient(160deg,var(--bg1),var(--bg2) 62%,var(--bg3));color:var(--text)}
+.coversq .page{padding:77px;display:flex;flex-direction:column;gap:26px}
+.coversq .hd{flex:0 0 auto}
+.coversq .mid{display:flex;flex-direction:column;gap:18px;margin-top:6px}
+.coversq .kicker{font-size:24px}
+.coversq .ttl{font-size:74px;font-weight:800;line-height:1.08;letter-spacing:-2px}
+.coversq .sub{font-size:28px;color:var(--text-2)}
+.coversq .vis{flex:1;display:flex;align-items:center;justify-content:center;min-height:0}
+.coversq .tags{flex:0 0 auto}
+.coversq .browser,.coversq .code{width:100%}
+</style>
+</head>
+<body class="coversq {{THEME}}">
+{{ICON_SPRITE}}
+<div class="bg"></div>
+<div class="page">
+  <header class="hd">
+    <div class="brand">
+      <span class="logo">{{LOGO}}</span>
+      <span class="bname">{{BRAND}}</span>
+      <span class="sep">·</span>
+      <span class="col">{{COLUMN}}</span>
+    </div>
+  </header>
+  <div class="mid">
+    <div class="kicker">{{KICKER}}</div>
+    <div class="ttl">{{TITLE}}</div>
+    <div class="sub">{{SUB}}</div>
+  </div>
+  <div class="vis">{{VISUAL}}</div>
+  <div class="tags">{{TAGS}}</div>
+</div>
+</body>
+</html>

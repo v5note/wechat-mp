@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>article-body · 微信文章内联样式配方</title>
+<style>body{margin:0;background:#EDEDED;font-family:-apple-system,"PingFang SC",sans-serif}
+.wrap{max-width:680px;margin:0 auto;background:#fff;padding:22px 18px 60px}
+.hint{font:12px/1.6 monospace;color:#b0b0b0;margin:6px 0 18px;border-left:3px solid #eee;padding-left:10px}
+</style></head>
+<body>
+<!--
+  article-body.html · 微信「图文消息」正文内联样式配方
+  微信编辑器会剥离 <style>/<script>/外链，所以每个元素都写成 style="..."。
+  scripts/build.mjs 用同样的配方（scripts/article.mjs）生成最终 article.html。
+  下面是全部可复用元素的写法：顶部条 / H1 / 摘要 / H2 / 段落 / 引用 / 图片+图注 / 表格 / 高亮 / CTA。
+-->
+<div class="wrap">
+
+  <!-- 顶部条（可选）：公众号定位 -->
+  <p style="margin:0 0 20px;padding:10px 14px;background:#F3F6FF;border-radius:8px;font-size:13px;color:#5B667A;letter-spacing:.5px">
+    每天推荐一个能上手的开源项目 · 栏目「开源精选」
+  </p>
+
+  <!-- H1 标题 -->
+  <h1 style="margin:0 0 12px;font-size:24px;line-height:1.4;font-weight:800;color:#101828">把任意仓库画成一张能点开的架构图</h1>
+
+  <!-- 摘要 / 署名行 -->
+  <p style="margin:0 0 22px;font-size:13px;color:#98A2B3">摘要：一句话读懂整个项目结构，附导出与上手步骤。</p>
+
+  <!-- 导语（灰色，可放引用块） -->
+  <p style="margin:0 0 20px;font-size:16px;line-height:1.75;color:#6B6B6B">接手一个新仓库，最花时间的往往不是改代码，而是先弄清它到底怎么跑起来的。</p>
+
+  <!-- H2 小节标题（一、二、三 或 01 02 03，全文统一） -->
+  <h2 style="margin:34px 0 14px;font-size:19px;font-weight:800;color:#2563EB;line-height:1.4">一、先说结论</h2>
+
+  <!-- 正文段落：16px / 1.75 / #3F3F3F / 1.2em 段距 -->
+  <p style="margin:0 0 19px;font-size:16px;line-height:1.75;color:#3F3F3F;letter-spacing:.5px">一句话概括：把仓库丢进去，它把模块、依赖和调用关系画成一张可点击的图。<strong style="color:#2563EB">重点结论用加粗+主题色</strong>，关键词可用高亮。</p>
+
+  <!-- 高亮 -->
+  <p style="margin:0 0 19px;font-size:16px;line-height:1.75;color:#3F3F3F">它的定位是 <span style="background:#FFF3C4;padding:1px 5px;border-radius:4px">只读的架构地图</span>，不替你改代码。</p>
+
+  <!-- 引用块：左边框 4px 主题色 + 浅灰底 -->
+  <blockquote style="margin:0 0 22px;padding:14px 16px;background:#F7F8FA;border-left:4px solid #2563EB;border-radius:0 8px 8px 0;font-size:15px;line-height:1.7;color:#4B5563">
+    架构图的价值不在好看，而在让你三分钟内定位到「这个功能由哪几个模块负责」。
+  </blockquote>
+
+  <!-- 图片 + 图注：宽 100% 圆角 10px，图注 13px 灰色居中 -->
+  <figure style="margin:0 0 24px;text-align:center">
+    <img src="images/fig1.png" style="width:100%;border-radius:10px;display:block">
+    <figcaption style="margin-top:8px;font-size:13px;color:#9A9A9A">图1：仓库 → 模块 → 依赖的一张总图</figcaption>
+  </figure>
+
+  <!-- 表格：斑马纹 + 主题色表头 -->
+  <table style="width:100%;border-collapse:collapse;margin:0 0 24px;font-size:14px">
+    <thead><tr>
+      <th style="background:#2563EB;color:#fff;padding:10px 12px;text-align:left;font-weight:700">能力</th>
+      <th style="background:#2563EB;color:#fff;padding:10px 12px;text-align:left;font-weight:700">说明</th>
+    </tr></thead>
+    <tbody>
+      <tr style="background:#fff"><td style="padding:10px 12px;border-bottom:1px solid #EEF1F6">结构解析</td><td style="padding:10px 12px;border-bottom:1px solid #EEF1F6;color:#5B667A">识别模块与入口</td></tr>
+      <tr style="background:#F7F9FC"><td style="padding:10px 12px;border-bottom:1px solid #EEF1F6">依赖图</td><td style="padding:10px 12px;border-bottom:1px solid #EEF1F6;color:#5B667A">画出调用关系</td></tr>
+    </tbody>
+  </table>
+
+  <!-- 分割线 -->
+  <div style="height:1px;background:#E5E7EB;margin:28px 0"></div>
+
+  <!-- CTA / 项目地址 -->
+  <p style="margin:0 0 10px;font-size:15px;line-height:1.8;color:#3F3F3F"><strong>项目地址：</strong>https://example.com/atlas</p>
+  <p style="margin:0;padding:14px 16px;background:#EEF4FF;border-radius:10px;font-size:14px;color:#2563EB;text-align:center">关注「开源精选」，回复「架构」领取模板</p>
+
+</div>
+</body>
+</html>

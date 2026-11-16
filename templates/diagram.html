@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<!-- diagram.html · 文章正文配图 (宽 1080, 高由 render --height 指定)
+     占位符: BASE_CSS / THEME / ICON_SPRITE / KICKER / TITLE / VISUAL / CAPTION -->
+<style>
+{{BASE_CSS}}
+html,body{height:100%;margin:0}
+.dgm{width:1080px;height:100vh;position:relative;overflow:hidden;
+  background:linear-gradient(160deg,var(--bg1),var(--bg2) 70%,var(--bg3));color:var(--text)}
+.dgm .page{padding:60px 72px;gap:30px}
+.dgm .ttl{font-size:56px;font-weight:800;line-height:1.15;letter-spacing:-1px}
+.dgm .kicker{font-size:24px}
+.dgm .vis{flex:1;display:flex;align-items:center;justify-content:center}
+.dgm .cap{font-size:24px;color:var(--text-3);border-top:1px solid var(--border);padding-top:20px}
+</style>
+</head>
+<body class="dgm {{THEME}}">
+{{ICON_SPRITE}}
+<div class="bg"></div>
+<div class="page">
+  <div class="kicker">{{KICKER}}</div>
+  <div class="ttl">{{TITLE}}</div>
+  <div class="vis">{{VISUAL}}</div>
+  <div class="cap">{{CAPTION}}</div>
+</div>
+</body>
+</html>

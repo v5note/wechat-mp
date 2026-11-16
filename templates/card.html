@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<!-- ============================================================
+  card.html · 贴图单卡外壳 (1080×1440, 3:4)
+  占位符由 scripts/build.mjs 注入：
+    BASE_CSS / THEME / ICON_SPRITE / LOGO / BRAND / COLUMN
+    BADGE / MAIN / FOOTER_LEFT / PAGE
+  自定义时只改 MAIN（正文区），头尾与主题自动统一。
+  ============================================================ -->
+<style>{{BASE_CSS}}</style>
+</head>
+<body class="card {{THEME}}">
+{{ICON_SPRITE}}
+<div class="bg"></div>
+<div class="page">
+  <header class="hd">
+    <div class="brand">
+      <span class="logo">{{LOGO}}</span>
+      <span class="bname">{{BRAND}}</span>
+      <span class="sep">·</span>
+      <span class="col">{{COLUMN}}</span>
+    </div>
+    {{BADGE}}
+  </header>
+
+  <main class="main">
+{{MAIN}}
+  </main>
+
+  <footer class="ft">
+    <span>{{FOOTER_LEFT}}</span>
+    <span>{{PAGE}}</span>
+  </footer>
+</div>
+</body>
+</html>
