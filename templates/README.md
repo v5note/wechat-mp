@@ -10,6 +10,7 @@
 | diagram.html | 文章正文配图（架构图 / 流程图 / 对比等） | 宽 1080，高自定 |
 | article-body.html | 微信文章内联样式**配方参考**（由 scripts/gen-article-body.mjs 生成） | 流式 |
 | video-cover.html | 视频号竖版封面 | 1080×1920（9:16） |
+| case-banner.html | README 案例区头图 | 1600×720 |
 
 ## card.html 占位符
 

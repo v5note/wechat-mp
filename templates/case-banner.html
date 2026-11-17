@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<!-- case-banner.html · README 案例区头图 (1600×720)
+     占位符: BASE_CSS / ICON_SPRITE / IMG_FOREST / IMG_ROSE / IMG_CREAM / IMG_BAIZE / IMG_CYBER -->
+<style>
+{{BASE_CSS}}
+html,body{margin:0}
+.cb{width:1600px;height:720px;position:relative;overflow:hidden;color:#F5F7FF;
+  background:
+    radial-gradient(900px 620px at 88% -10%,rgba(98,85,215,.34),transparent 62%),
+    radial-gradient(760px 560px at -8% 112%,rgba(45,226,230,.16),transparent 60%),
+    linear-gradient(135deg,#0A0F1F,#111936 58%,#080C18)}
+.cb:before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.06) 1px,transparent 1px);background-size:26px 26px;opacity:.7}
+.cb .page{position:absolute;inset:0;padding:70px 76px}
+.cb .left{width:540px;display:flex;flex-direction:column;gap:22px;position:relative;z-index:2}
+.cb .kick{display:inline-flex;align-items:center;gap:10px;font-size:22px;font-weight:700;letter-spacing:2px;color:#9FB0FF}
+.cb .kick i{width:10px;height:10px;border-radius:50%;background:#5EEAD4;display:block;box-shadow:0 0 16px #5EEAD4}
+.cb h1{margin:0;font-size:82px;line-height:1.06;letter-spacing:-3px;font-weight:800;color:#fff}
+.cb h1 .g{background:linear-gradient(92deg,#8B9DFF,#5EEAD4);-webkit-background-clip:text;background-clip:text;color:transparent}
+.cb .sub{margin:0;font-size:22px;line-height:1.62;color:#AEB8D6;max-width:500px}
+.cb .chips{display:flex;gap:10px;flex-wrap:nowrap;margin-top:4px}
+.cb .chip{font-size:16px;font-weight:700;color:#C9D2F0;background:rgba(255,255,255,.06);
+  border:1px solid rgba(160,180,255,.22);padding:8px 14px;border-radius:999px;white-space:nowrap}
+.cb .chip.on{color:#0A0F1F;background:linear-gradient(90deg,#8B9DFF,#5EEAD4);border:none}
+.cb .right{position:absolute;right:56px;top:50%;transform:translateY(-50%);
+  display:flex;align-items:center;justify-content:center;gap:12px;width:900px;z-index:2}
+.cb .item{width:166px;flex:0 0 auto;display:flex;flex-direction:column;gap:9px;align-items:center;
+  transform:rotate(var(--r)) translateY(var(--y))}
+.cb .thumb{width:166px;height:221px;border-radius:13px;overflow:hidden;
+  border:1px solid rgba(255,255,255,.16);box-shadow:0 20px 40px rgba(0,0,0,.5);background:#0B1020}
+.cb .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.cb .lb{font-size:16px;font-weight:700;color:#C9D2F0;letter-spacing:.3px;white-space:nowrap}
+.cb .lb b{color:#5EEAD4;font-weight:800}
+.cb .glow{position:absolute;right:120px;top:50%;width:760px;height:420px;transform:translateY(-50%);
+  background:radial-gradient(closest-side,rgba(98,85,215,.28),transparent 72%);filter:blur(18px);z-index:1}
+.cb .foot{position:absolute;left:76px;bottom:34px;font-size:16px;color:#6E7FA3;letter-spacing:1px;z-index:2}
+</style>
+</head>
+<body>
+<div class="cb">
+  <div class="glow"></div>
+  <div class="page">
+    <div class="left">
+      <div class="kick"><i></i>WECHAT-MP · STYLE CASES</div>
+      <h1>五种风格<br><span class="g">五套可发样例</span></h1>
+      <p class="sub">从 35 张贴图 / 15 篇文章 / 3 个视频号素材提炼；每套含贴图 + 文章（+ 可选视频号）。</p>
+      <div class="chips">
+        <span class="chip on">15 套主题</span>
+        <span class="chip">11 种贴图风格</span>
+        <span class="chip">6 种文章骨架</span>
+        <span class="chip">5 个案例</span>
+      </div>
+    </div>
+    <div class="right">
+      <div class="item" style="--r:-4deg;--y:12px"><div class="thumb"><img src="{{IMG_FOREST}}"></div><div class="lb">forest · <b>开源</b></div></div>
+      <div class="item" style="--r:3deg;--y:-12px"><div class="thumb"><img src="{{IMG_ROSE}}"></div><div class="lb">rose · <b>设计</b></div></div>
+      <div class="item" style="--r:-2deg;--y:8px"><div class="thumb"><img src="{{IMG_CREAM}}"></div><div class="lb">cream · <b>图解</b></div></div>
+      <div class="item" style="--r:3deg;--y:-10px"><div class="thumb"><img src="{{IMG_BAIZE}}"></div><div class="lb">baize · <b>真实</b></div></div>
+      <div class="item" style="--r:-4deg;--y:14px"><div class="thumb"><img src="{{IMG_CYBER}}"></div><div class="lb">cyber · <b>合集</b></div></div>
+    </div>
+  </div>
+  <div class="foot">wechat-mp · 全部由 HTML 模板 + 无头 Chrome 真实渲染</div>
+</div>
+</body>
+</html>

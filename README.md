@@ -108,6 +108,8 @@
 
 ### 参考风格案例
 
+![参考风格案例头图](assets/case-banner.png)
+
 从上面的参考素材提炼风格后，仓库另附 5 个高完成度案例（除白泽为真实产品外，其余为演示虚构项目，用于展示版式与写法）：
 
 | 案例 | 风格 | 体裁 | 产出 |
@@ -121,6 +123,8 @@
 ![深度绿色开源案例贴图墙](examples/cases/forest-stackbase/overview.png)
 ![白泽真实案例贴图墙](examples/cases/baize-baize/overview.png)
 ![霓虹合集案例贴图墙](examples/cases/cyber-agentbench/overview.png)
+
+> 头图由 `node scripts/case-banner.mjs` 生成（1600×720），素材取自 5 个案例的封面卡。
 
 ### 可选增强：风格样张与方向提案
 
@@ -254,6 +258,7 @@ wechat-mp/
 │   ├── tokens.css         # 15 套主题令牌 + 卡片 / 视觉组件样式
 │   ├── icons.svg          # 图标 sprite
 │   ├── icons/README.md    # 图标用法与清单
+│   ├── case-banner.png    # README 案例区头图（1600×720）
 │   └── style-specimens/   # 主题样张（方向提案用）
 ├── templates/
 │   ├── card.html          # 贴图卡片外壳（1080×1440）
@@ -261,6 +266,7 @@ wechat-mp/
 │   ├── article-cover-square.html # 文章封面 1:1 方版（1080×1080）
 │   ├── diagram.html       # 正文配图（宽 1080，高自定）
 │   ├── video-cover.html   # 视频号竖版封面（1080×1920）
+│   ├── case-banner.html   # README 案例区头图（1600×720）
 │   ├── article-body.html  # 微信内联样式配方参考
 │   └── README.md          # 模板占位符与卡片数据说明
 ├── scripts/
@@ -274,6 +280,7 @@ wechat-mp/
 │   ├── article-tokens.mjs # 文章样式唯一来源
 │   ├── gen-article-body.mjs # 由 tokens 生成配方参考
 │   ├── route.mjs          # 智能路由：主题 → 体裁/主题/骨架推荐
+│   ├── case-banner.mjs    # 生成 README 案例区头图
 │   ├── card-render.mjs    # 单卡渲染（样张 / 方向缩略图共用）
 │   ├── sheet.mjs          # 多图拼对照图
 │   ├── gen-specimens.mjs  # 生成全部 15 套主题样张

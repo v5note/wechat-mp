@@ -47,6 +47,14 @@ test('no undefined image refs in demo', () => {
   }
 });
 
+test('case banner exists at 1600×720', () => {
+  const p = 'assets/case-banner.png';
+  assert.ok(existsSync(p), 'missing case banner');
+  const b = readFileSync(p);
+  assert.equal(b.readUInt32BE(16), 1600);
+  assert.equal(b.readUInt32BE(20), 720);
+});
+
 test('theme specimens exist', () => {
   for (const t of ['magazine', 'guofeng', 'mono', 'night-cyan', 'aurora', 'forest', 'ocean', 'cream', 'cyber', 'sky', 'rose', 'midnight', 'baize']) {
     assert.ok(existsSync('assets/style-specimens/sheet-' + t + '.png'), 'missing specimen ' + t);
