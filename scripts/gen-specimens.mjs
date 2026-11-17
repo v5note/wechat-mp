@@ -7,10 +7,21 @@ import { renderSheet } from './sheet.mjs';
 import { ROOT } from './chrome.mjs';
 
 const themes = [
+  { theme: 'dark', label: 'dark · 深色科技', column: '科技前线' },
+  { theme: 'light', label: 'light · 浅色清新', column: '效率工坊' },
   { theme: 'magazine', label: 'magazine · 杂志米色', column: '杂志编辑' },
   { theme: 'guofeng', label: 'guofeng · 国风朱砂', column: '国风专栏' },
   { theme: 'mono', label: 'mono · 极简黑白', column: '极简观察' },
   { theme: 'night-cyan', label: 'night-cyan · 深底青', column: '科技前线' },
+  { theme: 'aurora', label: 'aurora · 浅蓝工具推荐', column: '工具推荐' },
+  { theme: 'forest', label: 'forest · 深绿开源项目', column: '开源精选' },
+  { theme: 'ocean', label: 'ocean · 深蓝工具发布', column: '软件发布' },
+  { theme: 'cream', label: 'cream · 米色架构图解', column: '原理图解' },
+  { theme: 'cyber', label: 'cyber · 暗黑霓虹合集', column: '榜单合集' },
+  { theme: 'sky', label: 'sky · 亮蓝清单干货', column: '干货清单' },
+  { theme: 'rose', label: 'rose · 浅红新开源', column: '新开源' },
+  { theme: 'midnight', label: 'midnight · 深紫夜', column: '灵感清单' },
+  { theme: 'baize', label: 'baize · 白泽品牌紫', column: 'Agent 运行时' },
 ];
 
 const outDir = join(ROOT, 'assets', 'style-specimens');

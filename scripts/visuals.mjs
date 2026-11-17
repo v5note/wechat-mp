@@ -1,5 +1,27 @@
 // scripts/visuals.mjs — 卡片视觉组件库（纯字符串拼装，输出 HTML 片段）
 // 所有组件遵守 references/image-design-system.md 的规范。
+import { readFileSync } from 'node:fs';
+import { join, dirname, isAbsolute } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
+
+// 把本地图片读成 data URI，避免相对路径在渲染临时目录里失效（真实品牌截图用）
+export function dataUri(p){
+  const abs = isAbsolute(p) ? p : join(ROOT, p);
+  const b = readFileSync(abs);
+  const l = abs.toLowerCase();
+  const mime = (l.endsWith('.jpg') || l.endsWith('.jpeg')) ? 'image/jpeg'
+    : l.endsWith('.webp') ? 'image/webp'
+    : l.endsWith('.svg') ? 'image/svg+xml' : 'image/png';
+  return 'data:' + mime + ';base64,' + b.toString('base64');
+}
+
+export function shotFrame(url, caption, src){
+  return '<div class="shotwrap"><div class="shot"><div class="sbar"><span class="bdot r"></span><span class="bdot y"></span><span class="bdot g"></span>' +
+    '<span class="surl">' + esc(url || '') + '</span></div><img src="' + dataUri(src) + '"></div>' +
+    (caption ? '<div class="shotcap">' + ic('search') + esc(caption) + '</div>' : '') + '</div>';
+}
 
 export function esc(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 export function ic(name){ return '<svg class="ic"><use href="#ic-' + name + '"/></svg>'; }
@@ -9,6 +31,11 @@ export function hl(text, accent){
   var i = text.indexOf(accent);
   if(i < 0){ return esc(text); }
   return esc(text.slice(0,i)) + '<span class="acc">' + esc(accent) + '</span>' + esc(text.slice(i+accent.length));
+}
+
+export function titleHtml(t, accent){
+  if(Array.isArray(t)){ return t.map(function(x){ return hl(x, accent); }).join('<br>'); }
+  return hl(t, accent);
 }
 
 export function chip(t){
@@ -99,15 +126,81 @@ export function ring(center, sides){
   return '<div class="ring"><div class="center">' + ic(center||'bolt') + '</div><div class="side" style="flex-direction:row;gap:14px">' + s + '</div></div>';
 }
 
+// ---------- steps (numbered horizontal) ----------
+export function steps(items){
+  var parts = [];
+  (items||[]).forEach(function(n, i){
+    parts.push('<div class="step"><div class="snum">' + esc(n.num != null ? n.num : (i+1)) + '</div>' +
+      '<div class="st">' + esc(n.t||'') + '</div>' + (n.d ? '<div class="sd">' + esc(n.d) + '</div>' : '') + '</div>');
+    if(i < items.length - 1){ parts.push('<div class="sarrow">' + ic('arrow-right') + '</div>'); }
+  });
+  return '<div class="steps">' + parts.join('') + '</div>';
+}
+
+// ---------- matrix / collection grid ----------
+export function matrix(items, cols, compact){
+  var c = cols || (items && items.length >= 6 ? 3 : 2);
+  var cards = (items||[]).map(function(x){
+    var rows = (x.fields||[]).map(function(f){ return '<div class="mxrow"><span>' + esc(f.k) + '</span><b>' + esc(f.v) + '</b></div>'; }).join('');
+    var tags = (x.tags||[]).length ? '<div class="mxtags">' + x.tags.map(function(t){ return '<span class="mxtag">' + esc(t) + '</span>'; }).join('') + '</div>' : '';
+    return '<div class="mxcard"><div class="mxhead">' + (x.num ? '<span class="mxnum">' + esc(x.num) + '</span>' : '') +
+      '<span class="mxttl">' + esc(x.t||'') + '</span></div>' +
+      (x.desc ? '<div class="mxdesc">' + esc(x.desc) + '</div>' : '') +
+      (rows ? '<div class="mxfields">' + rows + '</div>' : '') + tags + '</div>';
+  }).join('');
+  return '<div class="matrix c' + c + (compact ? ' compact' : '') + '">' + cards + '</div>';
+}
+
+// ---------- checklist ----------
+export function checklist(items){
+  var rows = (items||[]).map(function(x){
+    var t = typeof x === 'string' ? x : (x.t||'');
+    var b = typeof x === 'object' && x.b ? '<b>' + esc(x.b) + '</b>' : '';
+    var txt = typeof x === 'string' ? esc(x) : (esc(x.t||'') + (x.b ? '<b>' + esc(x.b) + '</b>' : '') + (x.d ? esc(x.d) : ''));
+    return '<div class="clrow"><div class="clbox">' + ic('check') + '</div><div class="cltxt">' + txt + '</div></div>';
+  }).join('');
+  return '<div class="checklist">' + rows + '</div>';
+}
+
+// ---------- key-value table ----------
+export function kv(rows){
+  var body = (rows||[]).map(function(r){ return '<div class="kvrow"><span class="kvk">' + esc(r.k) + '</span><span class="kvv">' + esc(r.v) + '</span></div>'; }).join('');
+  return '<div class="kv">' + body + '</div>';
+}
+
+// ---------- big stats ----------
+export function stats(items){
+  var s = (items||[]).map(function(x){ return '<div class="stat"><div class="num">' + esc(x.num) + '</div><div class="lb">' + esc(x.label||'') + '</div></div>'; }).join('');
+  return '<div class="stats">' + s + '</div>';
+}
+
+// ---------- bullet list ----------
+export function blist(items){
+  var rows = (items||[]).map(function(x, i){
+    var head = x.icon ? '<div class="bico">' + ic(x.icon) + '</div>' : '<div class="bidx">' + esc(x.num != null ? x.num : (i+1)) + '</div>';
+    return '<div class="brow">' + head + '<div class="btxt"><div class="bt">' + esc(x.t||'') + '</div>' +
+      (x.d ? '<div class="bd">' + esc(x.d) + '</div>' : '') + '</div></div>';
+  }).join('');
+  return '<div class="blist">' + rows + '</div>';
+}
+
 // ---------- generic hero dispatcher ----------
 export function hero(h){
   if(!h) return '';
   if(h.type === 'browser'){ return browserFrame(h.url, h.ui === 'list' ? mockList() : (h.ui === 'board' ? mockBoard() : mockDashboard())); }
   if(h.type === 'code'){ return codeWindow(h.file, h.lines); }
   if(h.type === 'flow'){ return flow(h.nodes, h.vertical); }
+  if(h.type === 'steps'){ return steps(h.nodes || h.items); }
   if(h.type === 'stack'){ return stack(h.layers); }
   if(h.type === 'tiles'){ return tiles(h.items); }
   if(h.type === 'ring'){ return ring(h.center, h.sides); }
+  if(h.type === 'matrix'){ return matrix(h.items, h.cols, h.compact); }
+  if(h.type === 'checklist'){ return checklist(h.items); }
+  if(h.type === 'kv'){ return kv(h.rows); }
+  if(h.type === 'stats'){ return stats(h.items); }
+  if(h.type === 'blist'){ return blist(h.items); }
+  if(h.type === 'compare'){ return compareBlock(h.left || {}, h.right || {}); }
+  if(h.type === 'shot'){ return shotFrame(h.url, h.caption, h.src); }
   return '';
 }
 
@@ -127,7 +220,7 @@ export function buildPoint(c){
   var out = '';
   if(c.num){ out += '<div class="ghost">' + esc(c.num) + '</div>'; }
   if(c.label){ out += '<div class="chip accent" style="align-self:flex-start">' + (c.labelIcon ? ic(c.labelIcon) : '') + esc(c.label) + '</div>'; }
-  if(c.title){ out += '<h2 class="headline sm ' + (c.label ? 'mt-m' : '') + '">' + hl(c.title, c.accent) + '</h2>'; }
+  if(c.title){ out += '<h2 class="headline sm ' + (c.label ? 'mt-m' : '') + '">' + titleHtml(c.title, c.accent) + '</h2>'; }
   if(c.body){ out += '<p class="body mt-m" style="max-width:900px">' + esc(c.body) + '</p>'; }
   if(c.hero){ out += '<div class="fill">' + hero(c.hero) + '</div>'; }
   return out;
@@ -136,29 +229,31 @@ export function buildPoint(c){
 export function buildDiagram(c){
   var out = '';
   if(c.kicker){ out += '<div class="kicker">' + esc(c.kicker) + '</div>'; }
-  if(c.title){ out += '<h2 class="headline sm ' + (c.kicker ? 'mt-m' : '') + '">' + hl(c.title, c.accent) + '</h2>'; }
+  if(c.title){ out += '<h2 class="headline sm ' + (c.kicker ? 'mt-m' : '') + '">' + titleHtml(c.title, c.accent) + '</h2>'; }
   if(c.hero){ out += '<div class="fill">' + hero(c.hero) + '</div>'; }
   if(c.caption){ out += '<div class="caption mt-m">' + esc(c.caption) + '</div>'; }
   return out;
 }
 
+function cmpCol(side, cls){
+  var li = ((side && side.items) || []).map(function(x){
+    return '<li class="' + (cls === 'new' ? 'yes' : 'non') + '">' + ic(cls === 'new' ? 'check' : 'x') + esc(x) + '</li>';
+  }).join('');
+  return '<div class="col ' + cls + '"><div class="chead">' + esc((side && side.title) || '') + '</div><ul>' + li + '</ul></div>';
+}
+export function compareBlock(left, right){ return '<div class="cmp">' + cmpCol(left, 'old') + cmpCol(right, 'new') + '</div>'; }
+
 export function buildCompare(c){
-  var col = function(side, cls){
-    var li = (side.items||[]).map(function(x){
-      return '<li class="' + (cls === 'new' ? 'yes' : 'non') + '">' + ic(cls === 'new' ? 'check' : 'x') + esc(x) + '</li>';
-    }).join('');
-    return '<div class="col ' + cls + '"><div class="chead">' + esc(side.title||'') + '</div><ul>' + li + '</ul></div>';
-  };
   var out = '';
-  if(c.title){ out += '<h2 class="headline sm">' + hl(c.title, c.accent) + '</h2>'; }
-  out += '<div class="cmp ' + (c.title ? 'mt-l' : '') + '">' + col(c.left,'old') + col(c.right,'new') + '</div>';
+  if(c.title){ out += '<h2 class="headline sm">' + titleHtml(c.title, c.accent) + '</h2>'; }
+  out += '<div class="' + (c.title ? 'mt-l' : '') + '">' + compareBlock(c.left, c.right) + '</div>';
   if(c.caption){ out += '<div class="caption mt-m">' + esc(c.caption) + '</div>'; }
   return out;
 }
 
 export function buildEnding(c){
   var out = '';
-  if(c.title){ out += '<h2 class="headline sm">' + hl(c.title, c.accent) + '</h2>'; }
+  if(c.title){ out += '<h2 class="headline sm">' + titleHtml(c.title, c.accent) + '</h2>'; }
   if(c.points && c.points.length){
     var li = c.points.map(function(p){ return '<div class="ri"><span class="ck">' + ic('check') + '</span>' + esc(p) + '</div>'; }).join('');
     out += '<div class="recap mt-l">' + li + '</div>';
@@ -170,11 +265,54 @@ export function buildEnding(c){
   return out;
 }
 
+export function buildList(c){
+  var out = '';
+  if(c.kicker){ out += '<div class="kicker' + (c.kickerPill ? ' pill' : '') + '">' + esc(c.kicker) + '</div>'; }
+  if(c.title){ out += '<h2 class="headline sm ' + (c.kicker ? 'mt-m' : '') + '">' + titleHtml(c.title, c.accent) + '</h2>'; }
+  if(c.body){ out += '<p class="body mt-s" style="max-width:920px">' + esc(c.body) + '</p>'; }
+  if(c.items || c.points){
+    var items = c.items || (c.points||[]).map(function(p){ return {t:p}; });
+    out += '<div class="mt-l">' + blist(items) + '</div>';
+  }
+  return out;
+}
+
+export function buildQuote(c){
+  var out = '<div class="qmark">“</div>';
+  out += '<div class="bigquote">' + hl(c.quote || c.title || '', c.accent) + '</div>';
+  if(c.author){ out += '<div class="qauthor">— ' + esc(c.author) + '</div>'; }
+  return out;
+}
+
+export function buildGrid(c){
+  var out = '';
+  if(c.kicker){ out += '<div class="kicker' + (c.kickerPill ? ' pill' : '') + '">' + esc(c.kicker) + '</div>'; }
+  if(c.title){ out += '<h2 class="headline sm ' + (c.kicker ? 'mt-m' : '') + '">' + titleHtml(c.title, c.accent) + '</h2>'; }
+  if(c.hero){ out += '<div class="fill">' + hero(c.hero) + '</div>'; }
+  else if(c.items){ out += '<div class="mt-l">' + matrix(c.items, c.cols, c.compact) + '</div>'; }
+  if(c.caption){ out += '<div class="caption mt-s">' + esc(c.caption) + '</div>'; }
+  return out;
+}
+
+export function buildStat(c){
+  var out = '';
+  if(c.kicker){ out += '<div class="kicker' + (c.kickerPill ? ' pill' : '') + '">' + esc(c.kicker) + '</div>'; }
+  if(c.title){ out += '<h2 class="headline sm ' + (c.kicker ? 'mt-m' : '') + '">' + titleHtml(c.title, c.accent) + '</h2>'; }
+  if(c.body){ out += '<p class="body mt-s">' + esc(c.body) + '</p>'; }
+  if(c.stats){ out += '<div class="mt-l">' + stats(c.stats) + '</div>'; }
+  if(c.caption){ out += '<div class="caption mt-m">' + esc(c.caption) + '</div>'; }
+  return out;
+}
+
 export function buildCard(c){
   if(c.variant === 'cover') return buildCover(c);
   if(c.variant === 'point') return buildPoint(c);
   if(c.variant === 'diagram') return buildDiagram(c);
   if(c.variant === 'compare') return buildCompare(c);
   if(c.variant === 'ending') return buildEnding(c);
+  if(c.variant === 'list') return buildList(c);
+  if(c.variant === 'quote') return buildQuote(c);
+  if(c.variant === 'grid') return buildGrid(c);
+  if(c.variant === 'stat') return buildStat(c);
   return '<h2 class="headline sm">' + hl(c.title||'', c.accent) + '</h2>';
 }

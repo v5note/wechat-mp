@@ -13,7 +13,16 @@ const LABELS = {
   'magazine': '杂志米色',
   'guofeng': '国风墨朱',
   'mono': '极简黑白',
-  'night-cyan': '深底青'
+  'night-cyan': '深底青',
+  'aurora': '浅蓝工具推荐',
+  'forest': '深绿开源项目',
+  'ocean': '深蓝工具发布',
+  'cream': '米色架构图解',
+  'cyber': '暗黑霓虹合集',
+  'sky': '亮蓝清单干货',
+  'rose': '浅红新开源',
+  'midnight': '深紫夜',
+  'baize': '白泽品牌紫'
 };
 
 function specimenPath(name) {

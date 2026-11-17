@@ -7,12 +7,12 @@
 
 ![wechat-mp · WeChat Official Account Content Studio](assets/banner.svg)
 
-**Turn any topic into publish-ready WeChat content**: image-card series + long-form articles — **2 versions × 2 formats = 4 samples**.
-Every image follows the same **image design system**, every article follows the same **article format spec** — stable, reproducible, no improvisation.
+**Turn any topic into publish-ready WeChat content**: image-card series + long-form articles (+ optional short video) — **by default 2 versions × 2 formats = 4 samples**.
+It ships **15 reference-style themes** and genre-aware routing (distilled from 35 image posters, 15 articles, 3 video-channel clips). Every image follows the same **image design system**, every article the same **article format spec** — stable, reproducible, no improvisation.
 
 > This is an **Agent Skill**. Install it into your AI Agent and say "turn this topic into WeChat content", and it will produce deliverables according to the specs in this repo.
 
-[简体中文](README.md) · [Demo output](examples/demo/)
+[简体中文](README.md) · [Demo output](examples/demo/) · [Style cases](examples/cases/)
 
 ---
 
@@ -63,11 +63,14 @@ As a result, the output stays stylistically consistent no matter who or when gen
 ## Features
 
 - ✅ **Four samples in one run**: 2 versions (Dark Tech / Light Clean) × 2 formats (cards / article) = 4 samples.
+- ✅ **Style library + smart routing**: 15 themes (dark / forest / ocean / cream / cyber / sky / rose / midnight / baize …) × 11 poster styles × 6 article skeletons, auto-recommended by topic — see [style-catalog](references/style-catalog.md).
+- ✅ **Optional video-channel output**: `spec.video` renders a 9:16 cover (1080×1920) + spoken script + storyboard — see [video-format](references/video-format.md).
 - ✅ **Content separated from layout**: change one `spec.json` to regenerate everything; copy and images share one source.
 - ✅ **Controlled specs**: cards fixed at 1080×1440 (3:4), cover 1080×460 (2.35:1) plus a 1:1 square version 1080×1080, in-body figures 1080 wide.
 - ✅ **WeChat paste-ready**: article HTML uses inline styles only — no external CSS or scripts — so pasting keeps the styling.
 - ✅ **Automated check + preview**: `check.mjs` validates sizes/words/image refs/captions/md-html parity; `preview.mjs` builds overview sheets; broken output fails the build.
-- ✅ **Built-in visual components**: browser frame, code window, flow diagram, layered diagram, icon tiles, comparison card, and more.
+- ✅ **Built-in visual components**: browser frame, code window, flow, numbered steps, layered diagram, icon tiles, field-card matrix, checklist, big stats, real-screenshot frame, and more.
+- ✅ **Real-product case**: supports `shot` real screenshots and `logoImg` brand logos; the Baize case uses the official logo and real admin screenshots.
 - ✅ **Zero extra dependencies**: only Node.js 18+ and a local Chrome / Chromium; no npm packages.
 - ✅ **Delivery self-check**: every sample ships with a copy deck (`文案.md`) and a publish checklist (`发布清单.md`).
 
@@ -100,11 +103,27 @@ The repo ships one complete demonstration (the "Atlas" topic is fictional demo d
 
 See [examples/demo/README.md](examples/demo/README.md) for details and reproduce commands.
 
+### Reference-style cases
+
+Distilled from the reference materials, five high-fidelity cases are included (all fictional demo projects except Baize, which is a real product):
+
+| Case | Style | Genre | Output |
+|---|---|---|---|
+| [forest-stackbase](examples/cases/forest-stackbase/) | Deep-green open source (forest) | Open-source pick | 7 posters + 1,065-char article + video (script/storyboard/cover) |
+| [rose-mosaic](examples/cases/rose-mosaic/) | Light-red new open source (rose) | Design tips | 6 posters + 895-char article + video (carousel script) |
+| [cream-agent](examples/cases/cream-agent/) | Cream architecture explainer (cream) | Principle explainer | 6 posters + 937-char article |
+| [baize-baize](examples/cases/baize-baize/) | Baize brand purple (baize, **real product**) | Agent-runtime pick | 9 posters (real admin screenshots) + 1,465-char article + video |
+| [cyber-agentbench](examples/cases/cyber-agentbench/) | Dark-neon collection (cyber) | Collection / ranking | 6 posters + 928-char article + video |
+
+![Forest open-source case](examples/cases/forest-stackbase/overview.png)
+![Baize real-product case](examples/cases/baize-baize/overview.png)
+![Neon collection case](examples/cases/cyber-agentbench/overview.png)
+
 ### Optional extras: theme specimens & directions
 
 ![Theme specimens](assets/style-specimens/overview.png)
 
-**These are optional extras; the 4 core samples still work without them.** The 4 theme specimens are real renders from `node scripts/gen-specimens.mjs`; see [directions.png](examples/demo/directions/directions.png) for a direction-proposal example and [directions-auto/directions.png](examples/demo/directions-auto/directions.png) for the semi-auto version.
+**These are optional extras; the 4 core samples still work without them.** The 15 theme specimens are real renders from `node scripts/gen-specimens.mjs`; see [directions.png](examples/demo/directions/directions.png) for a direction-proposal example and [directions-auto/directions.png](examples/demo/directions-auto/directions.png) for the semi-auto version.
 
 ## Installation
 
@@ -148,7 +167,7 @@ node scripts/build.mjs --spec examples/demo/v1-dark.spec.json  --out examples/de
 node scripts/build.mjs --spec examples/demo/v2-light.spec.json --out examples/demo/v2-light
 ```
 
-(Optional) Generate 4 theme specimens / 3 direction thumbnails:
+(Optional) Generate all 15 theme specimens / 3 direction thumbnails:
 
 ```bash
 node scripts/gen-specimens.mjs
@@ -167,6 +186,7 @@ v1-dark/
 │   ├── images/fig1..N.png (in-body figures, ≥3)
 │   ├── article.md         (Markdown body)
 │   └── article.html       (WeChat-pasteable inline-styled HTML)
+├── video/                 (optional) cover.png + 口播稿.md + 分镜.md
 ├── 文案.md                (title options · summary · per-image caption script)
 ├── 发布清单.md            (image count / order / captions / upload checks)
 └── index.md               (index for this version)
@@ -176,15 +196,16 @@ The content source `v1-dark.spec.json` / `v2-light.spec.json` lives under `examp
 
 ### Standard workflow
 
-When handing a topic to your Agent (or doing it yourself), follow these 7 steps:
+When handing a topic to your Agent (or doing it yourself), follow these 8 steps:
 
 1. **Brief** — distill topic, audience, positioning, selling points, brand/column, tone differences, and content genre; fact-check / brand assets first when real info is involved.
-2. **Layout** — decide the card sequence, article outline, and theme tokens. (Optional: use `directions.mjs` to show 3 directions first.)
+2. **Layout** — decide the card sequence, article outline, and theme tokens (15 themes available). (Optional: use `directions.mjs` to show 3 directions first.)
 3. **Copy** — title options, ≤54-char summary, article Markdown draft, and per-card caption script.
 4. **Images** — render HTML templates into PNGs and visually check safe area / line breaks / overlaps.
 5. **Article formatting** — produce inline-styled HTML + matching Markdown, with complete figure captions.
-6. **Publish checklist** — generate an itemized checklist per [publish-checklist](references/publish-checklist.md).
-7. **Self-check** — run `check.mjs` + `preview.mjs`, then verify sizes, character counts, captions, version differences, and that all four samples are complete.
+6. **Video channel (optional)** — add a `video` block to the spec; output portrait cover + spoken script + storyboard.
+7. **Publish checklist** — generate an itemized checklist per [publish-checklist](references/publish-checklist.md).
+8. **Self-check** — run `check.mjs` + `preview.mjs`, then verify sizes, character counts, captions, version differences, and that all samples are complete.
 
 See [SKILL.md](SKILL.md) for the full contract.
 
@@ -192,10 +213,11 @@ See [SKILL.md](SKILL.md) for the full contract.
 
 Open any `spec.json` and edit these areas to regenerate everything:
 
-- `name` / `brand` / `accent` / `accent2` — project name, brand, and the two accent colors.
+- `name` / `brand` / `accent` / `accent2` — project name, brand, and the two accent colors; `brand.logoImg` can carry a real logo.
 - `titles` / `summary` / `imageCaption` — title options, summary, and card caption.
 - `cards[]` — each card's title, body, and visual component.
 - `article.*` — article title, lead, table of contents, sections, and figure slots.
+- `video` — optional video channel: portrait cover + spoken script + storyboard.
 
 Images will be regenerated against the same design system. See [templates/README.md](templates/README.md) for details.
 
@@ -203,17 +225,18 @@ Images will be regenerated against the same design system. See [templates/README
 
 | Field | Meaning |
 |---|---|
-| `theme` | `dark` (Dark Tech) or `light` (Light Clean) |
+| `theme` | one of 15 themes: `dark` / `light` / `aurora` / `forest` / `ocean` / `cream` / `cyber` / `sky` / `rose` / `midnight` / `baize` / `magazine` / `guofeng` / `mono` / `night-cyan` (see [styles](references/styles.md)) |
 | `accent` / `accent2` | theme accent colors |
-| `brand` | `{ name, logo, column, site }` |
+| `brand` | `{ name, logo, logoImg, column, site }`; `logoImg` renders a real logo from a local image |
 | `titles` | `{ article[], image[], recommend }` |
 | `summary` / `imageCaption` | article summary / card caption |
 | `cards[]` | the card series |
 | `article` | article structure (cover / toc / lead / sections[] / closing / links / cta) |
+| `video` | optional video: `{ title, duration, format, hook, cover, shots[], script[], tags, cta }` |
 
-**Card variants**: `cover`, `point`, `diagram`, `compare`, `ending`.
+**Card variants**: `cover`, `point`, `diagram`, `compare`, `ending`, `list`, `grid`, `stat`, `quote`.
 
-**Hero visual components**: `browser`, `code`, `flow` (flowchart), `stack` (layers), `tiles` (icon grid), `ring`.
+**Hero visual components**: `browser`, `code`, `flow`, `steps`, `stack`, `tiles`, `ring`, `matrix`, `checklist`, `kv`, `stats`, `blist`, `compare`, `shot`.
 
 See [assets/icons/README.md](assets/icons/README.md) for the icon list.
 
@@ -224,7 +247,7 @@ wechat-mp/
 ├── SKILL.md               # Skill entry: triggers, output contract, workflow, hard rules
 ├── assets/
 │   ├── banner.svg         # README banner (plus banner.png)
-│   ├── tokens.css         # Dark & light theme tokens (colors / type / spacing)
+│   ├── tokens.css         # 15 theme tokens + card / visual component styles
 │   ├── icons.svg          # Icon sprite
 │   ├── icons/README.md    # Icon usage & list
 │   └── style-specimens/   # Theme specimens (for direction proposals)
@@ -234,6 +257,7 @@ wechat-mp/
 │   ├── article-cover-square.html # Article cover, 1:1 square (1080×1080)
 │   ├── diagram.html       # In-body figure (1080 wide, custom height)
 │   ├── article-body.html  # Inline-style recipe reference for WeChat
+│   ├── video-cover.html   # Video-channel portrait cover (1080×1920)
 │   └── README.md          # Template placeholders & card data reference
 ├── scripts/
 │   ├── render.mjs         # HTML → PNG (headless Chrome)
@@ -245,15 +269,18 @@ wechat-mp/
 │   ├── article.mjs        # Article Markdown / HTML generation
 │   ├── article-tokens.mjs # Single source for article styles
 │   ├── gen-article-body.mjs # Generate the recipe from tokens
+│   ├── route.mjs          # Smart router: topic → genre/theme/skeleton
 │   ├── card-render.mjs    # Single-card renderer (specimens / directions)
 │   ├── sheet.mjs          # Compose labelled contact sheets
-│   ├── gen-specimens.mjs  # Generate 4 theme specimens
+│   ├── gen-specimens.mjs  # Generate all 15 theme specimens
 │   ├── directions.mjs     # 3 direction thumbnails + direction gate
 │   ├── directions-plan.mjs # topic → 3 candidate configs (semi-auto)
 │   ├── theme-registry.mjs # Read themes from tokens.css + specimens
+│   ├── video.mjs          # Video: spoken script / storyboard / cover fields
 │   └── tests/             # node --test invariant tests
-├── references/            # Specs & playbooks (fact-check / brand / directions / polish)
-└── examples/demo/         # Two-version, four-sample demo output
+├── references/            # Specs & playbooks (style library / video / fact-check / brand / directions / polish)
+├── examples/demo/         # Two-version, four-sample demo output
+└── examples/cases/        # Five reference-style cases (forest / rose / cream / baize / cyber)
 ```
 
 ## Requirements
@@ -266,22 +293,24 @@ export CHROME_BIN="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 # or: export CHROME_FLAGS="--no-sandbox --user-data-dir=/tmp/chrome-profile"
 ```
 
-- Validation & tests: `node scripts/check.mjs examples/demo/v1-dark examples/demo/v2-light`; `node --test`
+- Validation & tests: `node scripts/check.mjs examples/demo/v1-dark examples/demo/v2-light examples/cases/baize-baize/out`; `node --test`
 
 ## Specs & Playbooks
 
 | Doc | Content |
 |---|---|
-| [image-design-system.md](references/image-design-system.md) | Image design system: sizes / grid / safe area / theme tokens / type scale / 5 card types / icons / do & don't |
-| [article-format.md](references/article-format.md) | Article format spec: WeChat typography / structure / four genres / inline HTML rules |
-| [content-playbook.md](references/content-playbook.md) | Copywriting formulas: titles / summaries / leads / CTAs / four genre outlines |
+| [style-catalog.md](references/style-catalog.md) | **Style library + smart routing**: 11 poster styles / 6 article skeletons / 3 video forms / reference index |
+| [image-design-system.md](references/image-design-system.md) | Image design system: sizes / grid / safe area / 15 theme tokens / type scale / card types / visual components / do & don't |
+| [article-format.md](references/article-format.md) | Article format spec: WeChat typography / structure / six skeletons / inline HTML rules |
+| [content-playbook.md](references/content-playbook.md) | Copywriting formulas: titles / summaries / leads / CTAs / six outlines & patterns |
 | [publish-checklist.md](references/publish-checklist.md) | Publish checklist + pre-delivery self-check |
 | [fact-check.md](references/fact-check.md) | Fact-check workflow + `facts.md` template |
 | [brand-asset.md](references/brand-asset.md) | Brand-asset protocol + `brand-spec.md` template |
 | [directions.md](references/directions.md) | Direction proposal gate + `方向确认.md` |
 | [polish-loop.md](references/polish-loop.md) | Screenshot polish loop + `polish-log.md` |
 | [materials.md](references/materials.md) | Asset tiers (programmatic / real / generated) |
-| [styles.md](references/styles.md) | Theme extension + 4 suggested presets |
+| [styles.md](references/styles.md) | 15-theme list + how to add a theme |
+| [video-format.md](references/video-format.md) | **Video channel (optional)**: specs / 3 forms / `spec.video` fields / self-check |
 
 ## FAQ
 
@@ -299,5 +328,5 @@ A: 3:4 is a well-adapted ratio for WeChat image messages and Xiaolüshu — port
 
 ## License
 
-This project is released under the [MIT License](LICENSE). The "Atlas" project and all data in the demo output are fictional.
+This project is released under the [MIT License](LICENSE). The "Atlas", "Stackbase", "Mosaic UI" and "Agent Geo" projects and data in the examples are fictional; the "Baize" case is a real product (facts from official docs, screenshots provided by the user as test data). The reference materials are used only to distill style rules, not to copy their content.
 

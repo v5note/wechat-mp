@@ -16,3 +16,5 @@
 - 介绍具名产品，logo 逐个取到（见 [brand-asset](brand-asset.md)）。
 - 没有真图时用诚实占位：灰底矩形 +「示意图 1200×800」，不要用 emoji/SVG 手画人。
 - 演示用虚构项目要显式声明「仅为演示」。
+- 判完档位后，按 [style-catalog](style-catalog.md) 选贴图风格：真实产品优先 forest / ocean / rose（要真截图），
+  抽象概念优先 cream / dark / aurora；没有真图时用诚实占位，别用假 logo 假装真实。

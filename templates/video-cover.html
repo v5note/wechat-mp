@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<!-- video-cover.html · 视频号竖版封面 (1080×1920, 9:16)
+     占位符: BASE_CSS / THEME / ICON_SPRITE / BRAND / COLUMN / KICKER / TITLE / SUB / VISUAL / DURATION / TAGS -->
+<style>
+{{BASE_CSS}}
+.vid{width:1080px;height:1920px;position:relative;overflow:hidden;
+  background:linear-gradient(165deg,var(--bg1),var(--bg2) 58%,var(--bg3));color:var(--text)}
+.vid .page{padding:120px 84px 96px;display:flex;flex-direction:column}
+.vid .hd{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between}
+.vid .mid{flex:1;display:flex;flex-direction:column;justify-content:center;gap:30px;min-height:0}
+.vid .kicker{font-size:28px}
+.vid .ttl{font-size:98px;font-weight:800;line-height:1.1;letter-spacing:-3px}
+.vid .sub{font-size:34px;line-height:1.5;color:var(--text-2)}
+.vid .vis{flex:0 0 auto;display:flex;align-items:center;justify-content:center;padding-top:8px}
+.vid .browser,.vid .code{width:100%}
+.vid .ft{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;
+  padding-top:30px;border-top:1px solid var(--border)}
+.vid .dur{display:inline-flex;align-items:center;gap:10px;font-size:24px;font-weight:700;
+  color:var(--accent);background:var(--accent-soft);border:1px solid var(--accent-line);
+  padding:12px 22px;border-radius:999px}
+.vid .tags{display:flex;gap:12px;flex-wrap:wrap;justify-content:flex-end}
+</style>
+</head>
+<body class="vid {{THEME}}">
+{{ICON_SPRITE}}
+<div class="bg"></div>
+<div class="page">
+  <header class="hd">
+    <div class="brand">
+      <span class="logo">{{LOGO}}</span>
+      <span class="bname">{{BRAND}}</span>
+      <span class="col">{{COLUMN}}</span>
+    </div>
+  </header>
+  <div class="mid">
+    <div class="kicker pill">{{KICKER}}</div>
+    <div class="ttl">{{TITLE}}</div>
+    <div class="sub">{{SUB}}</div>
+    <div class="vis">{{VISUAL}}</div>
+  </div>
+  <footer class="ft">
+    <span class="dur">▶ 视频号 · {{DURATION}}</span>
+    <div class="tags">{{TAGS}}</div>
+  </footer>
+</div>
+</body>
+</html>

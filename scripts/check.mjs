@@ -3,7 +3,7 @@
 // 用法：node scripts/check.mjs [版本目录…]
 // 退出码：0 全过；1 有硬错误。
 import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
-import { join, resolve } from 'node:path';
+import { join, resolve, dirname } from 'node:path';
 
 const MAX_BYTES = 2 * 1024 * 1024;
 
@@ -141,6 +141,25 @@ export function checkVersion(dir, specPath) {
     if (!mdH2.length) warn('article.md 没有二级小标题');
   }
 
+  // ---- video (optional 视频号) ----
+  const videoDir = join(abs, 'video');
+  if (existsSync(videoDir)) {
+    const vc = join(videoDir, 'cover.png');
+    if (!existsSync(vc)) fail('缺少 video/cover.png');
+    else {
+      const s = pngSize(vc);
+      if (!s || s.w !== 1080 || s.h !== 1920) fail('video/cover.png 尺寸应为 1080×1920，实际 ' + (s ? s.w + '×' + s.h : '非 PNG'));
+    }
+    if (!existsSync(join(videoDir, '口播稿.md'))) fail('缺少 video/口播稿.md');
+    if (!existsSync(join(videoDir, '分镜.md'))) fail('缺少 video/分镜.md');
+    else {
+      const sb = readFileSync(join(videoDir, '分镜.md'), 'utf8');
+      const rows = (sb.match(/^\| \d+ \|/gm) || []).length;
+      if (rows < 4) fail('video/分镜.md 少于 4 个镜头');
+      else ok('视频分镜 ' + rows + ' 镜');
+    }
+  }
+
   // ---- companion files ----
   for (const [f, label] of [['文案.md', '文案'], ['发布清单.md', '发布清单'], ['index.md', '索引']]) {
     if (!existsSync(join(abs, f))) fail('缺少 ' + f);
@@ -156,7 +175,8 @@ export function checkVersion(dir, specPath) {
   if (leftovers) warn('存在 ' + leftovers + ' 个 .render-* 临时文件');
 
   // ---- spec ----
-  const sp = specPath || (existsSync(abs + '.spec.json') ? abs + '.spec.json' : null);
+  const sp = specPath || (existsSync(abs + '.spec.json') ? abs + '.spec.json'
+    : (existsSync(join(dirname(abs), 'spec.json')) ? join(dirname(abs), 'spec.json') : null));
   if (sp && existsSync(sp)) {
     const spec = JSON.parse(readFileSync(sp, 'utf8'));
     const art = (spec.titles && spec.titles.article) || [];
@@ -170,6 +190,12 @@ export function checkVersion(dir, specPath) {
     if (cards.length < 5 || cards.length > 9) fail('spec.cards ' + cards.length + ' 张，应为 5–9');
     const figs = ((spec.article && spec.article.sections) || []).filter((s) => s.figure).length;
     if (figs < 3 || figs > 5) fail('spec 配图位 ' + figs + ' 个，应为 3–5');
+    if (spec.video) {
+      if (!spec.video.title) fail('spec.video 缺少 title');
+      const shots = spec.video.shots || [];
+      if (shots.length < 4) fail('spec.video.shots ' + shots.length + ' 个，至少 4 个镜头');
+      ok('视频 spec 字段自检通过（' + shots.length + ' 镜）');
+    }
     ok('spec 字段自检通过');
   } else {
     warn('未找到 spec.json，跳过标题/摘要字段校验');

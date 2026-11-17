@@ -1,0 +1,594 @@
+{
+  "slug": "baize-baize",
+  "name": "白泽 Baize · 多语言 Agent 运行时平台（真实案例）",
+  "styleNote": "真实产品案例。事实来自官方仓库 docs/ 与官网，品牌主色 #6255D7，logo 与门户截图取自官方产物；未改造 baize 仓库。",
+  "theme": "baize",
+  "accent": "#6255D7",
+  "accent2": "#8B7CFF",
+  "brand": {
+    "name": "白泽",
+    "logo": "白",
+    "logoImg": "examples/cases/baize-baize/ref/baize-mark.png",
+    "column": "Agent 运行时平台",
+    "site": "baize.v5ai.xin"
+  },
+  "titles": {
+    "article": [
+      "白泽：一个 Java 控制面，把 Agent 跑到你的业务与桌面上",
+      "多语言 Agent 运行时平台：Java / Python / Node 都能接",
+      "统一掌控，自由运行——白泽 Agent 运行时上手",
+      "Server 控制面 + 多语言 Client，白泽怎么组织 Agent 执行"
+    ],
+    "image": [
+      "统一掌控，自由运行",
+      "一个控制面，多种执行"
+    ],
+    "recommend": 0
+  },
+  "summary": "白泽：多语言 Agent 运行时平台，Java Server 统一管理，经 NARP v2 连接多端执行。",
+  "imageCaption": "白泽：多语言 Agent 运行时平台，一个 Java Server 统一管理 Agent，通过 NARP v2 连接Java/Python/Node执行端。官网 baize.v5ai.xin",
+  "cards": [
+    {
+      "variant": "cover",
+      "kicker": "BAIZE · AGENT RUNTIME",
+      "kickerPill": true,
+      "title": [
+        "统一掌控",
+        "自由运行"
+      ],
+      "accent": "自由运行",
+      "sub": "让智能，融入你的业务",
+      "hero": {
+        "type": "shot",
+        "url": "baize.v5ai.xin",
+        "src": "examples/cases/baize-baize/ref/login.png"
+      },
+      "tags": [
+        "★ Agent 运行时",
+        "Java Server",
+        "多语言 Client"
+      ]
+    },
+    {
+      "variant": "point",
+      "label": "痛点",
+      "title": "Agent 想跑进业务，卡在环境",
+      "body": "模型、工具、知识库各自散落，执行端又跨了好几种语言和部署位置，接起来是场持久战。",
+      "hero": {
+        "type": "code",
+        "file": "architecture.md",
+        "lines": [
+          {
+            "text": "# Agent 想跑进业务，先过三关",
+            "cls": "cm"
+          },
+          {
+            "text": "管理: 模型 / 工具 / 知识库",
+            "cls": ""
+          },
+          {
+            "text": "执行: Java / Python / Node",
+            "cls": ""
+          },
+          {
+            "text": "位置: 服务端 / 进程 / 桌面",
+            "cls": ""
+          },
+          {
+            "text": "→ 一个控制面，把它们接起来",
+            "cls": "ck"
+          }
+        ]
+      }
+    },
+    {
+      "variant": "list",
+      "kicker": "它是什么",
+      "kickerPill": true,
+      "title": [
+        "Server 管能力，Client 去执行"
+      ],
+      "accent": "Client 去执行",
+      "body": "白泽把「谁可以执行、用哪些配置、交给哪个客户端」和「怎么调模型、怎么跑工具、怎么上报过程」分开。",
+      "items": [
+        {
+          "icon": "layers",
+          "t": "Java Server",
+          "d": "管理 Agent、模型、MCP、Skill、RAG 与执行调度"
+        },
+        {
+          "icon": "cube",
+          "t": "多语言 Client",
+          "d": "Java / Python / Node.js 独立执行端，主动连 Server"
+        },
+        {
+          "icon": "branch",
+          "t": "NARP v2",
+          "d": "gRPC 双向流承载握手、任务、事件与工具往返"
+        },
+        {
+          "icon": "share",
+          "t": "任意位置",
+          "d": "业务服务、独立进程，或桌面设备皆可执行"
+        }
+      ]
+    },
+    {
+      "variant": "diagram",
+      "kicker": "一次对话",
+      "title": "提交 → 路由 → 执行 → 回看",
+      "hero": {
+        "type": "flow",
+        "vertical": true,
+        "nodes": [
+          {
+            "num": "1",
+            "t": "提交输入",
+            "d": "从对话或调试入口选 Agent"
+          },
+          {
+            "num": "2",
+            "t": "选择 Client",
+            "d": "路由器在符合条件的节点中选执行位置"
+          },
+          {
+            "num": "3",
+            "t": "下发执行",
+            "d": "沿 NARP v2 下发配置与凭据"
+          },
+          {
+            "num": "4",
+            "t": "Client 执行",
+            "d": "Agent Loop · 调模型 · 跑工具 · 回传事件"
+          },
+          {
+            "num": "5",
+            "t": "回看 Trace",
+            "d": "管理端按执行回看路径、工具与用量"
+          }
+        ]
+      },
+      "caption": "跟随一次完整的 Agent 执行链路。"
+    },
+    {
+      "variant": "diagram",
+      "kicker": "控制台",
+      "title": "资源与运行，一屏看清",
+      "hero": {
+        "type": "shot",
+        "url": "baize.v5ai.xin",
+        "src": "examples/cases/baize-baize/ref/dashboard-top.png",
+        "caption": "真实管理后台 · 控制台"
+      },
+      "caption": ""
+    },
+    {
+      "variant": "diagram",
+      "kicker": "调试工具",
+      "title": "管理端直接真跑一次",
+      "hero": {
+        "type": "shot",
+        "url": "baize.v5ai.xin",
+        "src": "examples/cases/baize-baize/ref/playground.png",
+        "caption": "真实管理后台 · 对话调试"
+      },
+      "caption": ""
+    },
+    {
+      "variant": "diagram",
+      "kicker": "对话入口",
+      "title": "独立 Chat，也能接着聊",
+      "hero": {
+        "type": "shot",
+        "url": "baize.v5ai.xin",
+        "src": "examples/cases/baize-baize/ref/chat-ui.png",
+        "caption": "真实对话端 · baize-ai-chat"
+      },
+      "caption": ""
+    },
+    {
+      "variant": "grid",
+      "kicker": "能力矩阵",
+      "kickerPill": true,
+      "title": [
+        "管理面 vs 执行面"
+      ],
+      "accent": "执行面",
+      "body": "资源和运行分开，避免「Server 能访问 ≠ Client 能访问」的错觉。",
+      "items": [
+        {
+          "num": "01",
+          "t": "对话模型",
+          "desc": "管理 provider / adapter / key",
+          "fields": [
+            {
+              "k": "配",
+              "v": "Server"
+            },
+            {
+              "k": "跑",
+              "v": "Client"
+            }
+          ],
+          "tags": [
+            "#CHAT"
+          ]
+        },
+        {
+          "num": "02",
+          "t": "RAG",
+          "desc": "文档、索引、存储实例",
+          "fields": [
+            {
+              "k": "配",
+              "v": "Server"
+            },
+            {
+              "k": "跑",
+              "v": "Server 检索"
+            }
+          ],
+          "tags": [
+            "#知识库"
+          ]
+        },
+        {
+          "num": "03",
+          "t": "MCP",
+          "desc": "工具发现与权限",
+          "fields": [
+            {
+              "k": "管",
+              "v": "Server"
+            },
+            {
+              "k": "调",
+              "v": "Client"
+            }
+          ],
+          "tags": [
+            "#工具"
+          ]
+        },
+        {
+          "num": "04",
+          "t": "Skill",
+          "desc": "文本包与已发布版本",
+          "fields": [
+            {
+              "k": "服",
+              "v": "Server"
+            },
+            {
+              "k": "读",
+              "v": "按需读取"
+            }
+          ],
+          "tags": [
+            "#技能"
+          ]
+        },
+        {
+          "num": "05",
+          "t": "业务工具",
+          "desc": "方法留在业务进程里",
+          "fields": [
+            {
+              "k": "上报",
+              "v": "连接时"
+            },
+            {
+              "k": "执行",
+              "v": "本节点"
+            }
+          ],
+          "tags": [
+            "#业务"
+          ]
+        },
+        {
+          "num": "06",
+          "t": "执行观测",
+          "desc": "Agent Trace 回看",
+          "fields": [
+            {
+              "k": "查询",
+              "v": "管理端"
+            },
+            {
+              "k": "数据",
+              "v": "已保存"
+            }
+          ],
+          "tags": [
+            "#运维"
+          ]
+        }
+      ],
+      "cols": 2,
+      "compact": true,
+      "caption": "「管理与配置」「运行时执行」两边分开。"
+    },
+    {
+      "variant": "ending",
+      "title": "让智能，融入你的业务",
+      "points": [
+        "一个控制面管理全部 Agent 能力",
+        "多语言 Client 在业务与桌面执行",
+        "NARP v2 双向流连接彼此"
+      ],
+      "cta": "baize.v5ai.xin",
+      "ctaKicker": "AGENT RUNTIME / SERVER-CLIENT",
+      "qr": true
+    }
+  ],
+  "article": {
+    "title": "白泽：一个 Java 控制面，把 Agent 跑到你的业务与桌面上",
+    "summary": "白泽：多语言 Agent 运行时平台，Java Server 统一管理，经 NARP v2 连接多端执行。",
+    "topbar": "真实产品测评｜栏目「Agent 运行时」｜资料据官方文档整理",
+    "cover": {
+      "kicker": "BAIZE · AGENT RUNTIME",
+      "title": [
+        "统一掌控",
+        "自由运行"
+      ],
+      "accent": "自由运行",
+      "sub": "让智能，融入你的业务",
+      "hero": {
+        "type": "shot",
+        "url": "baize.v5ai.xin",
+        "src": "examples/cases/baize-baize/ref/website-hero.png",
+        "caption": "官方门户首屏截图"
+      },
+      "tags": [
+        "★ Agent 运行时",
+        "Java Server",
+        "多语言 Client"
+      ]
+    },
+    "toc": [
+      "一、先说结论：白泽解决什么问题",
+      "二、Server 与 Client：两种职责",
+      "三、三次关键连接：一次对话怎么跑",
+      "四、能力矩阵：谁配置、谁执行",
+      "五、三端客户端与桌面",
+      "六、边界、部署与注意事项"
+    ],
+    "lead": [
+      "把 Agent 从「演示」带到「真业务」，最难的不是模型，而是执行位置。",
+      "模型在云上，工具在自己的服务进程里，知识库在某个存储，桌面还要本地跑——东西越散，接起来越累。",
+      "白泽（Baize）是一套 Server–Client 模式的多语言 Agent 运行时平台：一个 Java 控制面统一管理 Agent、模型、MCP、Skill 与 RAG，把执行交给 Java、Python、Node.js 客户端，甚至桌面设备。",
+      "这篇基于官方 docs 与仓库源码梳理它怎么组织执行，以及哪里要先看清边界。"
+    ],
+    "sections": [
+      {
+        "h": "一、先说结论：白泽解决什么问题",
+        "paras": [
+          "白泽解决的是「Agent 要跑进各种业务现场」这件事。它的核心思路，是把「管理面」和「执行面」分开。",
+          "管理面由一个 Java Server 承担：它保存资源、校验准入、选择执行节点、编排执行并把会话持久化。你在这里配模型、配知识库、配 MCP、配 Skill，再把 Agent 发布出来。",
+          "执行面由 Agent Client 承担：它主动连接 Server，在业务进程里调用模型、运行 Agent Loop、执行本地业务工具和 MCP。Client 可以部署在业务服务、独立进程，或 Tauri 桌面应用中。",
+          "一句话：Server 告诉你「让谁跑、用什么跑」，Client 负责「怎么跑」。"
+        ],
+        "figure": {
+          "kicker": "控制台",
+          "title": "资源与运行一屏看清",
+          "accent": "",
+          "cap": "图1：控制台（真实管理后台）",
+          "height": 1000,
+          "hero": {
+            "type": "shot",
+            "url": "baize.v5ai.xin",
+            "src": "examples/cases/baize-baize/ref/dashboard-top.png"
+          }
+        }
+      },
+      {
+        "h": "二、Server 与 Client：两种职责",
+        "paras": [
+          "Server 负责「谁可以执行、使用哪些配置、交给哪个客户端」；Client 负责「怎样调用模型、怎样执行工具、怎样上报过程」。协议不绑定某一种 Agent 框架。",
+          "Java Client 使用 AgentScope，Python Client 使用 LangGraph（模型集成用 LangChain），Node.js Client 使用 Pi Agent。三种语言复用共同的 NARP v2 协议与适配契约，同时保留各自的实现方式。",
+          "客户端主动建立 gRPC 双向流连接 Server，所以不需要 Server 反向了解客户端的地址。这个设计让 Client 能安全地藏在业务网络或桌面设备后面。",
+          "现有实现覆盖 Java、Python、Node.js。Rust 与 Golang 的独立 SDK 属于规划，暂不是当前可接入的方式。"
+        ]
+      },
+      {
+        "h": "三、一次对话怎么跑",
+        "paras": [
+          "用户从对话或调试入口选择 Agent，提交输入。Server 解析用户身份、Agent 配置和本次用到的资源。",
+          "路由器在符合条件（在线、未排空、能力满足）的客户端节点中选择执行位置，然后沿 NARP v2 连接下发执行配置及运行需要的凭据。",
+          "Client 运行 Agent Loop，调用模型与工具，把文本、思考、工具和完成事件回传；Server 通过 SSE 向前端转发进度，并处理会话历史与执行状态。",
+          "结束后可在 Agent Trace 里按这次执行回看准入、握手、选择、派发、工具、结束各环节。"
+        ],
+        "figure": {
+          "kicker": "执行记录",
+          "title": "每次执行都能回看",
+          "accent": "",
+          "cap": "图2：执行记录（真实管理后台）",
+          "height": 820,
+          "hero": {
+            "type": "shot",
+            "url": "baize.v5ai.xin",
+            "src": "examples/cases/baize-baize/ref/execution-records.png"
+          }
+        }
+      },
+      {
+        "h": "四、能力矩阵：谁配置、谁执行",
+        "paras": [
+          "白泽用「管理和配置」「运行时执行」两列来组织能力，避免一个常见误区：Server 能访问模型，不代表 Client 也能访问。",
+          "对话模型属性在 Server 管理，但由 Client 发起调用；RAG 由 Server 检索，Client 接收结果或预注入上下文；MCP 由 Server 发现与授权，Client 建立连接并调用。",
+          "更特别的是「业务工具」：你把它声明在业务进程里，连接和重连时上报静态定义，通过校验后由该节点执行。方法留在原地，Agent 只是在调用它。",
+          "还有记忆与联网搜索这样的 Server 工具——相关能力由 Server 管理，通过工具调用返回给 Agent。"
+        ],
+        "figure": {
+          "kicker": "模型管理",
+          "title": "多 provider 统一接入",
+          "accent": "",
+          "cap": "图3：模型管理（真实管理后台）",
+          "height": 820,
+          "hero": {
+            "type": "shot",
+            "url": "baize.v5ai.xin",
+            "src": "examples/cases/baize-baize/ref/model-admin.png"
+          }
+        }
+      },
+      {
+        "h": "五、三端客户端与桌面",
+        "paras": [
+          "三端各有适合的场景：Java 接已有 Spring / Java 业务应用；Python 面向数据处理或 Agent 应用；Node.js 适合 TypeScript 服务与桌面 sidecar。",
+          "桌面执行走 Tauri 对话客户端：Rust Host 启动固定 sidecar，sidecar 通过 NARP 连接 Server，Agent Loop 使用 Pi Agent。启用后当前桌面的对话就在本机执行。",
+          "桌面需要独立的客户端应用身份、短时来源票据和桌面执行授权；启用后若本机断线，新的本机执行会失败，不会自动改派到其他端。",
+          "这也说明白泽对「执行位置」是显式管理的：你要明确告诉它把任务发给谁，而不是期望它全网自动找端。"
+        ],
+        "figure": {
+          "kicker": "Agent 管理",
+          "title": "配置、预览与发布",
+          "accent": "",
+          "cap": "图4：Agent 管理（真实管理后台）",
+          "height": 820,
+          "hero": {
+            "type": "shot",
+            "url": "baize.v5ai.xin",
+            "src": "examples/cases/baize-baize/ref/agent-admin.png"
+          }
+        }
+      },
+      {
+        "h": "六、边界、部署与注意事项",
+        "paras": [
+          "先说边界：白泽管理的是「执行的组织方式」，不是「零配置一键跑」。要让它真正干活，你仍要理会配置模型、接入客户端、部署 Server 与数据库、配好 Redis 与外部密钥。",
+          "NARP v2 当前未启用 TLS。官方明确要求把 gRPC 运行时端口限制在受信任网络内，不要把明文传输的端口直接暴露到不可信网络。",
+          "部署上，Java Server 需要 JDK 21 与 Maven；默认 HTTP 端口 8880、gRPC 18900（可覆盖）。首次启动前要在独立环境配自己的数据库与 Redis，不要把示例命令指向共享库。",
+          "适合：有跨语言团队、想让 Agent 跑进多方业务进程、或需要桌面本机执行的团队。不适合：只想零配置体验、或对生产安全要求极高而未做额外防护的场景。"
+        ],
+        "figure": {
+          "kicker": "部署",
+          "title": "环境与配置一览",
+          "accent": "",
+          "cap": "图5：主流技术栈与环境要求",
+          "height": 560,
+          "hero": {
+            "type": "kv",
+            "rows": [
+              {
+                "k": "Java Server",
+                "v": "JDK 21 · Maven · MySQL · Redis"
+              },
+              {
+                "k": "Node.js Client",
+                "v": "Node ≥ 22 · pnpm 10"
+              },
+              {
+                "k": "Python Client",
+                "v": "Python ≥ 3.11 · uv"
+              },
+              {
+                "k": "管理前端",
+                "v": "Vue · Node 22 · pnpm"
+              },
+              {
+                "k": "对话端",
+                "v": "Web + Tauri 桌面"
+              }
+            ]
+          }
+        },
+        "quote": "白泽的价值在「组织执行」：在 Server 管能力，让 Client 在它该在的地方跑。"
+      }
+    ],
+    "closing": "真正想让 Agent 落地业务，管理能力和执行位置是对半分的事。白泽把这两半都显式管起来，也把边界的判断权交回给你。",
+    "links": [
+      {
+        "label": "官网",
+        "url": "https://baize.v5ai.xin/"
+      },
+      {
+        "label": "文档（快速上手）",
+        "url": "https://baize-docs.v5ai.xin/zh/start"
+      },
+      {
+        "label": "后台仓库",
+        "url": "https://onedev.v5ai.xin/baize"
+      }
+    ],
+    "cta": "关注「Agent 运行时」，每周拆一个真实可部署的 Agent 平台",
+    "headerImage": "cover.png"
+  },
+  "video": {
+    "title": "2 分钟看懂白泽怎么组织 Agent 执行",
+    "duration": "60s",
+    "format": "口播干货",
+    "kicker": "Agent 运行时 · 白泽",
+    "hook": "把 Agent 跑进业务，最难的不是模型，是执行位置。",
+    "cover": {
+      "kicker": "Agent 运行时",
+      "title": [
+        "一个控制面",
+        "多端执行"
+      ],
+      "accent": "多端执行",
+      "sub": "Java / Python / Node / 桌面",
+      "hero": {
+        "type": "shot",
+        "url": "baize.v5ai.xin",
+        "src": "examples/cases/baize-baize/ref/login-left.png",
+        "caption": "白泽管理台"
+      },
+      "tags": [
+        "★ Agent 运行时",
+        "60 秒"
+      ]
+    },
+    "shots": [
+      {
+        "at": "0–4s",
+        "scene": "封面：一个控制面，多端执行",
+        "voice": "把 Agent 跑进业务，最难的不是模型，是执行位置。",
+        "sub": "难在执行位置",
+        "asset": "封面"
+      },
+      {
+        "at": "4–18s",
+        "scene": "Server-Client 架构图",
+        "voice": "白泽用一个 Java Server 统一管 Agent、模型和工具，让客户端去跑。",
+        "sub": "Server 管，Client 跑",
+        "asset": "架构图"
+      },
+      {
+        "at": "18–38s",
+        "scene": "三端 + 桌面图标",
+        "voice": "Java、Python、Node，还能在桌面本机执行，都走同一条 NARP 协议。",
+        "sub": "Java · Python · Node · 桌面",
+        "asset": "三端图"
+      },
+      {
+        "at": "38–52s",
+        "scene": "一次对话链路动画",
+        "voice": "你提交任务，Server 选端、下发配置，客户端执行再回传，全程可回看。",
+        "sub": "提交→路由→执行→回看",
+        "asset": "链路图"
+      },
+      {
+        "at": "52–60s",
+        "scene": "边界提示 + CTA",
+        "voice": "注意：生产要自己配数据库和安全边界。关注我，看下一个 Agent 平台。",
+        "sub": "边界要清楚",
+        "asset": "提示卡"
+      }
+    ],
+    "subtitles": [
+      "难在执行位置",
+      "Server 管，Client 跑",
+      "Java · Python · Node · 桌面",
+      "提交→路由→执行→回看",
+      "关注看更多"
+    ],
+    "tags": [
+      "#Agent",
+      "#运行时",
+      "#白泽"
+    ],
+    "cta": "关注「Agent 运行时」，每周拆一个真实可部署的 Agent 平台。"
+  }
+}

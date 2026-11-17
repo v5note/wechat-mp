@@ -2,13 +2,14 @@
 // scripts/build.mjs — 按 spec.json 生成整套：贴图卡片 + 文章封面 + 正文配图 + 文案 + 发布清单
 // 用法: node scripts/build.mjs --spec examples/demo/v1-dark.spec.json --out examples/demo/v1-dark
 import { parseArgs } from 'node:util';
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from 'node:fs';
 import { join, resolve, dirname } from 'node:path';
 import { renderHtml, ROOT } from './chrome.mjs';
-import { buildCard, hero, esc, hl, chip } from './visuals.mjs';
+import { buildCard, hero, esc, hl, chip, dataUri } from './visuals.mjs';
 import { buildArticleHtml, buildArticleMd } from './article.mjs';
 import { checkVersion } from './check.mjs';
 import { buildDemoOverviews } from './preview.mjs';
+import { buildVideoScriptMd, buildStoryboardMd, videoCoverFields } from './video.mjs';
 
 const { values } = parseArgs({ options: { spec: { type: 'string' }, out: { type: 'string' } } });
 if (!values.spec || !values.out) { console.error('用法: node scripts/build.mjs --spec <spec.json> --out <dir>'); process.exit(1); }
@@ -19,11 +20,12 @@ const theme = spec.theme || 'dark';
 const brand = spec.brand || {};
 const cards = spec.cards || [];
 const article = spec.article || {};
-const extraCss = '.t-' + theme + '{--accent:' + (spec.accent||'#4F8CFF') + ';--accent-2:' + (spec.accent2||'#38E1D6') + '}';
+const extraCss = spec.accent ? ('.t-' + theme + '{--accent:' + spec.accent + ';--accent-2:' + (spec.accent2||spec.accent) + '}') : '';
 const tplCard = readFileSync(join(ROOT,'templates/card.html'),'utf8');
 const tplCover = readFileSync(join(ROOT,'templates/article-cover.html'),'utf8');
 const tplCoverSq = readFileSync(join(ROOT,'templates/article-cover-square.html'),'utf8');
 const tplDiagram = readFileSync(join(ROOT,'templates/diagram.html'),'utf8');
+const tplVideo = readFileSync(join(ROOT,'templates/video-cover.html'),'utf8');
 
 function fill(tpl, map){
   var out = tpl;
@@ -33,7 +35,7 @@ function fill(tpl, map){
 function cardHtml(card, idx, total){
   var badge = card.badge ? '<span class="badge' + (card.badgeGhost?' ghost':'') + '">' + esc(card.badge) + '</span>' : '';
   var map = {
-    THEME: 't-' + theme, LOGO: esc(brand.logo || (brand.name||'A').charAt(0)),
+    THEME: 't-' + theme, LOGO: brand.logoImg ? ('<img class="logo-img" src="' + dataUri(brand.logoImg) + '">') : esc(brand.logo || (brand.name||'A').charAt(0)),
     BRAND: esc(brand.name||''), COLUMN: esc(brand.column||''), BADGE: badge,
     MAIN: buildCard(card), FOOTER_LEFT: esc(brand.site||brand.name||''), PAGE: (idx+1) + ' / ' + total
   };
@@ -42,6 +44,7 @@ function cardHtml(card, idx, total){
 
 mkdirSync(join(outDir,'cards'), { recursive: true });
 mkdirSync(join(outDir,'article','images'), { recursive: true });
+if(spec.video){ mkdirSync(join(outDir,'video'), { recursive: true }); }
 
 // 1) cards
 const cardFiles = [];
@@ -85,7 +88,7 @@ if(article.cover){
   renderHtml(cvTpl, join(outDir,'article','cover.png'), 1080, 460, extraCss);
   console.log('  cover ->', 'article/cover.png');
   var cvSq = fill(tplCoverSq, {
-    THEME: 't-' + theme, LOGO: esc(brand.logo || (brand.name||'A').charAt(0)),
+    THEME: 't-' + theme, LOGO: brand.logoImg ? ('<img class="logo-img" src="' + dataUri(brand.logoImg) + '">') : esc(brand.logo || (brand.name||'A').charAt(0)),
     BRAND: esc(brand.name||''), COLUMN: esc(brand.column||''),
     KICKER: esc(cv.kicker || ''),
     TITLE: (cv.title||[]).map(function(l){ return hl(l, cv.accent); }).join('<br>'),
@@ -104,6 +107,19 @@ const hanCount = (artMd.match(/[\u4e00-\u9fff]/g) || []).length;
 console.log('  article 汉字数:', hanCount, hanCount >= 800 ? '(OK >=800)' : '(WARN <800)');
 writeFileSync(join(outDir,'article','article.html'), buildArticleHtml(article), 'utf8');
 console.log('  article.md / article.html written');
+
+// 4.5) 可选：视频号产出（口播稿 + 分镜 + 竖版封面）
+var videoInfo = null;
+if(spec.video){
+  var v = spec.video;
+  var vf = videoCoverFields(v, brand);
+  vf.THEME = 't-' + theme;
+  renderHtml(fill(tplVideo, vf), join(outDir,'video','cover.png'), 1080, 1920, extraCss);
+  writeFileSync(join(outDir,'video','口播稿.md'), buildVideoScriptMd(v), 'utf8');
+  writeFileSync(join(outDir,'video','分镜.md'), buildStoryboardMd(v), 'utf8');
+  videoInfo = { cover: 'video/cover.png', script: 'video/口播稿.md', storyboard: 'video/分镜.md' };
+  console.log('  video -> cover.png + 口播稿.md + 分镜.md');
+}
 
 // 5) 文案.md
 var L = [];
@@ -181,6 +197,13 @@ I.push('- [article/article.html](article/article.html)');
 I.push('- [article/cover.png](article/cover.png)（2.35:1）');
 I.push('- [article/cover-square.png](article/cover-square.png)（1:1 方版）');
 I.push('');
+if(videoInfo){
+  I.push('');
+  I.push('## 视频号（可选）');
+  I.push('- [video/cover.png](video/cover.png)（1080×1920 竖版封面）');
+  I.push('- [video/口播稿.md](video/口播稿.md) · [video/分镜.md](video/分镜.md)');
+}
+I.push('');
 I.push('## 文案');
 I.push('- [文案.md](文案.md) · [发布清单.md](发布清单.md)');
 writeFileSync(join(outDir,'index.md'), I.join('\n'), 'utf8');
@@ -196,8 +219,9 @@ if(check.errs.length) { console.error('自检失败，已中止。'); process.ex
 
 // 9) 两版都在时，顺手刷新总览图（overview.png / overview-article.png）
 const parent = dirname(outDir);
-if(existsSync(join(parent, 'v1-dark')) && existsSync(join(parent, 'v2-light'))) {
-  buildDemoOverviews(parent);
-}
+try {
+  const sibs = readdirSync(parent);
+  if(sibs.some(function(d){ return existsSync(join(parent, d, 'cards')); })) buildDemoOverviews(parent);
+} catch (e) { /* ignore */ }
 
 console.log('DONE ->', outDir);

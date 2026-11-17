@@ -31,7 +31,7 @@
     node scripts/directions.mjs --topic "Atlas 开源架构图" --project "Atlas" \
       --points "痛点,方法,案例,结论" --out design-demos
 
-它会：
+它会（主题名单见 [style-catalog](style-catalog.md) 与 [styles](styles.md)）：
 1. 从 [scripts/theme-registry.mjs](../scripts/theme-registry.mjs)（读 `assets/tokens.css`，并检查 `assets/style-specimens/` 是否有样张）里挑 3 种结构：清单体（深色 tiles）/ 图解体（浅色 flow）/ 杂志叙事（优先从有样张的 magazine / guofeng / mono / night-cyan 中按题材选）；
 2. 生成 `design-demos/directions.json`（可手改后再跑）；
 3. 渲染 `A.png / B.png / C.png`、`directions.png`、`方向确认.md`。

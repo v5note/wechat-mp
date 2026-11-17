@@ -9,6 +9,7 @@
 | article-cover-square.html | 文章封面 1:1 方版 | 1080×1080 |
 | diagram.html | 文章正文配图（架构图 / 流程图 / 对比等） | 宽 1080，高自定 |
 | article-body.html | 微信文章内联样式**配方参考**（由 scripts/gen-article-body.mjs 生成） | 流式 |
+| video-cover.html | 视频号竖版封面 | 1080×1920（9:16） |
 
 ## card.html 占位符
 
@@ -21,10 +22,14 @@
 
 ## 卡片 variant 与数据（喂给 build.mjs 的 spec.cards[]）
 
-- cover：kicker / title[两行] / accent(高亮词) / sub / hero / tags[] / badge
+- cover：kicker / kickerPill / title[两行或字符串] / accent(高亮词) / sub / hero / tags[] / badge
 - point：num / label / title / body / hero
 - diagram：kicker / title / accent / hero / caption
 - compare：title / left{title,items[]} / right{title,items[]} / caption
+- list：kicker / kickerPill / title / body / items[{t,d,icon|num}]
+- grid：kicker / title / items[{num,t,desc,fields[{k,v}],tags[]}] / cols / caption
+- stat：kicker / title / body / stats[{num,label}] / caption
+- quote：quote / accent / author
 - ending：title / points[] / cta / ctaKicker / qr
 
 ## hero 视觉类型（hero.type）
@@ -32,9 +37,16 @@
 - browser：url + ui（dashboard | list | board）
 - code：file + lines（字符串或 {text, cls: cm|ck|cs|cv}）
 - flow：nodes[{num,t,d}] + vertical(true/false)
+- steps：nodes[{num,t,d}]（编号横向步骤）
 - stack：layers[{name,items[]}]
 - tiles：items[{icon,t}]
 - ring：center(icon) + sides[{icon,t}]
+- matrix：items[{num,t,desc,fields[{k,v}],tags[]}] + cols
+- checklist：items[字符串 或 {t,b,d}]
+- kv：rows[{k,v}]（技术栈/参数表）
+- stats：items[{num,label}]（数据大字）
+- blist：items[{t,d,icon|num}]（要点列表）
+- compare：left{title,items[]} + right{title,items[]}（正文配图用对比块）
 
 图标名见 [../assets/icons/README.md](../assets/icons/README.md)。
 

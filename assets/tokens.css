@@ -237,6 +237,9 @@ body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-f
 .fill .flow.v .fnode{flex:1;justify-content:center}
 .fill .flow:not(.v){align-items:stretch}
 .fill .flow:not(.v) .fnode{justify-content:center}
+.fill .steps{height:auto;margin:auto 0;align-items:stretch}
+.fill .steps .step{flex:1 1 0;height:auto}
+.step{padding:30px 22px}
 /* bigger diagram atoms */
 .slayer{padding:26px 30px}
 .slayer .sname{font-size:28px;width:148px}
@@ -251,3 +254,270 @@ body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-f
 .fill .tile{justify-content:center}
 .t-light .mcard,.t-light .mnav,.t-light .mchart{background:#EDF2FC}
 .t-light .ml{background:#DCE3F0}
+
+/* ============================================================
+   参考风格库主题（见 references/style-catalog.md）
+   从用户提供的 35 张贴图 + 15 篇文章 + 3 个视频号素材中提炼。
+   新增主题只改令牌，不改组件；背景纹理统一在 .t-x .bg 里补。
+   ============================================================ */
+
+/* A · aurora 浅蓝工具推荐（参考「show-me Skill」） */
+.t-aurora{
+  --bg1:#EAF2FF; --bg2:#F4F8FF; --bg3:#FFFFFF;
+  --surface:#FFFFFF; --surface-2:#EEF3FF;
+  --border:#DBE5FA; --border-strong:#C2D3F4;
+  --text:#0B1220; --text-2:#42506B; --text-3:#8593AE;
+  --accent:#3D5BF5; --accent-2:#8B5CF6;
+  --accent-soft:rgba(61,91,245,.10); --accent-line:rgba(61,91,245,.38);
+  --badge:#7C5CFF; --ok:#12B76A; --no:#98A2B3;
+  --shadow:0 24px 60px rgba(31,64,175,.14);
+}
+/* B · forest 深绿开源项目（参考「Supabase」） */
+.t-forest{
+  --bg1:#0A2620; --bg2:#0E3A30; --bg3:#07201B;
+  --surface:rgba(255,255,255,.06); --surface-2:rgba(255,255,255,.10);
+  --border:rgba(160,255,220,.14); --border-strong:rgba(160,255,220,.26);
+  --text:#ECFDF5; --text-2:#A7D8C7; --text-3:#6FA592;
+  --accent:#34D399; --accent-2:#22D3EE;
+  --accent-soft:rgba(52,211,153,.16); --accent-line:rgba(52,211,153,.45);
+  --badge:#34D399; --ok:#34D399; --no:#6FA592;
+  --shadow:0 30px 80px rgba(0,20,15,.55);
+}
+/* C · ocean 深蓝工具发布（参考「muCommander」） */
+.t-ocean{
+  --bg1:#081B36; --bg2:#0F3466; --bg3:#0A2450;
+  --surface:rgba(255,255,255,.06); --surface-2:rgba(255,255,255,.10);
+  --border:rgba(150,200,255,.16); --border-strong:rgba(150,200,255,.28);
+  --text:#EAF4FF; --text-2:#A7C3E6; --text-3:#6C8CB8;
+  --accent:#38BDF8; --accent-2:#FACC15;
+  --accent-soft:rgba(56,189,248,.16); --accent-line:rgba(56,189,248,.45);
+  --badge:#FACC15; --ok:#34D399; --no:#6C8CB8;
+  --shadow:0 30px 80px rgba(0,10,30,.55);
+}
+/* D · cream 米色架构图解（参考「AI Agent 完整架构」） */
+.t-cream{
+  --bg1:#F7F1E3; --bg2:#FBF7EE; --bg3:#F4EDDD;
+  --surface:#FFFFFF; --surface-2:#F4EDDF;
+  --border:#E4D8C2; --border-strong:#D3C3A6;
+  --text:#201A13; --text-2:#5E5344; --text-3:#948671;
+  --accent:#C0472F; --accent-2:#2F6F9E;
+  --accent-soft:rgba(192,71,47,.10); --accent-line:rgba(192,71,47,.36);
+  --badge:#C0472F; --ok:#2F7D4F; --no:#948671;
+  --shadow:0 24px 60px rgba(60,40,20,.14);
+}
+/* E · cyber 暗黑霓虹合集（参考「知识图谱」榜单） */
+.t-cyber{
+  --bg1:#05080F; --bg2:#0A1120; --bg3:#060A14;
+  --surface:rgba(255,255,255,.04); --surface-2:rgba(45,226,230,.06);
+  --border:rgba(45,226,230,.20); --border-strong:rgba(45,226,230,.38);
+  --text:#E8F6FF; --text-2:#9DB6C6; --text-3:#61788A;
+  --accent:#2DE2E6; --accent-2:#FF4D9D;
+  --accent-soft:rgba(45,226,230,.14); --accent-line:rgba(45,226,230,.45);
+  --badge:#FF4D9D; --ok:#2DE2E6; --no:#61788A;
+  --shadow:0 30px 90px rgba(0,0,0,.65);
+}
+/* F · sky 亮蓝清单干货（参考「Prompt 常用框架」） */
+.t-sky{
+  --bg1:#E8F2FF; --bg2:#F5FAFF; --bg3:#FFFFFF;
+  --surface:#FFFFFF; --surface-2:#EAF2FF;
+  --border:#CFE2FF; --border-strong:#AFCCF7;
+  --text:#0B1E3A; --text-2:#3F5578; --text-3:#8397B7;
+  --accent:#1B6BFF; --accent-2:#12B76A;
+  --accent-soft:rgba(27,107,255,.09); --accent-line:rgba(27,107,255,.36);
+  --badge:#1B6BFF; --ok:#12B76A; --no:#8397B7;
+  --shadow:0 24px 60px rgba(20,80,200,.14);
+}
+/* G · rose 浅红新开源/组件（参考「Pin UI」红色图片主题） */
+.t-rose{
+  --bg1:#FBECEE; --bg2:#FFF5F6; --bg3:#FDEDEF;
+  --surface:#FFFFFF; --surface-2:#FBEEF0;
+  --border:#F4D6DA; --border-strong:#EBB6BE;
+  --text:#1A0F12; --text-2:#6B4A50; --text-3:#A98A90;
+  --accent:#E11D48; --accent-2:#F43F5E;
+  --accent-soft:rgba(225,29,72,.09); --accent-line:rgba(225,29,72,.36);
+  --badge:#E11D48; --ok:#12B76A; --no:#A98A90;
+  --shadow:0 24px 60px rgba(180,30,60,.14);
+}
+/* H · midnight 深紫夜（参考「动效清单」） */
+.t-midnight{
+  --bg1:#12102E; --bg2:#1B1747; --bg3:#0E0C24;
+  --surface:rgba(255,255,255,.05); --surface-2:rgba(255,255,255,.09);
+  --border:rgba(170,160,255,.18); --border-strong:rgba(170,160,255,.30);
+  --text:#EFEDFF; --text-2:#B4AFD8; --text-3:#7C76A6;
+  --accent:#8B7CFF; --accent-2:#2DE2E6;
+  --accent-soft:rgba(139,124,255,.16); --accent-line:rgba(139,124,255,.45);
+  --badge:#FF6BD6; --ok:#34D399; --no:#7C76A6;
+  --shadow:0 30px 80px rgba(5,0,30,.60);
+}
+
+/* ---------- reference-theme background textures ---------- */
+.t-aurora .card .bg,.t-aurora .bg{background:
+  radial-gradient(820px 560px at 92% -8%,rgba(61,91,245,.16),transparent 62%),
+  radial-gradient(680px 480px at -10% 108%,rgba(139,92,246,.12),transparent 60%)}
+.t-forest .card .bg,.t-forest .bg{background:
+  radial-gradient(900px 620px at 88% -10%,rgba(52,211,153,.20),transparent 62%),
+  radial-gradient(700px 520px at -12% 110%,rgba(34,211,238,.10),transparent 60%)}
+.t-ocean .card .bg,.t-ocean .bg{background:
+  radial-gradient(900px 600px at 85% -12%,rgba(56,189,248,.22),transparent 62%),
+  radial-gradient(700px 520px at -10% 112%,rgba(250,204,21,.08),transparent 60%)}
+.t-cream .card .bg,.t-cream .bg{background:
+  radial-gradient(rgba(120,90,50,.05) 1px,transparent 1px),
+  radial-gradient(900px 620px at 90% -12%,rgba(192,71,47,.07),transparent 65%)}
+.t-cyber .card .bg,.t-cyber .bg{background:
+  linear-gradient(rgba(45,226,230,.045) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(45,226,230,.045) 1px,transparent 1px),
+  radial-gradient(800px 560px at 85% -10%,rgba(45,226,230,.14),transparent 62%),
+  radial-gradient(700px 520px at -12% 112%,rgba(255,77,157,.10),transparent 60%);
+  background-size:46px 46px,46px 46px,auto,auto}
+.t-sky .card .bg,.t-sky .bg{background:
+  radial-gradient(rgba(27,107,255,.06) 1px,transparent 1px),
+  radial-gradient(820px 560px at 90% -10%,rgba(27,107,255,.12),transparent 62%);
+  background-size:30px 30px,auto}
+.t-rose .card .bg,.t-rose .bg{background:
+  radial-gradient(rgba(225,29,72,.05) 1px,transparent 1px),
+  radial-gradient(820px 560px at 90% -10%,rgba(225,29,72,.10),transparent 62%);
+  background-size:28px 28px,auto}
+.t-midnight .card .bg,.t-midnight .bg{background:
+  radial-gradient(900px 620px at 88% -10%,rgba(139,124,255,.20),transparent 62%),
+  radial-gradient(700px 520px at -12% 112%,rgba(45,226,230,.10),transparent 60%)}
+
+/* light-theme mock overrides (mock app UI on light backgrounds) */
+.t-aurora .mcard,.t-aurora .mnav,.t-aurora .mchart,
+.t-sky .mcard,.t-sky .mnav,.t-sky .mchart,
+.t-rose .mcard,.t-rose .mnav,.t-rose .mchart,
+.t-cream .mcard,.t-cream .mnav,.t-cream .mchart{background:var(--surface-2)}
+.t-aurora .ml,.t-sky .ml,.t-rose .ml,.t-cream .ml{background:var(--border-strong)}
+
+/* ============================================================
+   参考风格新增视觉组件（steps / matrix / checklist / kv / stats / blist / bigquote）
+   ============================================================ */
+
+/* kicker as pill */
+.kicker.pill{display:inline-flex;align-items:center;gap:10px;align-self:flex-start;
+  background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent-line);
+  padding:9px 20px;border-radius:999px;font-size:22px;font-weight:700;letter-spacing:1px}
+
+/* numbered steps (horizontal) */
+.steps{display:flex;gap:18px;width:100%;align-items:stretch}
+.step{flex:1;background:var(--surface);border:1px solid var(--border-strong);border-radius:18px;
+  padding:26px 20px;display:flex;flex-direction:column;gap:12px;position:relative;min-width:0}
+.step .snum{width:52px;height:52px;border-radius:14px;background:var(--accent);color:#fff;
+  font-size:26px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.step .st{font-size:28px;font-weight:800;color:var(--text)}
+.step .sd{font-size:20px;line-height:1.45;color:var(--text-2)}
+.steps .sarrow{flex:0 0 auto;display:flex;align-items:center;color:var(--accent)}
+.steps .sarrow .ic{width:28px;height:28px}
+
+/* matrix / collection grid */
+.matrix{display:grid;gap:20px;width:100%}
+.matrix.c2{grid-template-columns:repeat(2,1fr)}
+.matrix.c3{grid-template-columns:repeat(3,1fr)}
+.mxcard{background:var(--surface);border:1px solid var(--border);border-radius:18px;
+  padding:24px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.mxhead{display:flex;align-items:center;gap:12px}
+.mxnum{font-size:19px;font-weight:800;color:var(--accent)}
+.mxttl{font-size:26px;font-weight:800;color:var(--text);letter-spacing:-.5px}
+.mxdesc{font-size:20px;line-height:1.5;color:var(--text-2)}
+.mxfields{display:flex;flex-direction:column;gap:5px;margin-top:auto;padding-top:6px}
+.mxrow{display:flex;justify-content:space-between;font-size:18px;color:var(--text-3)}
+.mxrow b{color:var(--text);font-weight:700}
+.mxtags{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.mxtag{font-size:16px;font-weight:600;color:var(--accent);background:var(--accent-soft);
+  border:1px solid var(--accent-line);padding:5px 12px;border-radius:8px}
+
+/* checklist */
+.checklist{display:flex;flex-direction:column;gap:15px;width:100%}
+.clrow{display:flex;align-items:flex-start;gap:16px;background:var(--surface);
+  border:1px solid var(--border);border-radius:16px;padding:20px 24px}
+.clbox{width:38px;height:38px;border-radius:11px;background:var(--accent-soft);
+  border:1px solid var(--accent-line);color:var(--accent);display:flex;align-items:center;
+  justify-content:center;flex:0 0 auto}
+.clbox .ic{width:22px;height:22px}
+.cltxt{font-size:25px;line-height:1.42;color:var(--text)}
+.cltxt b{color:var(--accent);font-weight:800}
+
+/* key-value table (tech stack) */
+.kv{display:flex;flex-direction:column;width:100%;border:1px solid var(--border);
+  border-radius:16px;overflow:hidden;background:var(--surface)}
+.kvrow{display:flex;align-items:center;padding:16px 24px;border-bottom:1px solid var(--border);font-size:22px}
+.kvrow:last-child{border-bottom:none}
+.kvrow:nth-child(even){background:var(--surface-2)}
+.kvk{width:190px;flex:0 0 auto;color:var(--text-3);font-weight:700}
+.kvv{color:var(--text)}
+
+/* big stats */
+.stats{display:flex;gap:20px;width:100%}
+.stat{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:20px;
+  padding:30px 22px;text-align:center}
+.stat .num{font-size:66px;font-weight:800;color:var(--accent);line-height:1;letter-spacing:-2px}
+.stat .lb{font-size:22px;color:var(--text-2);margin-top:14px;line-height:1.4}
+
+/* bullet list card */
+.blist{display:flex;flex-direction:column;gap:26px;width:100%}
+.brow{display:flex;gap:20px;align-items:flex-start}
+.bidx{width:46px;height:46px;border-radius:13px;background:var(--accent);color:#fff;
+  font-weight:800;font-size:22px;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.btxt .bt{font-size:30px;font-weight:800;color:var(--text);letter-spacing:-.5px}
+.btxt .bd{font-size:22px;color:var(--text-2);line-height:1.5;margin-top:5px}
+.brow .bico{width:46px;height:46px;border-radius:13px;background:var(--accent-soft);
+  border:1px solid var(--accent-line);color:var(--accent);display:flex;align-items:center;
+  justify-content:center;flex:0 0 auto}
+.brow .bico .ic{width:26px;height:26px}
+
+/* big quote */
+.bigquote{font-size:66px;font-weight:800;line-height:1.28;letter-spacing:-2px;color:var(--text)}
+.bigquote .acc{color:var(--accent)}
+.qauthor{margin-top:36px;font-size:26px;color:var(--text-3);letter-spacing:1px}
+.qmark{font-size:120px;font-weight:800;line-height:.6;color:var(--accent);opacity:.30;font-family:Georgia,serif}
+
+/* shot caption pill (for screenshot frames) */
+.shotcap{display:inline-flex;align-items:center;gap:8px;font-size:18px;font-weight:700;
+  color:#fff;background:rgba(10,15,25,.82);padding:8px 16px;border-radius:999px;margin-top:12px}
+.shotcap .ic{width:18px;height:18px}
+
+/* ============================================================
+   品牌主题 · baize（白泽，主色 #6255D7）— 真实品牌案例用
+   ============================================================ */
+.t-baize{
+  --bg1:#F4F2FF; --bg2:#FAF9FF; --bg3:#FFFFFF;
+  --surface:#FFFFFF; --surface-2:#F1EEFF;
+  --border:#E2DDF7; --border-strong:#CFC6F2;
+  --text:#16122B; --text-2:#4B4568; --text-3:#8D87A8;
+  --accent:#6255D7; --accent-2:#8B7CFF;
+  --accent-soft:rgba(98,85,215,.10); --accent-line:rgba(98,85,215,.38);
+  --badge:#6255D7; --ok:#12B76A; --no:#8D87A8;
+  --shadow:0 24px 60px rgba(80,60,190,.14);
+}
+.t-baize .card .bg,.t-baize .bg{background:
+  radial-gradient(rgba(98,85,215,.05) 1px,transparent 1px),
+  radial-gradient(820px 560px at 90% -10%,rgba(98,85,215,.13),transparent 62%),
+  radial-gradient(680px 480px at -10% 108%,rgba(139,124,255,.10),transparent 60%);
+  background-size:28px 28px,auto,auto}
+.t-baize .mcard,.t-baize .mnav,.t-baize .mchart{background:var(--surface-2)}
+.t-baize .ml{background:var(--border-strong)}
+
+/* real brand logo image in the header */
+.logo-img{width:52px;height:52px;border-radius:14px;object-fit:contain;background:#fff;padding:5px;box-shadow:0 6px 18px var(--accent-soft);display:block}
+
+/* compact grid for collection/ranking posters (8–9 items per poster) */
+.matrix.compact{gap:12px}
+.matrix.compact .mxcard{padding:14px 16px;gap:5px;border-radius:14px}
+.matrix.compact .mxnum{font-size:15px}
+.matrix.compact .mxttl{font-size:19px}
+.matrix.compact .mxdesc{font-size:14px;line-height:1.35}
+.matrix.compact .mxfields{gap:2px;padding-top:4px}
+.matrix.compact .mxrow{font-size:13px}
+.matrix.compact .mxtags{gap:5px;margin-top:5px}
+.matrix.compact .mxtag{font-size:11px;padding:3px 7px;border-radius:6px}
+
+/* real screenshot frame */
+.shotwrap{width:100%;display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+.shotwrap .shot{width:100%}
+.fill .shotwrap{align-self:center;height:auto}
+.fill .shotwrap .shot{height:auto}
+.shot{border:1px solid var(--border);border-radius:20px;overflow:hidden;background:var(--surface);box-shadow:var(--shadow)}
+.shot .sbar{height:46px;display:flex;align-items:center;gap:9px;padding:0 18px;border-bottom:1px solid var(--border);background:var(--surface-2)}
+.shot .surl{margin-left:12px;font-size:16px;color:var(--text-3);font-family:var(--mono)}
+.shot img{width:100%;display:block}
+
+

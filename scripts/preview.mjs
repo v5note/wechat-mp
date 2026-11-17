@@ -38,13 +38,14 @@ function sheetHtml(demoDir, rows, cellW, gapX, pad) {
 
 export function buildDemoOverviews(demoDir) {
   demoDir = resolve(demoDir);
-  const versions = ['v1-dark', 'v2-light'].filter((v) => existsSync(join(demoDir, v)));
+  const versions = readdirSync(demoDir).filter((d) => { try { return existsSync(join(demoDir, d, 'cards')); } catch (e) { return false; } }).sort();
   if (!versions.length) return [];
+  const short = (v) => /^v1/i.test(v) ? 'V1' : /^v2/i.test(v) ? 'V2' : v.replace(/^out$/i, 'OUT');
 
   // 1) card wall: one row per version, 7 columns
   const cardRows = versions.map((v) => ({
     cells: files(join(demoDir, v, 'cards'), /^card-\d+\.png$/).map((f, i) => ({
-      label: v.replace('v1-dark', 'V1').replace('v2-light', 'V2') + '-card' + String(i + 1).padStart(2, '0'),
+      label: short(v) + '-card' + String(i + 1).padStart(2, '0'),
       abs: join(demoDir, v, 'cards', f),
     })),
   }));
@@ -57,25 +58,25 @@ export function buildDemoOverviews(demoDir) {
   renderHtml(sheetHtml(demoDir, cardRows, cardW, cardGap, cardPad), cardOut, cardWidth, cardHeight);
   const outputs = [cardOut];
 
-  // 2) article overview: 2 columns, covers first then figures
-  if (versions.length === 2) {
-    const v1 = versions[0], v2 = versions[1];
-    const items = [
-      { label: 'V1-cover', abs: join(demoDir, v1, 'article', 'cover.png') },
-      { label: 'V2-cover', abs: join(demoDir, v2, 'article', 'cover.png') },
-    ];
-    const addFigs = (v, tag) => files(join(demoDir, v, 'article', 'images'), /^fig\d+\.png$/).forEach((f) => {
-      items.push({ label: tag + '-' + f.replace('.png', ''), abs: join(demoDir, v, 'article', 'images', f) });
+  // 2) article overview: covers first, then figures (works for 1..N versions)
+  const items = [];
+  for (const v of versions) {
+    const cov = join(demoDir, v, 'article', 'cover.png');
+    if (existsSync(cov)) items.push({ label: short(v) + '-cover', abs: cov });
+  }
+  for (const v of versions) {
+    files(join(demoDir, v, 'article', 'images'), /^fig\d+\.png$/).forEach((f) => {
+      items.push({ label: short(v) + '-' + f.replace('.png', ''), abs: join(demoDir, v, 'article', 'images', f) });
     });
-    addFigs(v1, 'V1');
-    addFigs(v2, 'V2');
+  }
+  if (items.length) {
     const rows = [];
     for (let i = 0; i < items.length; i += 2) rows.push({ cells: items.slice(i, i + 2) });
     const cellW = 520, gapX = 36, pad = 12;
     let height = pad * 2;
     rows.forEach((row, idx) => {
       let rh = 0;
-      row.cells.forEach((c) => { const s = pngSize(c.abs); rh = Math.max(rh, 18 + Math.round(cellW * s.h / s.w)); });
+      row.cells.forEach((c) => { const s = pngSize(c.abs); if (s) rh = Math.max(rh, 18 + Math.round(cellW * s.h / s.w)); });
       height += rh + (idx < rows.length - 1 ? 18 : 0);
     });
     const width = pad * 2 + 2 * cellW + gapX;

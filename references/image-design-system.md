@@ -158,3 +158,34 @@
 5. **结尾卡**：回顾 + CTA + 二维码。
 
 每张卡右下角可放 3/9、4/9 页码，弱化处理（--text-3）。
+
+## 9. 参考风格版式（来自 35 张贴图实战）
+
+真实爆款贴图比「干净模板」更密的三个原因，可迁移到本项目：
+
+1. **顶部信息条 + 大标题 + 一个视觉锚点**：大标题常 3–4 行、字号占屏 20–28%，关键词用强调色或色块；标题上方加一个小 pill（栏目/协议/期号）。
+2. **主视觉必须"像一个真实东西"**：真产品截图、架构图、卡片墙、清单格——不要大面积空白。截图配一枚「示意图/官方界面」小胶囊做诚实标注。
+3. **分区有结构**：能力用 2×2 卡片、合集用 2–3 列字段卡（形态/语言/许可/星数）、清单用勾选行、数据用大字。底部常有一条「先了解/边界」提示条。
+
+可借用的小元素：手绘箭头/下划波浪（浅色系）、角标页码（01/06）、四色分区（sky）、细网格（cyber）、纸纹（cream）。
+但**不要**回到「全大写小标签 + 中点 A·B·C + 每卡 01/02/03 当装饰」的 AI 模板腔。
+
+## 10. 主题扩展
+
+在原有 dark / light 基础上，新增 8 套参考风格主题（aurora / forest / ocean / cream / cyber / sky / rose / midnight），
+共 14 套，连同 magazine / guofeng / mono / night-cyan 一起由 [style-catalog](style-catalog.md) 索引。
+新增主题**只改令牌**（见 [../assets/tokens.css](../assets/tokens.css)），组件复用；样张用 `node scripts/gen-specimens.mjs` 生成。
+
+## 11. 新增视觉组件规格
+
+| 组件 | hero.type | 用法 | 关键约束 |
+|---|---|---|---|
+| 编号步骤 | `steps` | nodes[{num,t,d}] | 3–5 步；号码方块用强调色 |
+| 字段卡片墙 | `matrix` | items[{num,t,desc,fields[{k,v}],tags}] + cols | 4–9 项；字段 ≤4 行 |
+| 勾选清单 | `checklist` | items[字符串或 {t,b,d}] | 3–6 条；勾选框统一 |
+| 键值表 | `kv` | rows[{k,v}] | 行高一致；偶数行浅底 |
+| 数据大字 | `stats` | items[{num,label}] | 2–4 个；数字用强调色 |
+| 要点列表 | `blist` | items[{t,d,icon|num}] | 3–5 条 |
+
+对应卡片变体 `list` / `grid` / `stat` / `quote` 已在 `scripts/visuals.mjs` 注册，字段见 [style-catalog](style-catalog.md) 第 1 节。
+
