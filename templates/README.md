@@ -1,6 +1,6 @@
 # templates · 模板说明
 
-五个模板都用同一套 [../assets/tokens.css](../assets/tokens.css) 与 [../assets/icons.svg](../assets/icons.svg)（渲染时由脚本自动注入）。
+七个模板都用同一套 [../assets/tokens.css](../assets/tokens.css) 与 [../assets/icons.svg](../assets/icons.svg)（渲染时由脚本自动注入）。
 
 | 文件 | 用途 | 画布 |
 |---|---|---|
@@ -31,7 +31,12 @@
 - grid：kicker / title / items[{num,t,desc,fields[{k,v}],tags[]}] / cols / caption
 - stat：kicker / title / body / stats[{num,label}] / caption
 - quote：quote / accent / author
-- ending：title / points[] / cta / ctaKicker / qr
+- ending：title / points[] / cta / ctaKicker / qr（传 `{url,label,logoText}` 生成**真实二维码**，`true` 只是占位）
+- **phone**：kicker / title / sub / points[] / hero{type:phone} / tags / layout(split 或 stack)
+- **desktop**：kicker / title / body / hero{type:desktop} / caption
+- **bento**：kicker / title / body / items[{t,d,icon,num,tags,span,tall,tone}] / cols / caption
+- **flowchart**：kicker / title / hero{type:flowchart} / caption
+- **promo**：promoBadge / title / accent / sub / hero{type:promo} / points[] / cta / qr
 
 ## hero 视觉类型（hero.type）
 
@@ -48,6 +53,11 @@
 - stats：items[{num,label}]（数据大字）
 - blist：items[{t,d,icon|num}]（要点列表）
 - compare：left{title,items[]} + right{title,items[]}（正文配图用对比块）
+- **phone**：screen(chat|feed|app) + name / messages[{from,text,card}] / items / stats
+- **desktop**：app + ui(dashboard|board|editor) + nav / tabs / stats / dock
+- **bento**：items[{t,d,icon,num,tags,span,tall,tone}] + cols
+- **flowchart**：start + steps[{t,d}] + decision{q,yes,no} + end + yesLabel/noLabel
+- **promo**：device(phone|desktop) + src（真实截图）+ tags + price + priceNote
 
 图标名见 [../assets/icons/README.md](../assets/icons/README.md)。
 

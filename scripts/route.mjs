@@ -4,6 +4,16 @@
 // 用法：node scripts/route.mjs --topic "一款开源的后端框架" [--json]
 
 const RULES = [
+  { key: 'promo', test: /新品|宣传|海报|预售|上新|开售|卖点|广告图|主视觉/i,
+    genre: '产品宣传', themes: ['promo', 'ocean'], article: '产品宣发', video: '口播干货' },
+  { key: 'phone', test: /手机|移动端|小程序|聊天|对话|ios|android/i,
+    genre: '移动端体验', themes: ['ios', 'rose'], article: '设备图文', video: '屏幕解说' },
+  { key: 'desktop', test: /电脑|桌面|浏览器|网页|后台|工作台|编辑器|控制台|macos|windows/i,
+    genre: '桌面端体验', themes: ['desk', 'dark'], article: '设备图文', video: '屏幕解说' },
+  { key: 'flowchart', test: /流程图|流程|审批|分支|决策|链路|sop/i,
+    genre: '流程拆解', themes: ['blueprint', 'cream'], article: '教程一图流', video: '屏幕解说' },
+  { key: 'cards', test: /卡片|要点|模块|bento/i,
+    genre: '卡片清单', themes: ['bento', 'sky'], article: '合集/清单', video: '图文轮播' },
   { key: 'opensource', test: /开源|star|license|github|仓库|源码|协议/i,
     genre: '项目推荐', themes: ['forest', 'dark'], article: '开源项目推荐', video: '口播干货' },
   { key: 'release', test: /发布|上线|新版本|发布会|终于来了|公测/i,
@@ -25,6 +35,11 @@ const RULES = [
 ];
 
 const CARD_BONES = {
+  '产品宣传': ['promo', 'point', 'bento', 'compare', 'ending'],
+  '移动端体验': ['phone', 'point', 'bento', 'compare', 'ending'],
+  '桌面端体验': ['desktop', 'point', 'bento', 'diagram', 'ending'],
+  '流程拆解': ['flowchart', 'steps', 'point', 'compare', 'ending'],
+  '卡片清单': ['bento', 'grid', 'point', 'stat', 'ending'],
   '项目推荐': ['cover', 'point', 'list', 'diagram', 'compare', 'stat', 'ending'],
   '产品发布': ['cover', 'point', 'diagram', 'compare', 'ending'],
   '教程一图流': ['cover', 'diagram', 'list', 'steps', 'ending'],
@@ -33,6 +48,14 @@ const CARD_BONES = {
   '合集': ['cover', 'grid', 'list', 'stat', 'ending'],
   '设计干货': ['cover', 'grid', 'list', 'compare', 'ending'],
   '原理图解': ['cover', 'diagram', 'list', 'diagram', 'quote', 'ending'],
+};
+
+const VISUAL_STYLE = {
+  '产品宣传': '产品宣传图',
+  '移动端体验': '手机风格',
+  '桌面端体验': '电脑风格',
+  '流程拆解': '流程图风格',
+  '卡片清单': '卡片风格',
 };
 
 export function route(topic, opts = {}) {
@@ -56,6 +79,7 @@ export function route(topic, opts = {}) {
     altThemes: themes.slice(1),
     reader,
     articleSkeleton: article,
+    visualStyle: VISUAL_STYLE[genre] || '贴图套图',
     cardVariants: bones,
     videoForm: video,
     reasons,
@@ -78,7 +102,7 @@ if (isMain) {
   else {
     console.log('主题：' + r.topic);
     console.log('体裁：' + r.genre + '　读者：' + r.reader);
-    console.log('推荐主题：' + r.theme + (r.altThemes.length ? '（备选 ' + r.altThemes.join(' / ') + '）' : ''));
+    console.log('画面风格：' + r.visualStyle + '　推荐主题：' + r.theme + (r.altThemes.length ? '（备选 ' + r.altThemes.join(' / ') + '）' : ''));
     console.log('卡片序列：' + r.cardVariants.join(' → '));
     console.log('文章骨架：' + r.articleSkeleton + '　视频：' + r.videoForm);
     console.log('依据：' + r.reasons.join('；'));

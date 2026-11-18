@@ -22,7 +22,12 @@ const LABELS = {
   'sky': '亮蓝清单干货',
   'rose': '浅红新开源',
   'midnight': '深紫夜',
-  'baize': '白泽品牌紫'
+  'baize': '白泽品牌紫',
+  'ios': '手机风格（iOS）',
+  'desk': '电脑风格（桌面）',
+  'bento': '卡片风格（Bento）',
+  'blueprint': '流程图风格',
+  'promo': '产品宣传图'
 };
 
 function specimenPath(name) {

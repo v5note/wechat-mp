@@ -2,18 +2,16 @@
 
 > 主题只决定**视觉令牌**（底/面/字/强调/纹理）；风格 = 主题 + 版面骨架 + 语气，见 [style-catalog](style-catalog.md)。
 
-当前内置 **15 套主题**（`assets/tokens.css`）：基础两套 + 12 套扩展。要加新主题，**只改令牌，不改组件**。
+当前内置 **20 套主题**（`assets/tokens.css`）：基础 2 套 + 参考风格 10 套 + 画面风格 5 套 + 可选扩展 3 套。要加新主题，**只改令牌，不改组件**。
 
 ## 主题清单
+
+### 基础与参考风格
 
 | 主题 | 气质 | bg | accent | 样张 |
 |---|---|---|---|---|
 | dark | 深色科技（基线 V1） | `#0B1020` | `#4F8CFF` | [sheet-dark.png](../assets/style-specimens/sheet-dark.png) |
 | light | 浅色清新（基线 V2） | `#FFFFFF` | `#2563EB` | [sheet-light.png](../assets/style-specimens/sheet-light.png) |
-| magazine | 杂志米色 | `#F7F3EC` | `#B4472F` | [sheet-magazine.png](../assets/style-specimens/sheet-magazine.png) |
-| guofeng | 国风墨朱 | `#1B1712` | `#B23A2E` | [sheet-guofeng.png](../assets/style-specimens/sheet-guofeng.png) |
-| mono | 极简黑白 | `#FFFFFF` | `#111111` | [sheet-mono.png](../assets/style-specimens/sheet-mono.png) |
-| night-cyan | 深底青 | `#0A0F14` | `#2FD6C4` | [sheet-night-cyan.png](../assets/style-specimens/sheet-night-cyan.png) |
 | aurora | 浅蓝工具推荐 | `#EAF2FF` | `#3D5BF5` | [sheet-aurora.png](../assets/style-specimens/sheet-aurora.png) |
 | forest | 深绿开源项目 | `#0A2620` | `#34D399` | [sheet-forest.png](../assets/style-specimens/sheet-forest.png) |
 | ocean | 深蓝工具发布 | `#081B36` | `#38BDF8` | [sheet-ocean.png](../assets/style-specimens/sheet-ocean.png) |
@@ -23,20 +21,35 @@
 | rose | 浅红新开源 | `#FBECEE` | `#E11D48` | [sheet-rose.png](../assets/style-specimens/sheet-rose.png) |
 | midnight | 深紫夜 | `#12102E` | `#8B7CFF` | [sheet-midnight.png](../assets/style-specimens/sheet-midnight.png) |
 | baize | 白泽品牌紫 | `#F4F2FF` | `#6255D7` | [sheet-baize.png](../assets/style-specimens/sheet-baize.png) |
+| magazine | 杂志米色 | `#F7F3EC` | `#B4472F` | [sheet-magazine.png](../assets/style-specimens/sheet-magazine.png) |
+| guofeng | 国风墨朱 | `#1B1712` | `#B23A2E` | [sheet-guofeng.png](../assets/style-specimens/sheet-guofeng.png) |
+| mono | 极简黑白 | `#FFFFFF` | `#111111` | [sheet-mono.png](../assets/style-specimens/sheet-mono.png) |
+| night-cyan | 深底青 | `#0A0F14` | `#2FD6C4` | [sheet-night-cyan.png](../assets/style-specimens/sheet-night-cyan.png) |
+
+### 画面风格（手机 / 电脑 / 卡片 / 流程图 / 产品宣传）
+
+| 主题 | 气质 | bg | accent | 样张 |
+|---|---|---|---|---|
+| ios | 手机风格（iOS 浅色） | `#F5F5F7` | `#007AFF` | [sheet-ios.png](../assets/style-specimens/sheet-ios.png) |
+| desk | 电脑风格（深空灰桌面） | `#101217` | `#5B8CFF` | [sheet-desk.png](../assets/style-specimens/sheet-desk.png) |
+| bento | 卡片风格（暖米纸 + Bento） | `#FBF7F0` | `#FF5C35` | [sheet-bento.png](../assets/style-specimens/sheet-bento.png) |
+| blueprint | 流程图风格（蓝图网格） | `#F3F7FC` | `#1D4ED8` | [sheet-blueprint.png](../assets/style-specimens/sheet-blueprint.png) |
+| promo | 产品宣传图（近黑 + 橙金） | `#0B0B10` | `#FF6A00` | [sheet-promo.png](../assets/style-specimens/sheet-promo.png) |
 
 ![主题样张总览](../assets/style-specimens/overview.png)
 
-样张由 `node scripts/gen-specimens.mjs` 用真实渲染管线生成，不是色块示意。
+样张由 `node scripts/gen-specimens.mjs` 用真实渲染管线生成，不是色块示意；其中 ios / desk / bento / blueprint / promo 的样张分别演示手机、电脑、卡片、流程图、宣传图版式。
 
 ## 加一套主题
 
 1. 在 [../assets/tokens.css](../assets/tokens.css) 增加 `.t-<name>{ --bg1/--bg2/--bg3/--surface/--border/--text/--text-2/--text-3/--accent/--accent-2/... }`。
-2. 需要专属纹理时补 `.t-<name> .card .bg{...}`；浅色主题补 mock 覆盖。
-3. 在 [../scripts/gen-specimens.mjs](../scripts/gen-specimens.mjs) 的 `themes` 里加一行，跑 `node scripts/gen-specimens.mjs`。
-4. 在 [style-catalog](style-catalog.md) 与上表登记。
+2. 需要专属纹理时补 `.t-<name> .card .bg{...}`；浅色主题补 mock 覆盖（`.mcard/.mnav/.mchart/.ml`）。
+3. 在 [../scripts/gen-specimens.mjs](../scripts/gen-specimens.mjs) 的 `themes` 里加一行（可带专属 `card`），跑 `node scripts/gen-specimens.mjs`。
+4. 在 [style-catalog](style-catalog.md) 与 [theme-registry](../scripts/theme-registry.mjs) 的 `LABELS` 登记。
 
 ## 规矩
 
 - 正文对比度 ≥4.5:1，标签 ≥3:1。
 - 一个方向只用一套强调色；别把两套主题的色混在一个版里。
 - 加主题不是换皮：风格仍要求**结构不同**（见 [style-catalog](style-catalog.md) 与 [directions](directions.md)）。
+- 画面风格（手机/电脑/卡片/流程图/宣传图）是版式，不是主题；同一版式可以换主题，但一期只保留一个主画面风格。

@@ -1,10 +1,10 @@
 ---
 name: wechat-mp
-description: 微信公众号内容生产工坊（贴图 + 长文 + 可选视频号）。当用户要把一个主题、项目、教程或复盘做成公众号内容，说「写公众号」「做个贴图」「生成公众号文章」「按某篇公众号的风格出一版」「出一套公众号样例」「配个视频号/口播」，或给定主题要标题备选 / 摘要 / 正文 / 配图 / 发布清单时使用。内置 15 套参考风格主题与体裁路由：从 35 张贴图、15 篇文章、3 个视频号素材提炼风格库，按主题自动推荐版式。默认交付 2 版本（深色科技 + 浅色清新）× 2 格式（贴图 + 文章）= 4 个样例；可选输出视频号（口播稿 + 分镜 + 竖版封面）。配图用 HTML 模板 + 无头 Chrome 统一渲染成 PNG，规格受控。
+description: 微信公众号内容生产工坊（贴图 + 长文 + 可选视频号）。当用户要把一个主题、项目、教程或复盘做成公众号内容，说「写公众号」「做个贴图」「生成公众号文章」「按某篇公众号的风格出一版」「出一套公众号样例」「配个视频号/口播」，或给定主题要标题备选 / 摘要 / 正文 / 配图 / 发布清单时使用。内置 20 套主题、6 类画面风格（手机/电脑/卡片/流程图/产品宣传图）、8 种文章骨架与体裁路由：从 35 张贴图、15 篇文章、3 个视频号及 9 篇补充参考中提炼风格库，按主题自动推荐版式。默认交付 2 版本（深色科技 + 浅色清新）× 2 格式（贴图 + 文章）= 4 个样例；可选手机/电脑/流程图/宣传图套图与视频号（口播稿 + 分镜 + 竖版封面）。配图用 HTML 模板 + 无头 Chrome 统一渲染成 PNG，规格受控。
 allowed-tools: Bash, Read, Write, Edit, Glob, Grep
 metadata:
   author: "wechat-mp"
-  version: "2.0.0"
+  version: "0.1.0"
   homepage: "https://github.com/v5note/wechat-mp"
   repository: "https://github.com/v5note/wechat-mp"
   license: "MIT"
@@ -25,7 +25,7 @@ metadata:
 
 | 文件 | 作用 |
 |---|---|
-| [references/style-catalog.md](references/style-catalog.md) | **风格库 + 智能路由**：11 种贴图风格、6 种文章骨架、3 种视频形式，及「输入→风格」查表 |
+| [references/style-catalog.md](references/style-catalog.md) | **风格库 + 智能路由**：6 类画面风格、16 种贴图风格（20 套主题）、8 种文章骨架、3 种视频形式，及「输入→风格」查表 |
 | [references/image-design-system.md](references/image-design-system.md) | 图片硬规格：画布/安全区/字号阶/卡片原型/视觉组件 |
 | [references/article-format.md](references/article-format.md) | 文章排版与「开源项目推荐/横评/复盘」等骨架 |
 
@@ -45,7 +45,8 @@ metadata:
 | V1 深色科技版 | 5–9 张 3:4 卡片图 + 逐图文案 | 长文 + 封面 + 3–5 张正文配图 |
 | V2 浅色清新版 | 5–9 张 3:4 卡片图 + 逐图文案 | 长文 + 封面 + 3–5 张正文配图 |
 
-**进阶**（题材有明确最佳风格时）：按 [style-catalog](references/style-catalog.md) 显式挑 1 套「主题 + 骨架」，做 1 个高完成度样例；
+**进阶**（题材有明确最佳风格时）：按 [style-catalog](references/style-catalog.md) 显式挑 1 套「画面风格 + 主题 + 骨架」，做 1 个高完成度样例；
+手机 / 电脑 / 卡片 / 流程图 / 产品宣传图可作为主画面，`phone` / `desktop` / `bento` / `flowchart` / `promo` 卡与同名 hero 直接组合。
 需要时再加 **1 个视频号产出**（`video/cover.png` + `口播稿.md` + `分镜.md`）。
 
 每个样例都要带齐四件套：
@@ -72,17 +73,22 @@ metadata:
 
 输出体裁、推荐主题、卡片序列、文章骨架与视频形式。下表为人工核对依据：
 
-| 输入信号 | 体裁 | 首选贴图风格 | 文章骨架 | 视频 |
-|---|---|---|---|---|
-| 开源 / Star / License / GitHub | 项目推荐 | forest / dark | 开源项目推荐 | 口播 |
-| 新版本 / 上线 / 发布 | 产品发布 | ocean / forest | 产品发布 | 屏幕解说 |
-| 工具 / Skill / 插件 / 效率 | 项目推荐 | aurora / sky | 项目推荐 | 口播 |
-| 教程 / 步骤 / 一图流 | 教程 | sky / cream | 教程一图流 | 图文轮播 |
-| 对比 / 选型 / 哪个好 | 横评 | mono / light | 横评对比 | 口播 |
-| 数据 / 复盘 / 指标 | 复盘 | dark / cream | 数据复盘 | 屏幕解说 |
-| 榜单 / 合集 / N 个 | 合集 | cyber | 合集/清单 | 图文轮播 |
-| 设计 / UI / 灵感 | 设计干货 | rose / midnight | 项目推荐 | 图文轮播 |
-| 原理 / 架构 / 系统 | 原理图解 | cream | 教程 | 屏幕解说 |
+| 输入信号 | 体裁 | 画面风格 | 首选主题 | 文章骨架 | 视频 |
+|---|---|---|---|---|---|
+| 新品 / 宣传 / 海报 / 预售 | 产品宣传 | 产品宣传图 | promo / ocean | 产品宣发 | 口播 |
+| 手机 / 移动端 / 小程序 / 聊天 | 移动端体验 | 手机风格 | ios / rose | 设备图文 | 屏幕解说 |
+| 电脑 / 桌面 / 浏览器 / 后台 | 桌面端体验 | 电脑风格 | desk / dark | 设备图文 | 屏幕解说 |
+| 流程图 / 流程 / 审批 / 分支 | 流程拆解 | 流程图风格 | blueprint / cream | 教程一图流 | 屏幕解说 |
+| 卡片 / 要点 / 模块 / Bento | 卡片清单 | 卡片风格 | bento / sky | 合集/清单 | 图文轮播 |
+| 开源 / Star / License / GitHub | 项目推荐 | 贴图套图 | forest / dark | 开源项目推荐 | 口播 |
+| 新版本 / 上线 / 发布 | 产品发布 | 贴图套图 | ocean / forest | 产品发布 | 屏幕解说 |
+| 工具 / Skill / 插件 / 效率 | 项目推荐 | 贴图套图 | aurora / sky | 项目推荐 | 口播 |
+| 教程 / 步骤 / 一图流 | 教程 | 流程图风格 | sky / cream | 教程一图流 | 图文轮播 |
+| 对比 / 选型 / 哪个好 | 横评 | 卡片风格 | mono / light | 横评对比 | 口播 |
+| 数据 / 复盘 / 指标 | 复盘 | 贴图套图 | dark / cream | 数据复盘 | 屏幕解说 |
+| 榜单 / 合集 / N 个 | 合集 | 卡片风格 | cyber / bento | 合集/清单 | 图文轮播 |
+| 设计 / UI / 灵感 | 设计干货 | 手机/电脑/卡片 | rose / midnight | 项目推荐 | 图文轮播 |
+| 原理 / 架构 / 系统 | 原理图解 | 流程图风格 | cream / blueprint | 教程 | 屏幕解说 |
 
 ## 工作流程
 
@@ -93,7 +99,7 @@ metadata:
 
 ### 第 2 步 · 定版式
 为每版定：卡片序列（封面→要点→图解/对比→结尾）、文章小节大纲、主题令牌（`theme` + `accent`）。
-优先用 [style-catalog](references/style-catalog.md) 的卡片骨架（cover/point/diagram/compare/list/grid/stat/quote/ending）与视觉组件（browser/code/flow/steps/stack/tiles/matrix/checklist/kv/stats/blist）。
+优先用 [style-catalog](references/style-catalog.md) 的卡片骨架（cover/point/diagram/compare/list/grid/stat/quote/ending + phone/desktop/bento/flowchart/promo）与视觉组件（browser/code/flow/steps/stack/tiles/matrix/checklist/kv/stats/blist + phone/desktop/bento/flowchart/promo）。
 **完成标准**：两版「卡片清单 + 文章目录」落到纸面，每张卡/每节都对应一个卖点；两版结构至少一处不同。
 
 > 可选：先做风格探索，跑 `node scripts/directions.mjs --topic "主题" --out design-demos`（见 [directions](references/directions.md)）。
@@ -130,8 +136,8 @@ metadata:
 
 ## 目录导览
 
-- [references/style-catalog.md](references/style-catalog.md) — **风格库 + 智能路由**（11 贴图风格 / 6 文章骨架 / 3 视频形式 / 参考索引）。
-- [references/image-design-system.md](references/image-design-system.md) — 图片硬规格：画布/栅格/安全区、15 套主题令牌、字号阶、卡片原型、视觉组件、正反例。
+- [references/style-catalog.md](references/style-catalog.md) — **风格库 + 智能路由**（6 类画面风格 / 16 贴图风格 / 20 套主题 / 8 文章骨架 / 3 视频形式 / 参考索引）。
+- [references/image-design-system.md](references/image-design-system.md) — 图片硬规格：画布/栅格/安全区、20 套主题令牌、字号阶、10 种卡片原型、视觉组件、画面尺寸、正反例。
 - [references/article-format.md](references/article-format.md) — 文章排版参数、结构、骨架、Markdown/内联 HTML 规则。
 - [references/content-playbook.md](references/content-playbook.md) — 标题/摘要/导语/小标题/配图配文/CTA 公式与实战范式。
 - [references/video-format.md](references/video-format.md) — **视频号（可选）**：规格、3 种形式、`spec.video` 字段、自检。
@@ -141,11 +147,11 @@ metadata:
 - [references/directions.md](references/directions.md) — **可选增强**：方向提案与 `方向确认.md`。
 - [references/polish-loop.md](references/polish-loop.md) — 截图打磨环与 `polish-log.md`。
 - [references/materials.md](references/materials.md) — **可选增强**：素材分档 T0/T1/T2。
-- [references/styles.md](references/styles.md) — 15 套主题清单与加主题步骤。
+- [references/styles.md](references/styles.md) — 20 套主题清单（含手机/电脑/卡片/流程图/宣传图）与加主题步骤。
 - [templates/](templates/) — card / article-cover / article-cover-square / diagram / video-cover / article-body。
 - [scripts/](scripts/) — render.mjs、build.mjs、check.mjs、preview.mjs、route.mjs（智能路由）、gen-specimens.mjs、directions.mjs、directions-plan.mjs、theme-registry.mjs、video.mjs。
 - [assets/](assets/) — `tokens.css`（15 套主题 + 组件）、`icons.svg`、`style-specimens/`（主题样张）。
-- [examples/](examples/) — `demo/`（两版四样例基线）+ `cases/`（参考风格案例：forest / rose / cream / 视频号）。
+- [examples/](examples/) — `demo/`（两版四样例基线）+ `cases/`（参考风格案例：forest / rose / cream / 视频号 / style-gallery 六类画面风格）。
 
 ## 环境与命令
 
@@ -183,7 +189,11 @@ metadata:
 - 每张卡只表达一个信息；标题最多两行；每卡强调色只用一种。
 - 颜色、字号、间距一律取 [assets/tokens.css](assets/tokens.css) 的令牌，不手写魔法值。
 - 文章 HTML 只用内联样式；不引外部字体/脚本；图片按顺序编号并配「图N：」图注。
+- **二维码要真**：结尾卡/宣传卡的 `qr` 传官网或 GitHub 地址（`{url,label,logoText}`），由 `scripts/qr.mjs` 生成可扫码的真码；码地址必须与 `article.links` 一致，白底、≥112px，不用占位图案。
 - 版面安全区：四周 ≥64px，主标题不贴边，底部标签不压图。
+- **画面风格硬规格**：手机真机框 404×820；桌面窗口 936 宽；流程图 936 宽（2–4 步 + 1 判断）；Bento 3–4 列；宣传图一屏一产品一价格一 CTA。
+- **设备类配图要够高**：手机/电脑文章配图 ≥900，流程图配图 ≥900，否则设备或末节点会被裁。
+- **示意要诚实**：手机/电脑窗口内的 UI 与数字、宣传图价格必须标「示意」或有真实来源；真实截图优先用 `shot`。
 - **事实与品牌**：真实产品/数据/评价必须有来源；真实品牌必须有官方 logo/截图，缺失用诚实占位并标注「示意图」。
 - **反模板装饰**：非序列不用 01/02/03；不用中点式「A · B · C」；不把全大写小标签当装饰；`NEW`/`免费` 这类徽章只在 brief 明确需要时才加。
 - **两版不是换皮**：至少一版的卡片顺序、主视觉类型或文体不同；只换配色/语气不算两版。

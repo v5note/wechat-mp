@@ -1,6 +1,7 @@
 // scripts/visuals.mjs — 卡片视觉组件库（纯字符串拼装，输出 HTML 片段）
 // 所有组件遵守 references/image-design-system.md 的规范。
 import { readFileSync } from 'node:fs';
+import { qrSvg } from './qr.mjs';
 import { join, dirname, isAbsolute } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -184,6 +185,323 @@ export function blist(items){
   return '<div class="blist">' + rows + '</div>';
 }
 
+
+// ============================================================
+// 画面风格组件（手机 / 电脑 / 卡片 / 流程图 / 产品宣传图）
+// 参考：手机截图流、桌面端演示、Bento 卡片墙、流程图解、产品宣发海报
+// ============================================================
+
+// 测试钩子：prerender 时可让指定 URL 渲染成空心占位，用于验证「二维码内容与链接一致」
+export const qrTestHooks = { onRender: function(){ return null; } };
+
+let _uid = 0;
+function uid(prefix){ _uid += 1; return prefix + '-' + _uid; }
+
+// ---------- phone mockup ----------
+function phoneStatus(o){
+  return '<div class="pstatus"><span class="ptime">' + esc(o.time || '9:41') + '</span>' +
+    '<span class="pstat"><i class="pbar b1"></i><i class="pbar b2"></i><i class="pbar b3"></i><i class="pbatt"></i></span></div>';
+}
+function phoneChat(o){
+  const msgs = o.messages || [
+    { from: 'them', text: '把仓库地址发我，我帮你画一张架构图' },
+    { from: 'me', text: 'https://github.com/acme/atlas' },
+    { from: 'them', text: '解析完成：42 个模块，3 处循环依赖', card: { t: '架构图已生成', s: 'PNG / SVG / 链接' } }
+  ];
+  const body = msgs.map(function(m){
+    const cls = m.from === 'me' ? ' me' : '';
+    const card = m.card ? '<div class="pmcard"><div class="pic"></div><div><div class="pt">' + esc(m.card.t || '') +
+      '</div><div class="ps">' + esc(m.card.s || '') + '</div></div></div>' : '';
+    return '<div class="pmsg' + cls + '">' + esc(m.text || '') + card + '</div>';
+  }).join('');
+  return '<div class="pchathead"><span class="pback">‹</span><span class="pav">' + esc(o.avatar || (o.name || 'A').charAt(0)) + '</span>' +
+    '<span class="pname">' + esc(o.name || 'Atlas 助手') + '</span><span class="pdots">···</span></div>' +
+    '<div class="pmsgs"><div class="pday">' + esc(o.day || '今天 09:41') + '</div>' + body + '</div>' +
+    '<div class="pinput"><span class="pplus">+</span><span class="pfield">' + esc(o.input || '发消息…') + '</span></div>';
+}
+function phoneFeed(o){
+  const items = o.items || [
+    { t: '一张图看懂整个项目', d: '架构 / 调用 / 依赖' },
+    { t: '新人接手，先看这三张图', d: '入口 / 模块 / 数据' },
+    { t: '循环依赖，怎么拆', d: '识别 / 解耦 / 验证' }
+  ];
+  const first = items[0] || {};
+  const rows = items.slice(1).map(function(x){
+    return '<div class="plistrow"><div class="pdot"></div><div class="pl"><b>' + esc(x.t || '') + '</b><span>' + esc(x.d || '') + '</span></div></div>';
+  }).join('');
+  return '<div class="pfeedhead"><b>' + esc(o.title || '发现') + '</b><span class="psearch">' + ic('search') + ' 搜索</span></div>' +
+    '<div class="pfeature"><div class="pthumb"></div><div class="pftxt"><b>' + esc(first.t || '') + '</b><span>' + esc(first.d || '') + '</span></div></div>' +
+    rows +
+    '<div class="ptabbar"><span class="ptab on">' + ic('spark') + '精选</span><span class="ptab">' + ic('grid') + '专题</span>' +
+    '<span class="ptab">' + ic('users') + '关注</span><span class="ptab">' + ic('cube') + '我的</span></div>';
+}
+function phoneApp(o){
+  const stats = o.stats || [{ num: '42', label: '模块' }, { num: '3', label: '循环依赖' }, { num: '8', label: '入口' }];
+  const rows = o.items || [
+    { icon: 'layers', t: '架构图已更新', d: '2 分钟前 · 42 个模块' },
+    { icon: 'branch', t: '发现 3 处循环依赖', d: '建议先解耦 core 与 api' },
+    { icon: 'share', t: '导出 PNG / SVG', d: '可直接放进评审文档' }
+  ];
+  const statHtml = stats.map(function(s){ return '<div class="pstatbox"><b>' + esc(s.num) + '</b><span>' + esc(s.label) + '</span></div>'; }).join('');
+  const rowHtml = rows.map(function(x){
+    return '<div class="papprow"><div class="pic">' + ic(x.icon || 'cube') + '</div><div class="ptxt"><b>' + esc(x.t || '') +
+      '</b><span>' + esc(x.d || '') + '</span></div><span class="pgo">›</span></div>';
+  }).join('');
+  const heights = [38, 62, 48, 76, 54, 88, 66];
+  const bars = heights.map(function(h){ return '<i style="height:' + h + '%"></i>'; }).join('');
+  return '<div class="papphead"><b>' + esc(o.title || '工作台') + '</b><span class="pav">' + esc(o.avatar || 'A') + '</span></div>' +
+    '<div class="pstatrow">' + statHtml + '</div>' +
+    '<div class="papphero"><div class="pht">' + esc(o.chartTitle || '本周结构变化') + '</div><div class="phb">' + bars + '</div></div>' +
+    '<div class="papplist">' + rowHtml + '</div>' +
+    '<div class="ptabbar"><span class="ptab on">' + ic('grid') + '概览</span><span class="ptab">' + ic('layers') + '项目</span>' +
+    '<span class="ptab">' + ic('chart') + '报表</span><span class="ptab">' + ic('users') + '我的</span></div>';
+}
+export function phone(o){
+  o = o || {};
+  const screen = o.screen || 'chat';
+  const inner = screen === 'feed' ? phoneFeed(o) : (screen === 'app' ? phoneApp(o) : phoneChat(o));
+  return '<div class="phonewrap"><div class="phone">' +
+    '<span class="pside vol"></span><span class="pside vol2"></span><span class="pside pwr"></span>' +
+    '<div class="pscreen">' + phoneStatus(o) + '<div class="pbody">' + inner + '</div></div>' +
+    '<div class="pnotch"></div><div class="phome"></div>' +
+    '</div></div>';
+}
+
+// ---------- desktop / mac window ----------
+function deskContent(o){
+  const ui = o.ui || 'dashboard';
+  if(ui === 'editor') {
+    const lines = (o.lines || [
+      'import { parse } from "./core"',
+      'import { render } from "./view"',
+      '',
+      'const repo = parse(input);',
+      'const graph = build(repo);',
+      'render(graph, { theme: "dark" });'
+    ]).map(function(l, i){
+      return '<span class="' + (i === 3 ? 'ck' : (i === 4 ? 'cs' : '')) + '">' + esc(l) + '</span>';
+    }).join('\n');
+    return '<div class="dcode">' + lines + '</div>';
+  }
+  if(ui === 'board') {
+    const col = function(n, extra){
+      let s = '<div class="mcard" style="flex:1;gap:8px">';
+      for (let i = 0; i < n; i++) s += '<div class="ml ' + (i % 2 ? 'w2' : 'w3') + '"></div>';
+      return s + '</div>';
+    };
+    return '<div class="drow" style="flex:1">' + col(3) + col(4) + col(2) + '</div>';
+  }
+  const stats = o.stats || [{ num: '42', label: '模块' }, { num: '128', label: '依赖' }, { num: '3', label: '待处理' }];
+  const statHtml = stats.map(function(s){ return '<div class="dstat"><b>' + esc(s.num) + '</b><span>' + esc(s.label) + '</span></div>'; }).join('');
+  const heights = [42, 66, 52, 78, 58, 88, 70, 62];
+  const bars = heights.map(function(h){ return '<i class="mbar" style="height:' + h + '%"></i>'; }).join('');
+  return '<div class="dstatrow">' + statHtml + '</div>' +
+    '<div class="dchart">' + bars + '</div>' +
+    '<div class="drow"><div class="mcard"><div class="ml w2"></div><div class="ml w1"></div></div>' +
+    '<div class="mcard"><div class="ml w3"></div><div class="ml w2"></div></div></div>';
+}
+export function desktop(o){
+  o = o || {};
+  const nav = o.nav || [
+    { icon: 'grid', t: '概览' }, { icon: 'layers', t: '项目' }, { icon: 'branch', t: '架构图' },
+    { icon: 'chart', t: '调用链' }, { icon: 'cube', t: '设置' }
+  ];
+  const navHtml = nav.map(function(n, i){
+    return '<div class="wnav' + (i === 0 ? ' on' : '') + '">' + ic(n.icon || 'cube') + esc(n.t || '') + '</div>';
+  }).join('');
+  const tabs = (o.tabs || ['概览', '结构', '导出']).map(function(t, i){
+    return '<span class="wintab' + (i === 0 ? ' on' : '') + '">' + esc(t) + '</span>';
+  }).join('');
+  const dock = o.dock === false ? '' : '<div class="ddock"><i class="on"></i><i></i><i></i><i></i><i></i></div>';
+  return '<div class="desktop">' +
+    '<div class="menubar"><span class="mblogo">◆</span><span class="mbmenu">文件</span><span class="mbmenu">编辑</span>' +
+    '<span class="mbmenu">视图</span><span class="mbmenu">窗口</span><span class="mbmenu">帮助</span>' +
+    '<span class="mbright">' + esc(o.time || '9:41') + '</span></div>' +
+    '<div class="deskwin"><div class="winbar"><span class="bdot r"></span><span class="bdot y"></span><span class="bdot g"></span>' +
+    '<span class="wintitle">' + esc(o.app || 'Atlas Studio') + '</span><span class="wintabs">' + tabs + '</span></div>' +
+    '<div class="winbody"><div class="winside">' + navHtml + '</div><div class="winc">' + deskContent(o) + '</div></div></div>' +
+    dock + '</div>';
+}
+
+// ---------- bento / card wall ----------
+export function bento(items, cols, compact){
+  const c = cols || (items && items.length >= 6 ? 3 : 2);
+  const cells = (items || []).map(function(x, i){
+    // CSS 里 .bcell 基类用 ink/accent 作色块名，所以浅色主题的墨色块统一输出成 "ink solid"
+    const cls = 'bcell' + (x.span ? ' span' + x.span : '') + (x.tall ? ' tall' : '') + (x.tone === 'ink' ? ' ink solid' : (x.tone ? ' ' + x.tone : ''));
+    const head = x.icon ? '<div class="bico">' + ic(x.icon) + '</div>' : '';
+    const num = x.num != null ? '<div class="bignum">' + esc(x.num) + '</div>' : '';
+    const tags = (x.tags || []).length ? '<div class="btags">' + x.tags.map(function(t){ return '<span class="btag">' + esc(t) + '</span>'; }).join('') + '</div>' : '';
+    return '<div class="' + cls + '" style="color:' + (x.tone ? '#fff' : 'var(--text)') + '">' + head + '<div class="bt">' + esc(x.t || '') + '</div>' +
+      (x.d ? '<div class="bd">' + esc(x.d) + '</div>' : '') + num + tags +
+      (x.ghost ? '<div class="bnum">' + esc(x.ghost) + '</div>' : '') + '</div>';
+  }).join('');
+  return '<div class="bento c' + c + '">' + cells + '</div>';
+}
+
+// ---------- flowchart (HTML nodes + SVG connectors) ----------
+export function flowchart(o){
+  o = o || {};
+  const W = 936, cx = W / 2;
+  const nodes = [], edges = [], labels = [];
+  let y = 0;
+  const start = { kind: 'start', x: cx - 190, y: 0, w: 380, h: 76, t: o.start || '开始' };
+  nodes.push(start); y = 76 + 52;
+  const steps = o.steps || [];
+  steps.forEach(function(s, i){
+    nodes.push({ kind: 'step', x: cx - 280, y: y, w: 560, h: 88, t: s.t || '', d: s.d || '', num: s.num || (i + 1) });
+    y += 88 + 44;
+  });
+  const dec = o.decision ? { kind: 'decision', x: cx - 180, y: y, w: 360, h: 168, t: o.decision.q || '' } : null;
+  if (dec) { nodes.push(dec); y += 168 + 42; }
+  let yes = null, no = null;
+  if (dec) {
+    const bw = 356, bh = 124;
+    yes = { kind: 'branch', x: 20, y: y, w: bw, h: bh, t: (o.decision.yes || {}).t || '是', d: (o.decision.yes || {}).d || '', tag: o.yesLabel || '是' };
+    no = { kind: 'branch', x: W - 20 - bw, y: y, w: bw, h: bh, t: (o.decision.no || {}).t || '否', d: (o.decision.no || {}).d || '', tag: o.noLabel || '否' };
+    nodes.push(yes, no); y += bh + 44;
+  }
+  const end = { kind: 'end', x: cx - 190, y: y, w: 380, h: 76, t: o.end || '结束' };
+  nodes.push(end);
+  const H = y + 76;
+
+  const chain = [start].concat(steps.map(function(s, i){ return nodes[1 + i]; }));
+  if (dec) chain.push(dec);
+  for (let i = 0; i < chain.length - 1; i++) {
+    const a = chain[i], b = chain[i + 1];
+    edges.push({ d: 'M ' + cx + ' ' + (a.y + a.h) + ' L ' + cx + ' ' + b.y });
+  }
+  if (!dec) {
+    const last = steps.length ? nodes[steps.length] : start;
+    edges.push({ d: 'M ' + cx + ' ' + (last.y + last.h) + ' L ' + cx + ' ' + end.y });
+  } else {
+    const dcy = dec.y + dec.h / 2;
+    const ycx = yes.x + yes.w / 2, ncx = no.x + no.w / 2;
+    edges.push({ d: 'M ' + dec.x + ' ' + dcy + ' L ' + ycx + ' ' + dcy + ' L ' + ycx + ' ' + yes.y });
+    edges.push({ d: 'M ' + (dec.x + dec.w) + ' ' + dcy + ' L ' + ncx + ' ' + dcy + ' L ' + ncx + ' ' + no.y });
+    labels.push({ x: (dec.x + ycx) / 2 - 14, y: dcy - 34, t: o.yesLabel || '是' });
+    labels.push({ x: (dec.x + ncx) / 2 - 14, y: dcy - 34, t: o.noLabel || '否' });
+    const mergeY = yes.y + yes.h + 22;
+    edges.push({ d: 'M ' + ycx + ' ' + (yes.y + yes.h) + ' L ' + ycx + ' ' + mergeY + ' L ' + cx + ' ' + mergeY + ' L ' + cx + ' ' + end.y });
+    edges.push({ d: 'M ' + ncx + ' ' + (no.y + no.h) + ' L ' + ncx + ' ' + mergeY + ' L ' + cx + ' ' + mergeY + ' L ' + cx + ' ' + end.y });
+  }
+
+  const mid = uid('fc');
+  const nodeHtml = nodes.map(function(n){
+    const style = 'left:' + n.x + 'px;top:' + n.y + 'px;width:' + n.w + 'px;height:' + n.h + 'px';
+    if (n.kind === 'decision') {
+      return '<div class="fcdecision" style="' + style + '"><svg viewBox="0 0 ' + n.w + ' ' + n.h + '" preserveAspectRatio="none">' +
+        '<polygon points="' + (n.w / 2) + ',2 ' + (n.w - 2) + ',' + (n.h / 2) + ' ' + (n.w / 2) + ',' + (n.h - 2) + ' 2,' + (n.h / 2) + '"></polygon></svg>' +
+        '<div class="fdtext">' + esc(n.t) + '</div></div>';
+    }
+    const cls = 'fcnode ' + n.kind;
+    return '<div class="' + cls + '" style="' + style + '">' +
+      (n.num != null ? '<div class="fcnum">' + esc(n.num) + '</div>' : '') +
+      (n.tag ? '<div class="fctag">' + esc(n.tag) + '</div>' : '') +
+      '<div class="fct">' + esc(n.t) + '</div>' + (n.d ? '<div class="fcd">' + esc(n.d) + '</div>' : '') + '</div>';
+  }).join('');
+
+  const edgeHtml = edges.map(function(e){
+    return '<path class="fcedge" d="' + e.d + '" marker-end="url(#' + mid + ')"></path>';
+  }).join('');
+  const labelHtml = labels.map(function(l){
+    return '<div class="fclabel" style="left:' + l.x + 'px;top:' + l.y + 'px">' + esc(l.t) + '</div>';
+  }).join('');
+
+  return '<div class="flowchartwrap"><div class="fchart" style="width:' + W + 'px;height:' + H + 'px">' +
+    '<svg class="fclines" width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '">' +
+    '<defs><marker id="' + mid + '" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">' +
+    '<path class="fcarrow" d="M0,0 L10,5 L0,10 z"></path></marker></defs>' + edgeHtml + '</svg>' +
+    nodeHtml + labelHtml + '</div></div>';
+}
+
+// ---------- product promo stage ----------
+export function promoStage(o){
+  o = o || {};
+  let device;
+  if (o.src) {
+    device = '<div class="pdev pdev-shot"><div class="shot"><img src="' + dataUri(o.src) + '"></div></div>';
+  } else if (o.device === 'desktop') {
+    device = '<div class="pdev pdev-desk">' + desktop({ app: o.app || 'Atlas Studio', ui: o.ui || 'dashboard', dock: false }) + '</div>';
+  } else {
+    device = '<div class="pdev pdev-phone">' + phone({ screen: o.screen || 'app', name: o.app || 'Atlas', items: o.items }) + '</div>';
+  }
+  const tags = (o.tags || ['一句话出图', '四种视图', '随仓库更新']).slice(0, 3);
+  const floats = tags.map(function(t, i){ return '<div class="pfloat f' + (i + 1) + '">' + ic('check') + esc(t) + '</div>'; }).join('');
+  const price = o.price ? '<div class="pprice"><b>' + esc(o.price) + '</b>' + (o.priceNote ? '<span>' + esc(o.priceNote) + '</span>' : '') + '</div>' : '';
+  return '<div class="pstage"><div class="pglow"></div><div class="pring"></div>' + device + floats + price + '</div>';
+}
+
+// ---------- new card builders ----------
+export function buildPhone(c){
+  const heroHtml = hero(c.hero || { type: 'phone', screen: c.screen || 'chat', name: c.app, messages: c.messages, items: c.items });
+  const text = '<div class="sdtext">' +
+    (c.kicker ? '<div class="sdkicker">' + esc(c.kicker) + '</div>' : '') +
+    (c.title ? '<h2 class="headline">' + titleHtml(c.title, c.accent) + '</h2>' : '') +
+    (c.sub ? '<div class="sdbody">' + esc(c.sub) + '</div>' : '') +
+    ((c.points || []).length ? '<div class="sdpoints">' + c.points.map(function(p){ return '<div class="sdpoint">' + ic('check') + esc(p) + '</div>'; }).join('') + '</div>' : '') +
+    '<div class="tags">' + (c.tags || []).map(chip).join('') + '</div></div>';
+  if (c.layout === 'stack') {
+    return (c.kicker ? '<div class="kicker">' + esc(c.kicker) + '</div>' : '') +
+      (c.title ? '<h2 class="headline sm ' + (c.kicker ? 'mt-m' : '') + '">' + titleHtml(c.title, c.accent) + '</h2>' : '') +
+      (c.sub ? '<div class="body mt-s">' + esc(c.sub) + '</div>' : '') +
+      '<div class="fill">' + heroHtml + '</div>';
+  }
+  return '<div class="splitdevice phone-split">' + text + '<div class="sdvis">' + heroHtml + '</div></div>';
+}
+
+export function buildDesktop(c){
+  let out = '';
+  if (c.kicker) out += '<div class="kicker">' + esc(c.kicker) + '</div>';
+  if (c.title) out += '<h2 class="headline sm ' + (c.kicker ? 'mt-m' : '') + '">' + titleHtml(c.title, c.accent) + '</h2>';
+  if (c.body) out += '<p class="body mt-s" style="max-width:940px">' + esc(c.body) + '</p>';
+  out += '<div class="fill">' + hero(c.hero || { type: 'desktop', app: c.app, ui: c.ui }) + '</div>';
+  if (c.caption) out += '<div class="caption mt-s">' + esc(c.caption) + '</div>';
+  return out;
+}
+
+export function buildBento(c){
+  let out = '';
+  if (c.kicker) out += '<div class="kicker' + (c.kickerPill ? ' pill' : '') + '">' + esc(c.kicker) + '</div>';
+  if (c.title) out += '<h2 class="headline sm ' + (c.kicker ? 'mt-m' : '') + '">' + titleHtml(c.title, c.accent) + '</h2>';
+  if (c.body) out += '<p class="body mt-s" style="max-width:940px">' + esc(c.body) + '</p>';
+  out += '<div class="fill">' + hero(c.hero || { type: 'bento', items: c.items, cols: c.cols }) + '</div>';
+  if (c.caption) out += '<div class="caption mt-s">' + esc(c.caption) + '</div>';
+  return out;
+}
+
+export function buildFlowchart(c){
+  let out = '';
+  if (c.kicker) out += '<div class="kicker">' + esc(c.kicker) + '</div>';
+  if (c.title) out += '<h2 class="headline sm ' + (c.kicker ? 'mt-m' : '') + '">' + titleHtml(c.title, c.accent) + '</h2>';
+  out += '<div class="fill">' + hero(c.hero || { type: 'flowchart', start: c.start, steps: c.steps, decision: c.decision, end: c.end }) + '</div>';
+  if (c.caption) out += '<div class="caption mt-s">' + esc(c.caption) + '</div>';
+  return out;
+}
+
+export function buildPromo(c){
+  let out = '';
+  if (c.promoBadge) out += '<div class="promobadge">' + (c.badgeIcon ? ic(c.badgeIcon) : '') + esc(c.promoBadge) + '</div>';
+  if (c.title) out += '<h1 class="headline ' + (c.promoBadge ? 'mt-m' : '') + '">' + titleHtml(c.title, c.accent) + '</h1>';
+  if (c.sub) out += '<div class="sub mt-s" style="max-width:820px">' + esc(c.sub) + '</div>';
+  out += '<div class="promostage-wrap fill">' + hero(c.hero || { type: 'promo' }) + '</div>';
+  if ((c.points || []).length || c.cta) {
+    out += '<div class="promobar"><div class="promopoints">' +
+      (c.points || []).map(function(p){ return '<div class="pp">' + ic('check') + esc(p) + '</div>'; }).join('') +
+      '</div>' + (c.cta ? '<div class="promocta">' + esc(c.cta) + '</div>' : '') + '</div>';
+  }
+  // 宣传卡也可带真实二维码：qr 传 URL 或 {url,label}
+  var q = typeof c.qr === 'object' && c.qr ? c.qr : (typeof c.qr === 'string' ? { url: c.qr } : null);
+  if (q && q.url) {
+    out += '<div class="pqrcard"><div class="pqrbox">' + qrSvg(q.url, { logoText: q.logoText, fg: '#111111' }) + '</div>' +
+      '<div class="pqrtxt"><div class="pqrb">' + esc(q.label || '扫码打开') + '</div>' +
+      '<div class="pqru">' + esc(String(q.url).replace(/^https?:\/\//, '')) + '</div></div></div>';
+  }
+  return out;
+}
+
+export const CARD_VARIANTS = ['cover', 'point', 'diagram', 'compare', 'list', 'grid', 'stat', 'quote', 'ending', 'phone', 'desktop', 'bento', 'flowchart', 'promo'];
+
 // ---------- generic hero dispatcher ----------
 export function hero(h){
   if(!h) return '';
@@ -199,6 +517,11 @@ export function hero(h){
   if(h.type === 'kv'){ return kv(h.rows); }
   if(h.type === 'stats'){ return stats(h.items); }
   if(h.type === 'blist'){ return blist(h.items); }
+  if(h.type === 'phone'){ return phone(h); }
+  if(h.type === 'desktop'){ return desktop(h); }
+  if(h.type === 'bento'){ return bento(h.items, h.cols, h.compact); }
+  if(h.type === 'flowchart'){ return flowchart(h); }
+  if(h.type === 'promo'){ return promoStage(h); }
   if(h.type === 'compare'){ return compareBlock(h.left || {}, h.right || {}); }
   if(h.type === 'shot'){ return shotFrame(h.url, h.caption, h.src); }
   return '';
@@ -258,10 +581,21 @@ export function buildEnding(c){
     var li = c.points.map(function(p){ return '<div class="ri"><span class="ck">' + ic('check') + '</span>' + esc(p) + '</div>'; }).join('');
     out += '<div class="recap mt-l">' + li + '</div>';
   }
+  // 二维码：qr 传 URL 字符串或 {url, label, logoText} 时生成**真实可扫**的码；true 为占位（不推荐）
+  var qrTarget = typeof c.qr === 'object' && c.qr ? c.qr : (typeof c.qr === 'string' ? { url: c.qr } : null);
+  var qrHtml = '';
+  if (qrTarget && qrTarget.url) {
+    var hollow = qrTestHooks.onRender(qrTarget.url);
+    qrHtml = '<div class="qrcard' + (hollow ? ' hollow' : '') + '"><div class="qrsvgbox">' +
+      (hollow ? '' : qrSvg(qrTarget.url, { logoText: qrTarget.logoText })) + '</div>' +
+      '<div class="qrlabel">' + esc(qrTarget.label || '扫码打开') + '</div>' +
+      (hollow ? '' : '<div class="qrurl">' + esc(String(qrTarget.url).replace(/^https?:\/\//, '')) + '</div>') + '</div>';
+  } else if (c.qr === true) {
+    qrHtml = '<div class="qrcard"><div class="qr placeholder"></div><div class="qrlabel">二维码占位</div></div>';
+  }
   var rowStyle = 'display:flex;align-items:center;justify-content:space-between;gap:32px;margin-top:56px;padding-top:32px;border-top:1px solid var(--border)';
   out += '<div style="' + rowStyle + '"><div><div class="kicker">' + esc(c.ctaKicker||'') + '</div>' +
-    '<div class="headline xs mt-s" style="font-size:40px">' + esc(c.cta||'') + '</div></div>' +
-    (c.qr ? '<div class="qr"></div>' : '') + '</div>';
+    '<div class="headline xs mt-s" style="font-size:40px">' + esc(c.cta||'') + '</div></div>' + qrHtml + '</div>';
   return out;
 }
 
@@ -314,5 +648,10 @@ export function buildCard(c){
   if(c.variant === 'quote') return buildQuote(c);
   if(c.variant === 'grid') return buildGrid(c);
   if(c.variant === 'stat') return buildStat(c);
+  if(c.variant === 'phone') return buildPhone(c);
+  if(c.variant === 'desktop') return buildDesktop(c);
+  if(c.variant === 'bento') return buildBento(c);
+  if(c.variant === 'flowchart') return buildFlowchart(c);
+  if(c.variant === 'promo') return buildPromo(c);
   return '<h2 class="headline sm">' + hl(c.title||'', c.accent) + '</h2>';
 }

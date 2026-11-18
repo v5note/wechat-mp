@@ -210,7 +210,10 @@
       ],
       "cta": "atlas.dev",
       "ctaKicker": "OPEN SOURCE / MIT",
-      "qr": true
+      "qr": {
+        "url": "https://example.com/atlas",
+        "label": "扫码打开"
+      }
     }
   ],
   "article": {

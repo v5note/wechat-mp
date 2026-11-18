@@ -200,7 +200,10 @@
       ],
       "cta": "stackbase.dev",
       "ctaKicker": "OPEN SOURCE / APACHE-2.0",
-      "qr": true
+      "qr": {
+        "url": "https://stackbase.dev",
+        "label": "扫码打开"
+      }
     }
   ],
   "article": {

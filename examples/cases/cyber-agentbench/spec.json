@@ -416,7 +416,10 @@
       ],
       "cta": "ai-geo",
       "ctaKicker": "KNOWLEDGE GRAPH / RANKING",
-      "qr": true
+      "qr": {
+        "url": "https://example.com/ai-geo",
+        "label": "扫码打开"
+      }
     }
   ],
   "article": {

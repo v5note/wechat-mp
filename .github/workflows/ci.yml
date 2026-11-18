@@ -1,0 +1,81 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Lint & format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Syntax check (node --check)
+        run: |
+          fail=0
+          for f in scripts/*.mjs scripts/tests/*.mjs; do
+            node --check "$f" || fail=1
+          done
+          exit $fail
+
+      - name: Line endings (no CRLF)
+        run: |
+          if git grep -lI -e $'\r' -- . ; then
+            echo '::error::CRLF line endings found; use LF'
+            exit 1
+          fi
+
+      - name: Trailing whitespace
+        run: |
+          if git grep -nI -E ' +$' -- '*.mjs' '*.md' '*.json' '*.css' '*.yml' '*.html' ; then
+            echo '::error::Trailing whitespace found'
+            exit 1
+          fi
+
+      - name: Final newline + tabs
+        run: |
+          fail=0
+          for f in $(git ls-files '*.mjs' '*.md' '*.json' '*.css' '*.yml' '*.html'); do
+            [ -s "$f" ] || continue
+            [ "$(tail -c 1 "$f" | wc -l)" -eq 1 ] || { echo "::error file=$f::Missing final newline"; fail=1; }
+            grep -nI $'\t' "$f" && { echo "::error file=$f::Tabs found"; fail=1; }
+          done
+          exit $fail
+
+  deliveries:
+    name: Deliverables self-check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: check.mjs (all demo + cases)
+        run: |
+          dirs="examples/demo/v1-dark examples/demo/v2-light"
+          for d in examples/cases/*/out; do dirs="$dirs $d"; done
+          node scripts/check.mjs $dirs
+
+  test:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: node --test
+        run: node --test

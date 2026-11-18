@@ -8,7 +8,7 @@
 ![wechat-mp · WeChat Official Account Content Studio](assets/banner.svg)
 
 **Turn any topic into publish-ready WeChat content**: image-card series + long-form articles (+ optional short video) — **by default 2 versions × 2 formats = 4 samples**.
-It ships **15 reference-style themes** and genre-aware routing (distilled from 35 image posters, 15 articles, 3 video-channel clips). Every image follows the same **image design system**, every article the same **article format spec** — stable, reproducible, no improvisation.
+It ships **20 themes and 6 visual families** (phone / desktop / card wall / flowchart / product promo / plain posters) with genre-aware routing (distilled from 35 image posters, 15 articles, 3 video-channel clips and 9 extra references). Every image follows the same **image design system**, every article the same **article format spec** — stable, reproducible, no improvisation.
 
 > This is an **Agent Skill**. Install it into your AI Agent and say "turn this topic into WeChat content", and it will produce deliverables according to the specs in this repo.
 
@@ -63,7 +63,8 @@ As a result, the output stays stylistically consistent no matter who or when gen
 ## Features
 
 - ✅ **Four samples in one run**: 2 versions (Dark Tech / Light Clean) × 2 formats (cards / article) = 4 samples.
-- ✅ **Style library + smart routing**: 15 themes (dark / forest / ocean / cream / cyber / sky / rose / midnight / baize …) × 11 poster styles × 6 article skeletons, auto-recommended by topic — see [style-catalog](references/style-catalog.md).
+- ✅ **Style library + smart routing**: 20 themes (dark / forest / ocean / cream / cyber / sky / rose / midnight / baize / ios / desk / bento / blueprint / promo …) × 16 poster styles × 8 article skeletons, auto-recommended by topic — see [style-catalog](references/style-catalog.md).
+- ✅ **Six visual families**: phone mockups, desktop windows, Bento card walls, flowchart with decision branches, and product promo posters — one spec.json switches between them.
 - ✅ **Optional video-channel output**: `spec.video` renders a 9:16 cover (1080×1920) + spoken script + storyboard — see [video-format](references/video-format.md).
 - ✅ **Content separated from layout**: change one `spec.json` to regenerate everything; copy and images share one source.
 - ✅ **Controlled specs**: cards fixed at 1080×1440 (3:4), cover 1080×460 (2.35:1) plus a 1:1 square version 1080×1080, in-body figures 1080 wide.
@@ -107,7 +108,7 @@ See [examples/demo/README.md](examples/demo/README.md) for details and reproduce
 
 ![Reference-style case banner](assets/case-banner.png)
 
-Distilled from the reference materials, five high-fidelity cases are included (all fictional demo projects except Baize, which is a real product):
+Distilled from the reference materials, six high-fidelity cases are included (all fictional demo projects except Baize, which is a real product):
 
 | Case | Style | Genre | Output |
 |---|---|---|---|
@@ -116,6 +117,7 @@ Distilled from the reference materials, five high-fidelity cases are included (a
 | [cream-agent](examples/cases/cream-agent/) | Cream architecture explainer (cream) | Principle explainer | 6 posters + 937-char article |
 | [baize-baize](examples/cases/baize-baize/) | Baize brand purple (baize, **real product**) | Agent-runtime pick | 9 posters (real admin screenshots) + 1,465-char article + video |
 | [cyber-agentbench](examples/cases/cyber-agentbench/) | Dark-neon collection (cyber) | Collection / ranking | 6 posters + 928-char article + video |
+| [style-gallery](examples/cases/style-gallery/) | Product promo (promo) + five visual families | Promo / phone / desktop / card / flowchart | 9 posters + 1,625-char article + 4 figures |
 
 ![Forest open-source case](examples/cases/forest-stackbase/overview.png)
 ![Baize real-product case](examples/cases/baize-baize/overview.png)
@@ -127,7 +129,7 @@ Distilled from the reference materials, five high-fidelity cases are included (a
 
 ![Theme specimens](assets/style-specimens/overview.png)
 
-**These are optional extras; the 4 core samples still work without them.** The 15 theme specimens are real renders from `node scripts/gen-specimens.mjs`; see [directions.png](examples/demo/directions/directions.png) for a direction-proposal example and [directions-auto/directions.png](examples/demo/directions-auto/directions.png) for the semi-auto version.
+**These are optional extras; the 4 core samples still work without them.** The 20 theme specimens are real renders from `node scripts/gen-specimens.mjs`; see [directions.png](examples/demo/directions/directions.png) for a direction-proposal example and [directions-auto/directions.png](examples/demo/directions-auto/directions.png) for the semi-auto version.
 
 ## Installation
 
@@ -171,7 +173,7 @@ node scripts/build.mjs --spec examples/demo/v1-dark.spec.json  --out examples/de
 node scripts/build.mjs --spec examples/demo/v2-light.spec.json --out examples/demo/v2-light
 ```
 
-(Optional) Generate all 15 theme specimens / 3 direction thumbnails:
+(Optional) Generate all 20 theme specimens / 3 direction thumbnails:
 
 ```bash
 node scripts/gen-specimens.mjs
@@ -203,7 +205,7 @@ The content source `v1-dark.spec.json` / `v2-light.spec.json` lives under `examp
 When handing a topic to your Agent (or doing it yourself), follow these 8 steps:
 
 1. **Brief** — distill topic, audience, positioning, selling points, brand/column, tone differences, and content genre; fact-check / brand assets first when real info is involved.
-2. **Layout** — decide the card sequence, article outline, and theme tokens (15 themes available). (Optional: use `directions.mjs` to show 3 directions first.)
+2. **Layout** — decide the card sequence, article outline, and theme tokens (20 themes available). (Optional: use `directions.mjs` to show 3 directions first.)
 3. **Copy** — title options, ≤54-char summary, article Markdown draft, and per-card caption script.
 4. **Images** — render HTML templates into PNGs and visually check safe area / line breaks / overlaps.
 5. **Article formatting** — produce inline-styled HTML + matching Markdown, with complete figure captions.
@@ -229,7 +231,7 @@ Images will be regenerated against the same design system. See [templates/README
 
 | Field | Meaning |
 |---|---|
-| `theme` | one of 15 themes: `dark` / `light` / `aurora` / `forest` / `ocean` / `cream` / `cyber` / `sky` / `rose` / `midnight` / `baize` / `magazine` / `guofeng` / `mono` / `night-cyan` (see [styles](references/styles.md)) |
+| `theme` | one of 20 themes: `dark` / `light` / `aurora` / `forest` / `ocean` / `cream` / `cyber` / `sky` / `rose` / `midnight` / `baize` / `ios` / `desk` / `bento` / `blueprint` / `promo` / `magazine` / `guofeng` / `mono` / `night-cyan` (see [styles](references/styles.md)) |
 | `accent` / `accent2` | theme accent colors |
 | `brand` | `{ name, logo, logoImg, column, site }`; `logoImg` renders a real logo from a local image |
 | `titles` | `{ article[], image[], recommend }` |
@@ -251,7 +253,7 @@ wechat-mp/
 ├── SKILL.md               # Skill entry: triggers, output contract, workflow, hard rules
 ├── assets/
 │   ├── banner.svg         # README banner (plus banner.png)
-│   ├── tokens.css         # 15 theme tokens + card / visual component styles
+│   ├── tokens.css         # 20 theme tokens + card / visual component (phone / desktop / card / flowchart / promo) styles
 │   ├── icons.svg          # Icon sprite
 │   ├── icons/README.md    # Icon usage & list
 │   ├── case-banner.png    # README case banner (1600×720)
@@ -279,7 +281,7 @@ wechat-mp/
 │   ├── case-banner.mjs    # Build the README case banner
 │   ├── card-render.mjs    # Single-card renderer (specimens / directions)
 │   ├── sheet.mjs          # Compose labelled contact sheets
-│   ├── gen-specimens.mjs  # Generate all 15 theme specimens
+│   ├── gen-specimens.mjs  # Generate all 20 theme specimens
 │   ├── directions.mjs     # 3 direction thumbnails + direction gate
 │   ├── directions-plan.mjs # topic → 3 candidate configs (semi-auto)
 │   ├── theme-registry.mjs # Read themes from tokens.css + specimens
@@ -287,7 +289,7 @@ wechat-mp/
 │   └── tests/             # node --test invariant tests
 ├── references/            # Specs & playbooks (style library / video / fact-check / brand / directions / polish)
 ├── examples/demo/         # Two-version, four-sample demo output
-└── examples/cases/        # Five reference-style cases (forest / rose / cream / baize / cyber)
+└── examples/cases/        # Six reference-style cases (forest / rose / cream / baize / cyber / style-gallery)
 ```
 
 ## Requirements
@@ -306,8 +308,8 @@ export CHROME_BIN="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 
 | Doc | Content |
 |---|---|
-| [style-catalog.md](references/style-catalog.md) | **Style library + smart routing**: 11 poster styles / 6 article skeletons / 3 video forms / reference index |
-| [image-design-system.md](references/image-design-system.md) | Image design system: sizes / grid / safe area / 15 theme tokens / type scale / card types / visual components / do & don't |
+| [style-catalog.md](references/style-catalog.md) | **Style library + smart routing**: 6 visual families / 16 poster styles / 8 article skeletons / 3 video forms / reference index |
+| [image-design-system.md](references/image-design-system.md) | Image design system: sizes / grid / safe area / 20 theme tokens / type scale / 10 card prototypes / visual components / do & don't |
 | [article-format.md](references/article-format.md) | Article format spec: WeChat typography / structure / six skeletons / inline HTML rules |
 | [content-playbook.md](references/content-playbook.md) | Copywriting formulas: titles / summaries / leads / CTAs / six outlines & patterns |
 | [publish-checklist.md](references/publish-checklist.md) | Publish checklist + pre-delivery self-check |
@@ -316,7 +318,7 @@ export CHROME_BIN="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 | [directions.md](references/directions.md) | Direction proposal gate + `方向确认.md` |
 | [polish-loop.md](references/polish-loop.md) | Screenshot polish loop + `polish-log.md` |
 | [materials.md](references/materials.md) | Asset tiers (programmatic / real / generated) |
-| [styles.md](references/styles.md) | 15-theme list + how to add a theme |
+| [styles.md](references/styles.md) | 20-theme list (incl. phone / desktop / card / flowchart / promo) + how to add a theme |
 | [video-format.md](references/video-format.md) | **Video channel (optional)**: specs / 3 forms / `spec.video` fields / self-check |
 
 ## FAQ

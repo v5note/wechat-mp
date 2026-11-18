@@ -319,7 +319,10 @@
       ],
       "cta": "baize.v5ai.xin",
       "ctaKicker": "AGENT RUNTIME / SERVER-CLIENT",
-      "qr": true
+      "qr": {
+        "url": "https://baize.v5ai.xin/",
+        "label": "扫码打开"
+      }
     }
   ],
   "article": {

@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 // scripts/build.mjs — 按 spec.json 生成整套：贴图卡片 + 文章封面 + 正文配图 + 文案 + 发布清单
+// v0.1.0：支持 phone / desktop / bento / flowchart / promo 五种画面风格卡片与 hero
 // 用法: node scripts/build.mjs --spec examples/demo/v1-dark.spec.json --out examples/demo/v1-dark
 import { parseArgs } from 'node:util';
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from 'node:fs';
@@ -102,10 +103,10 @@ if(article.cover){
 
 // 4) article md + html
 const artMd = buildArticleMd(article);
-writeFileSync(join(outDir,'article','article.md'), artMd, 'utf8');
+writeFileSync(join(outDir,'article','article.md'), artMd.replace(/\s*$/, '') + '\n', 'utf8');
 const hanCount = (artMd.match(/[\u4e00-\u9fff]/g) || []).length;
 console.log('  article 汉字数:', hanCount, hanCount >= 800 ? '(OK >=800)' : '(WARN <800)');
-writeFileSync(join(outDir,'article','article.html'), buildArticleHtml(article), 'utf8');
+writeFileSync(join(outDir,'article','article.html'), buildArticleHtml(article).replace(/\s*$/, '') + '\n', 'utf8');
 console.log('  article.md / article.html written');
 
 // 4.5) 可选：视频号产出（口播稿 + 分镜 + 竖版封面）
@@ -115,8 +116,8 @@ if(spec.video){
   var vf = videoCoverFields(v, brand);
   vf.THEME = 't-' + theme;
   renderHtml(fill(tplVideo, vf), join(outDir,'video','cover.png'), 1080, 1920, extraCss);
-  writeFileSync(join(outDir,'video','口播稿.md'), buildVideoScriptMd(v), 'utf8');
-  writeFileSync(join(outDir,'video','分镜.md'), buildStoryboardMd(v), 'utf8');
+  writeFileSync(join(outDir,'video','口播稿.md'), buildVideoScriptMd(v).replace(/\s*$/, '') + '\n', 'utf8');
+  writeFileSync(join(outDir,'video','分镜.md'), buildStoryboardMd(v).replace(/\s*$/, '') + '\n', 'utf8');
   videoInfo = { cover: 'video/cover.png', script: 'video/口播稿.md', storyboard: 'video/分镜.md' };
   console.log('  video -> cover.png + 口播稿.md + 分镜.md');
 }
@@ -159,7 +160,7 @@ cards.forEach(function(c,i){
   if(c.cta){ L.push('- CTA：' + c.cta); }
   L.push('');
 });
-writeFileSync(join(outDir,'文案.md'), L.join('\n'), 'utf8');
+writeFileSync(join(outDir,'文案.md'), L.join('\n') + '\n', 'utf8');
 
 // 6) 发布清单.md
 var C = [];
@@ -182,7 +183,7 @@ C.push('- [ ] HTML 为内联样式，粘贴到微信编辑器不丢样式');
 C.push('- [ ] 手机预览：无乱码、无失效图片');
 C.push('');
 C.push('## 交付前自检：见 references/publish-checklist.md C 节');
-writeFileSync(join(outDir,'发布清单.md'), C.join('\n'), 'utf8');
+writeFileSync(join(outDir,'发布清单.md'), C.join('\n') + '\n', 'utf8');
 
 // 7) index
 var I = [];
@@ -206,7 +207,7 @@ if(videoInfo){
 I.push('');
 I.push('## 文案');
 I.push('- [文案.md](文案.md) · [发布清单.md](发布清单.md)');
-writeFileSync(join(outDir,'index.md'), I.join('\n'), 'utf8');
+writeFileSync(join(outDir,'index.md'), I.join('\n') + '\n', 'utf8');
 
 // 8) 自动自检（失败即非零退出，避免把坏产物交出去）
 console.log('\n=== 自检 ===');

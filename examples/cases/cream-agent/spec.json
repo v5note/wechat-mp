@@ -198,7 +198,10 @@
       ],
       "cta": "agent-notes",
       "ctaKicker": "PRINCIPLE / DIAGRAM",
-      "qr": true
+      "qr": {
+        "url": "https://example.com/agent-notes",
+        "label": "扫码打开"
+      }
     }
   ],
   "article": {

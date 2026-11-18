@@ -7,6 +7,8 @@ import { ARTICLE } from '../article-tokens.mjs';
 import { planDirections } from '../directions-plan.mjs';
 import { listThemes, themeLabel } from '../theme-registry.mjs';
 import { route } from '../route.mjs';
+import { qrMatrix, qrSvg } from '../qr.mjs';
+import * as visualsModule from '../visuals.mjs';
 
 const demo = 'examples/demo';
 const versions = ['v1-dark', 'v2-light'];
@@ -30,7 +32,7 @@ test('article-body palette is a subset of article-tokens', () => {
 test('SKILL keeps the article + card contract and quality gates', () => {
   const s = readFileSync('SKILL.md', 'utf8');
   assert.match(s, /metadata:\s*\n\s*author:/);
-  assert.match(s, /version:\s*"2\.0\.0"/);
+  assert.match(s, /version:\s*"0\.1\.0"/);
   assert.ok(s.includes('2 个版本 × 2 种格式'));
   assert.ok(s.includes('4 个公众号样例'));
   assert.ok(s.includes('贴图') && s.includes('文章'));
@@ -56,7 +58,7 @@ test('case banner exists at 1600×720', () => {
 });
 
 test('theme specimens exist', () => {
-  for (const t of ['magazine', 'guofeng', 'mono', 'night-cyan', 'aurora', 'forest', 'ocean', 'cream', 'cyber', 'sky', 'rose', 'midnight', 'baize']) {
+  for (const t of ['magazine', 'guofeng', 'mono', 'night-cyan', 'aurora', 'forest', 'ocean', 'cream', 'cyber', 'sky', 'rose', 'midnight', 'baize', 'ios', 'desk', 'bento', 'blueprint', 'promo']) {
     assert.ok(existsSync('assets/style-specimens/sheet-' + t + '.png'), 'missing specimen ' + t);
   }
   assert.ok(existsSync('assets/style-specimens/overview.png'));
@@ -64,7 +66,11 @@ test('theme specimens exist', () => {
 
 test('theme registry lists themes and specimens', () => {
   const themes = listThemes();
-  assert.ok(themes.length >= 14, 'expected >=14 themes, got ' + themes.length);
+  assert.ok(themes.length >= 20, 'expected >=20 themes, got ' + themes.length);
+  for (const t of ['ios', 'desk', 'bento', 'blueprint', 'promo']) {
+    const f = themes.find((x) => x.name === t);
+    assert.ok(f && f.hasSpecimen, 'device/style theme with specimen: ' + t);
+  }
   for (const t of ['aurora', 'forest', 'ocean', 'cream', 'cyber', 'sky', 'rose', 'midnight']) {
     const f = themes.find((x) => x.name === t);
     assert.ok(f && f.hasSpecimen, 'new theme with specimen: ' + t);
@@ -85,6 +91,18 @@ test('router maps topics to genre/theme/skeleton', () => {
   const r2 = route('库存数据复盘，指标怎么看');
   assert.equal(r2.genre, '数据复盘');
   assert.ok(r2.altThemes.length >= 1 || r2.theme);
+  const r3 = route('手机端 App 里怎么和助手对话');
+  assert.equal(r3.genre, '移动端体验');
+  assert.equal(r3.visualStyle, '手机风格');
+  assert.equal(r3.theme, 'ios');
+  const r4 = route('用流程图讲清审批分支');
+  assert.equal(r4.genre, '流程拆解');
+  assert.equal(r4.theme, 'blueprint');
+  assert.ok(r4.cardVariants.includes('flowchart'));
+  const r5 = route('新品发布宣传海报');
+  assert.equal(r5.genre, '产品宣传');
+  assert.equal(r5.theme, 'promo');
+  assert.ok(r5.cardVariants.includes('promo'));
 });
 
 test('planner turns a topic into 3 structural directions', () => {
@@ -102,12 +120,51 @@ test('planner honors --themes', () => {
 });
 
 test('reference-style cases pass automated check', () => {
-  for (const c of ['forest-stackbase', 'rose-mosaic', 'cream-agent', 'baize-baize', 'cyber-agentbench']) {
+  for (const c of ['forest-stackbase', 'rose-mosaic', 'cream-agent', 'baize-baize', 'cyber-agentbench', 'style-gallery']) {
     const dir = join('examples/cases', c, 'out');
     const r = checkVersion(dir);
     assert.equal(r.errs.length, 0, c + ': ' + r.errs.join('; '));
   }
 });
+
+test('qr encoder builds a well-formed version-2 matrix for short URLs', () => {
+  const m = qrMatrix('https://atlas.dev');
+  assert.equal(m.version, 2);
+  assert.equal(m.size, 25);
+  // 三个定位图形必须完整：7×7 深色外框 + 3×3 深色中心
+  for (const [r0, c0] of [[0, 0], [0, 18], [18, 0]]) {
+    for (let i = 0; i < 7; i++) {
+      assert.equal(m.modules[r0][c0 + i], 1);
+      assert.equal(m.modules[r0 + 6][c0 + i], 1);
+      assert.equal(m.modules[r0 + i][c0 + 6], 1);
+    }
+    assert.equal(m.modules[r0 + 3][c0 + 3], 1);
+  }
+  assert.ok(m.modules.flat().filter(Boolean).length > 100);
+});
+
+test('qr encoder scales to longer URLs and svg has no stray markup', () => {
+  const long = 'https://github.com/v5note/wechat-mp/blob/main/examples/cases/style-gallery/spec.json?ref=wechat';
+  const m = qrMatrix(long);
+  assert.ok(m.version >= 4 && m.size === m.version * 4 + 17);
+  const svg = qrSvg('https://baize.v5ai.xin/', { logoText: '白' });
+  assert.match(svg, /^<svg class="qrsvg"/);
+  assert.ok(!svg.includes('undefined'));
+  assert.ok((svg.match(/<rect/g) || []).length > 20);
+});
+
+test('ending card renders a real QR (not a placeholder) and check flags missing target', () => {
+  const { buildCard } = require_visuals();
+  const real = buildCard({ variant: 'ending', title: '现在就能试', points: ['一句话出图'], cta: 'atlas.dev', qr: { url: 'https://atlas.dev', label: '扫码打开' } });
+  assert.ok(real.includes('qrsvg'));
+  assert.ok(!real.includes('qr placeholder'));
+  const missing = buildCard({ variant: 'ending', title: '现在就能试', cta: 'atlas.dev' });
+  assert.ok(!missing.includes('qrsvg'));
+});
+
+function require_visuals() {
+  return visualsModule;
+}
 
 test('directions demo has 3 thumbnails and a gate', () => {
   for (const id of ['A', 'B', 'C']) {

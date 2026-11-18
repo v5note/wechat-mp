@@ -216,7 +216,10 @@
       ],
       "cta": "mosaic-ui.dev",
       "ctaKicker": "OPEN SOURCE / MIT",
-      "qr": true
+      "qr": {
+        "url": "https://mosaic-ui.dev",
+        "label": "扫码打开"
+      }
     }
   ],
   "article": {

@@ -6,6 +6,16 @@ import { buildCard, esc } from './visuals.mjs';
 
 const TPL = readFileSync(join(ROOT, 'templates/card.html'), 'utf8');
 
+// 单卡渲染时同样需要注入 tokens.css 与图标 sprite；
+// chrome.mjs 的 injectAssets 只认模板里的 {{BASE_CSS}} / {{ICON_SPRITE}} 占位符。
+export function inlineAssets(html) {
+  const tokens = readFileSync(join(ROOT, 'assets/tokens.css'), 'utf8');
+  const sprite = readFileSync(join(ROOT, 'assets/icons.svg'), 'utf8');
+  return html
+    .split('{{BASE_CSS}}').join(tokens)
+    .split('{{ICON_SPRITE}}').join(sprite);
+}
+
 function fill(tpl, map) {
   let out = tpl;
   Object.keys(map).forEach((k) => { out = out.split('{{' + k + '}}').join(map[k]); });
@@ -30,5 +40,5 @@ export function renderCard(card, opts = {}, outPath) {
   if (opts.accent) {
     extraCss = '.t-' + theme + '{--accent:' + opts.accent + ';--accent-2:' + (opts.accent2 || opts.accent) + '}';
   }
-  return renderHtml(html, outPath, 1080, 1440, extraCss);
+  return renderHtml(inlineAssets(html), outPath, 1080, 1440, extraCss);
 }

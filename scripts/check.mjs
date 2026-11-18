@@ -4,6 +4,8 @@
 // 退出码：0 全过；1 有硬错误。
 import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { join, resolve, dirname } from 'node:path';
+import { CARD_VARIANTS } from './visuals.mjs';
+import { checkQr } from './qr-check.mjs';
 
 const MAX_BYTES = 2 * 1024 * 1024;
 
@@ -188,6 +190,8 @@ export function checkVersion(dir, specPath) {
     if (spec.imageCaption && spec.imageCaption.length > 100) fail('imageCaption 超过 100 字');
     const cards = spec.cards || [];
     if (cards.length < 5 || cards.length > 9) fail('spec.cards ' + cards.length + ' 张，应为 5–9');
+    const badVariants = cards.map((c) => c.variant).filter((v) => v && !CARD_VARIANTS.includes(v));
+    if (badVariants.length) fail('未知卡片变体: ' + [...new Set(badVariants)].join(', '));
     const figs = ((spec.article && spec.article.sections) || []).filter((s) => s.figure).length;
     if (figs < 3 || figs > 5) fail('spec 配图位 ' + figs + ' 个，应为 3–5');
     if (spec.video) {
@@ -196,6 +200,9 @@ export function checkVersion(dir, specPath) {
       if (shots.length < 4) fail('spec.video.shots ' + shots.length + ' 个，至少 4 个镜头');
       ok('视频 spec 字段自检通过（' + shots.length + ' 镜）');
     }
+    // 二维码：结尾卡的码必须是真码，且指向链接里的地址
+    const q = checkQr(abs, sp);
+    q.oks.forEach(ok); q.warns.forEach(warn); q.errs.forEach(fail);
     ok('spec 字段自检通过');
   } else {
     warn('未找到 spec.json，跳过标题/摘要字段校验');

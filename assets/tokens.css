@@ -510,6 +510,385 @@ body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-f
 .matrix.compact .mxtags{gap:5px;margin-top:5px}
 .matrix.compact .mxtag{font-size:11px;padding:3px 7px;border-radius:6px}
 
+
+/* ============================================================
+   画面风格组（手机 / 电脑 / 卡片 / 流程图 / 产品宣传图）
+   对应主题：ios / desk / bento / blueprint / promo
+   参考来源：手机截图流、桌面端演示、Bento 卡片墙、流程图解、产品宣发海报
+   ============================================================ */
+
+/* ---------- themes ---------- */
+.t-ios{
+  --bg1:#F5F5F7; --bg2:#FFFFFF; --bg3:#EDEFF4;
+  --surface:#FFFFFF; --surface-2:#F2F2F7;
+  --border:#E3E3E9; --border-strong:#CECED6;
+  --text:#1C1C1E; --text-2:#5A5A61; --text-3:#8E8E93;
+  --accent:#007AFF; --accent-2:#34C759;
+  --accent-soft:rgba(0,122,255,.10); --accent-line:rgba(0,122,255,.34);
+  --badge:#FF3B30; --ok:#34C759; --no:#8E8E93;
+  --shadow:0 24px 60px rgba(20,30,50,.14);
+}
+.t-desk{
+  --bg1:#101217; --bg2:#1A1D25; --bg3:#0B0D11;
+  --surface:rgba(255,255,255,.055); --surface-2:rgba(255,255,255,.09);
+  --border:rgba(255,255,255,.12); --border-strong:rgba(255,255,255,.22);
+  --text:#F2F4F8; --text-2:#A9B0BE; --text-3:#6C7384;
+  --accent:#5B8CFF; --accent-2:#7DE2D1;
+  --accent-soft:rgba(91,140,255,.16); --accent-line:rgba(91,140,255,.45);
+  --badge:#FF6B6B; --ok:#4ADE80; --no:#6C7384;
+  --shadow:0 34px 90px rgba(0,0,0,.55);
+}
+.t-bento{
+  --bg1:#FBF7F0; --bg2:#FFFDF8; --bg3:#F5EDDF;
+  --surface:#FFFFFF; --surface-2:#F4EDE1;
+  --border:#E8DECC; --border-strong:#D7C8AE;
+  --text:#1B1712; --text-2:#5C5346; --text-3:#948873;
+  --accent:#FF5C35; --accent-2:#1D4ED8;
+  --accent-soft:rgba(255,92,53,.10); --accent-line:rgba(255,92,53,.34);
+  --badge:#FF5C35; --ok:#1F8A4C; --no:#948873;
+  --shadow:0 24px 60px rgba(80,50,20,.14);
+}
+.t-blueprint{
+  --bg1:#F3F7FC; --bg2:#FFFFFF; --bg3:#E9F1FA;
+  --surface:#FFFFFF; --surface-2:#EDF3FA;
+  --border:#D5E2F0; --border-strong:#B6CBE3;
+  --text:#0E2238; --text-2:#4A6076; --text-3:#8298AD;
+  --accent:#1D4ED8; --accent-2:#0EA5E9;
+  --accent-soft:rgba(29,78,216,.09); --accent-line:rgba(29,78,216,.34);
+  --badge:#1D4ED8; --ok:#0F8A5F; --no:#8298AD;
+  --shadow:0 24px 60px rgba(20,50,100,.14);
+}
+.t-promo{
+  --bg1:#0B0B10; --bg2:#191321; --bg3:#07070B;
+  --surface:rgba(255,255,255,.06); --surface-2:rgba(255,255,255,.10);
+  --border:rgba(255,190,120,.16); --border-strong:rgba(255,190,120,.32);
+  --text:#FFF6EA; --text-2:#C9B9A6; --text-3:#8C7C6C;
+  --accent:#FF6A00; --accent-2:#FFC24B;
+  --accent-soft:rgba(255,106,0,.16); --accent-line:rgba(255,106,0,.45);
+  --badge:#FF3D2E; --ok:#4ADE80; --no:#8C7C6C;
+  --shadow:0 34px 90px rgba(0,0,0,.65);
+}
+
+/* ---------- background textures ---------- */
+.t-ios .card .bg,.t-ios .bg{background:
+  radial-gradient(880px 560px at 88% -8%,rgba(0,122,255,.12),transparent 62%),
+  radial-gradient(700px 480px at -10% 110%,rgba(52,199,89,.08),transparent 60%)}
+.t-desk .card .bg,.t-desk .bg{background:
+  linear-gradient(rgba(91,140,255,.05) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(91,140,255,.05) 1px,transparent 1px),
+  radial-gradient(900px 600px at 86% -10%,rgba(91,140,255,.22),transparent 62%),
+  radial-gradient(700px 520px at -12% 112%,rgba(125,226,209,.10),transparent 60%);
+  background-size:52px 52px,52px 52px,auto,auto}
+.t-bento .card .bg,.t-bento .bg{background:
+  radial-gradient(rgba(120,90,50,.06) 1px,transparent 1px),
+  radial-gradient(860px 560px at 90% -10%,rgba(255,92,53,.10),transparent 62%);
+  background-size:26px 26px,auto}
+.t-blueprint .card .bg,.t-blueprint .bg{background:
+  linear-gradient(rgba(29,78,216,.055) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(29,78,216,.055) 1px,transparent 1px),
+  radial-gradient(820px 560px at 88% -10%,rgba(29,78,216,.10),transparent 62%);
+  background-size:32px 32px,32px 32px,auto}
+.t-promo .card .bg,.t-promo .bg{background:
+  radial-gradient(680px 620px at 50% 118%,rgba(255,106,0,.30),transparent 62%),
+  radial-gradient(560px 480px at 88% -6%,rgba(255,194,75,.14),transparent 60%),
+  radial-gradient(600px 420px at -8% 108%,rgba(255,61,46,.12),transparent 60%)}
+
+/* light-theme mock overrides */
+.t-ios .mcard,.t-ios .mnav,.t-ios .mchart,
+.t-bento .mcard,.t-bento .mnav,.t-bento .mchart,
+.t-blueprint .mcard,.t-blueprint .mnav,.t-blueprint .mchart{background:var(--surface-2)}
+.t-ios .ml,.t-bento .ml,.t-blueprint .ml{background:var(--border-strong)}
+
+/* ---------- phone mockup ---------- */
+.phonewrap{display:flex;align-items:center;justify-content:center;width:100%}
+.phone{position:relative;width:404px;height:820px;border-radius:60px;flex:0 0 auto;box-sizing:border-box;
+  padding:11px;background:linear-gradient(150deg,#4A4A52,#1B1B20 44%,#2E2E34);
+  box-shadow:0 34px 70px rgba(15,20,35,.30),0 6px 16px rgba(15,20,35,.18),inset 0 0 0 1px rgba(255,255,255,.14)}
+.phone .pscreen{position:relative;width:100%;height:100%;border-radius:49px;overflow:hidden;
+  background:var(--bg1);display:flex;flex-direction:column}
+.phone .pbody{position:relative;flex:1;min-height:0;display:flex;flex-direction:column;padding-bottom:26px;background:var(--surface-2)}
+.phone .pbody > *{flex-shrink:0}
+.phone .pbody > .pmsgs{flex:1 1 auto;min-height:0}
+.phone .pinput{padding-bottom:12px}
+/* 输入栏下方留出 Home Indicator 区域，底边与屏幕圆角顺接 */
+.phone .pbody > *{position:relative;z-index:1}
+.phone .pbody::after{content:"";position:absolute;left:0;right:0;bottom:0;height:26px;background:var(--surface);z-index:0}
+.pnotch{position:absolute;left:50%;top:0;transform:translateX(-50%);width:118px;height:32px;border-radius:0 0 18px 18px;background:#08080A;z-index:9}
+.pstatus{flex:0 0 auto;height:58px;display:flex;align-items:flex-end;justify-content:space-between;
+  padding:0 28px 9px;font-size:15px;font-weight:700;color:var(--text);position:relative;z-index:8}
+.pstat{display:flex;align-items:flex-end;gap:3px}
+.pbar{width:4px;border-radius:2px;background:var(--text);display:block}
+.pbar.b1{height:6px}.pbar.b2{height:9px}.pbar.b3{height:12px}
+.pbatt{width:24px;height:12px;border:1.6px solid var(--text);border-radius:4px;position:relative;margin-left:4px;opacity:.9}
+.pbatt::after{content:"";position:absolute;left:2px;top:2px;bottom:2px;width:13px;background:var(--text);border-radius:2px}
+.phome{position:absolute;left:50%;bottom:9px;transform:translateX(-50%);width:128px;height:5px;border-radius:3px;background:var(--text);opacity:.32;z-index:11;pointer-events:none}
+/* 深色主题下机身在深色底上要能分辨：加一圈高光边 */
+.t-desk .phone,.t-dark .phone,.t-promo .phone,.t-cyber .phone,.t-forest .phone,.t-midnight .phone,.t-ocean .phone,.t-guofeng .phone{box-shadow:0 34px 70px rgba(0,0,0,.55),0 6px 16px rgba(0,0,0,.35),inset 0 0 0 1.5px rgba(255,255,255,.22)}
+/* 屏外机身边框在底角处要真实可见（圆角弧线 + 底部/侧边按键） */
+.pscreen{box-shadow:inset 0 0 0 1px rgba(0,0,0,.06)}
+.phone .pside{position:absolute;right:-2px;width:3px;border-radius:2px;background:linear-gradient(180deg,#55555E,#2A2A30);z-index:12}
+.phone .pside.pwr{top:196px;height:78px}
+.phone .pside.vol{left:-2px;top:150px;height:46px}
+.phone .pside.vol2{left:-2px;top:208px;height:46px}
+/* chat screen */
+.pchathead{display:flex;align-items:center;gap:10px;padding:8px 18px 12px;border-bottom:1px solid var(--border);background:var(--surface)}
+.pback{font-size:30px;line-height:1;color:var(--text-2);margin-top:-5px}
+.pav{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));
+  color:#fff;font-size:17px;font-weight:800;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.pname{font-size:17px;font-weight:700;color:var(--text)}
+.pchathead .pdots{margin-left:auto;color:var(--text-3);font-size:20px;letter-spacing:2px}
+.pmsgs{flex:1;display:flex;flex-direction:column;gap:12px;padding:18px 16px;background:var(--surface-2);overflow:hidden}
+.pday{align-self:center;font-size:12px;color:var(--text-3);background:rgba(127,127,127,.12);padding:4px 10px;border-radius:8px}
+.pmsg{max-width:80%;padding:11px 15px;border-radius:18px;font-size:16px;line-height:1.45;
+  background:var(--surface);color:var(--text);border:1px solid var(--border);align-self:flex-start;word-break:break-word}
+.pmsg.me{align-self:flex-end;background:var(--accent);color:#fff;border-color:transparent}
+.pmsg b{font-weight:800;color:var(--accent)}
+.pmsg.me b{color:#fff}
+.pmcard{margin-top:9px;border-radius:12px;border:1px solid var(--border);background:var(--surface-2);
+  padding:11px;display:flex;gap:10px;align-items:center}
+.pmcard .pic{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--accent),var(--accent-2));flex:0 0 auto}
+.pmcard .pt{font-size:13px;font-weight:700;color:var(--text)}
+.pmcard .ps{font-size:11px;color:var(--text-3);margin-top:2px}
+.pinput{flex:0 0 auto;display:flex;align-items:center;gap:8px;padding:10px 14px 22px;border-top:1px solid var(--border);background:var(--surface)}
+.pfield{flex:1;padding:9px 14px;border-radius:12px;border:1px solid var(--border);background:var(--surface-2);
+  font-size:14px;color:var(--text-3)}
+.pplus{width:30px;height:30px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;
+  justify-content:center;color:var(--text-2);font-size:18px;flex:0 0 auto}
+/* feed screen */
+.pfeedhead{display:flex;align-items:center;justify-content:space-between;padding:6px 20px 14px}
+.pfeedhead b{font-size:26px;font-weight:800;color:var(--text);letter-spacing:-.5px}
+.psearch{font-size:12px;color:var(--text-3);background:var(--surface-2);border:1px solid var(--border);padding:7px 12px;border-radius:10px}
+.pfeature{margin:0 14px 14px;border-radius:18px;overflow:hidden;background:var(--surface);border:1px solid var(--border)}
+.pthumb{height:148px;background:linear-gradient(135deg,var(--accent-soft),var(--surface-2));position:relative}
+.pthumb::after{content:"";position:absolute;left:20px;top:20px;width:56px;height:56px;border-radius:17px;
+  background:linear-gradient(135deg,var(--accent),var(--accent-2))}
+.pftxt{padding:14px 16px 16px}
+.pftxt b{display:block;font-size:17px;color:var(--text);line-height:1.35}
+.pftxt span{display:block;margin-top:6px;font-size:12px;color:var(--text-3)}
+.plistrow{display:flex;gap:12px;align-items:center;padding:11px 18px;border-top:1px solid var(--border)}
+.plistrow .pdot{width:40px;height:40px;border-radius:12px;background:var(--accent-soft);border:1px solid var(--accent-line);flex:0 0 auto}
+.plistrow .pl{flex:1}
+.plistrow .pl b{display:block;font-size:14px;color:var(--text)}
+.plistrow .pl span{display:block;font-size:11px;color:var(--text-3);margin-top:3px}
+.ptabbar{flex:0 0 auto;margin-top:auto;display:flex;justify-content:space-around;align-items:center;padding:9px 0 20px;
+  border-top:1px solid var(--border);background:var(--surface);font-size:10px;color:var(--text-3)}
+.ptab{display:flex;flex-direction:column;align-items:center;gap:4px;font-weight:600}
+.ptab.on{color:var(--accent)}
+.ptab .ic{width:21px;height:21px}
+/* app screen */
+.papphead{display:flex;align-items:center;justify-content:space-between;padding:4px 20px 14px}
+.papphead b{font-size:22px;font-weight:800;color:var(--text)}
+.papphead .pav{width:32px;height:32px;border-radius:10px;font-size:14px}
+.pstatrow{display:flex;gap:9px;padding:0 14px 14px}
+.pstatbox{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:12px 8px;text-align:center}
+.pstatbox b{display:block;font-size:24px;font-weight:800;color:var(--accent);line-height:1}
+.pstatbox span{display:block;font-size:10px;color:var(--text-3);margin-top:5px}
+.papphero{margin:0 14px 12px;padding:13px 14px;border:1px solid var(--border);border-radius:14px;background:var(--surface);display:flex;flex-direction:column;gap:9px;flex:1;min-height:110px}
+.pht{font-size:12px;font-weight:700;color:var(--text-2)}
+.phb{flex:1;display:flex;align-items:flex-end;gap:6px;min-height:52px}
+.phb i{flex:1;border-radius:3px 3px 0 0;background:var(--accent);opacity:.82}
+.papplist{padding:0 14px;display:flex;flex-direction:column;gap:8px}
+.papprow{display:flex;align-items:center;gap:11px;background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:11px 12px}
+.papprow .pic{width:34px;height:34px;border-radius:10px;background:var(--accent-soft);color:var(--accent);
+  display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.papprow .pic .ic{width:19px;height:19px}
+.papprow .ptxt{flex:1;min-width:0}
+.papprow b{display:block;font-size:13px;color:var(--text);font-weight:700}
+.papprow span{display:block;font-size:10px;color:var(--text-3);margin-top:2px}
+.papprow .pgo{color:var(--text-3);font-size:15px}
+
+/* ---------- desktop / mac window ---------- */
+.desktop{width:100%;display:flex;flex-direction:column;gap:12px}
+.menubar{height:34px;display:flex;align-items:center;gap:15px;padding:0 16px;border-radius:10px;
+  background:var(--surface-2);border:1px solid var(--border);font-size:13px;color:var(--text-2)}
+.mblogo{font-size:15px;color:var(--accent)}
+.mbmenu{opacity:.9}
+.mbright{margin-left:auto;color:var(--text-3);font-size:12px;font-family:var(--mono)}
+.deskwin{border:1px solid var(--border);border-radius:16px;overflow:hidden;background:var(--surface);box-shadow:var(--shadow)}
+.winbar{height:50px;display:flex;align-items:center;gap:8px;padding:0 16px;background:var(--surface-2);border-bottom:1px solid var(--border)}
+.wintitle{font-size:14px;font-weight:700;color:var(--text-2);margin-left:8px}
+.wintabs{margin-left:auto;display:flex;gap:6px}
+.wintab{font-size:11px;color:var(--text-3);padding:5px 10px;border-radius:7px;background:var(--surface)}
+.wintab.on{color:var(--accent);background:var(--accent-soft)}
+.winbody{display:flex;min-height:430px}
+.winside{width:190px;flex:0 0 auto;background:var(--surface-2);border-right:1px solid var(--border);
+  padding:14px 12px;display:flex;flex-direction:column;gap:6px}
+.wnav{height:32px;border-radius:8px;display:flex;align-items:center;gap:9px;padding:0 10px;font-size:13px;color:var(--text-2)}
+.wnav.on{background:var(--accent-soft);color:var(--accent);font-weight:700}
+.wnav .ic{width:15px;height:15px}
+.winc{flex:1;padding:20px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.dstatrow{display:flex;gap:10px}
+.dstat{flex:1;background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:13px 14px}
+.dstat b{display:block;font-size:24px;font-weight:800;color:var(--accent);line-height:1;letter-spacing:-1px}
+.dstat span{display:block;font-size:11px;color:var(--text-3);margin-top:6px}
+.dchart{flex:1;display:flex;align-items:flex-end;gap:8px;padding:14px;border:1px solid var(--border);
+  border-radius:12px;background:var(--surface-2);min-height:130px}
+.dchart .mbar{flex:1;border-radius:5px 5px 0 0;background:var(--accent);opacity:.85}
+.drow{display:flex;gap:10px}
+.drow .mcard{flex:1;background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:12px}
+.dcode{flex:1;background:#0A0E18;border-radius:12px;padding:16px;font-family:var(--mono);font-size:13px;
+  line-height:1.8;color:#C7D2E8;white-space:pre-wrap;min-height:180px}
+.dcode .cm{color:#5B6B8C}.dcode .ck{color:#7CC5FF}.dcode .cs{color:#8BE9A8}
+.ddock{display:flex;justify-content:center;gap:10px;padding:2px 0}
+.ddock i{width:38px;height:38px;border-radius:10px;background:var(--surface-2);border:1px solid var(--border);display:block}
+.ddock i.on{background:linear-gradient(135deg,var(--accent),var(--accent-2));border-color:transparent}
+
+/* ---------- bento / card wall ---------- */
+.bento{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:150px;gap:14px;width:100%}
+.bento.c3{grid-template-columns:repeat(3,1fr)}
+.bento.c2{grid-template-columns:repeat(2,1fr)}
+.bcell{position:relative;overflow:hidden;background:var(--surface);border:1px solid var(--border);
+  border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.bcell.span2{grid-column:span 2}
+.bcell.tall{grid-row:span 2}
+.bcell.accent{background:linear-gradient(150deg,var(--accent),var(--accent-2));border-color:transparent;color:#fff}
+.bcell.accent .bd{color:rgba(255,255,255,.88)}
+.bcell.ink{background:linear-gradient(150deg,var(--accent),var(--accent-2));border-color:transparent;color:#fff}
+.bcell.ink.solid{background:var(--text);color:#FFFFFF;border-color:transparent}
+.bcell.ink.solid .bd{color:rgba(255,255,255,.78)}
+.bcell.ink.solid .bico{background:rgba(255,255,255,.14);color:#fff}
+.bcell .bico{width:38px;height:38px;border-radius:11px;background:var(--accent-soft);color:var(--accent);
+  display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.bcell.accent .bico{background:rgba(255,255,255,.20);color:#fff}
+.bcell .bico .ic{width:21px;height:21px}
+.bcell .bt{font-size:23px;font-weight:800;letter-spacing:-.5px;line-height:1.2;color:inherit}
+.bcell .bd{font-size:16px;line-height:1.45;color:var(--text-2)}
+.bcell.accent .bd{color:rgba(255,255,255,.88)}
+.bcell.ink .bt{color:#FFFFFF}
+.bcell.ink .bd{color:rgba(255,255,255,.80)}
+.bcell.ink .bico{background:rgba(0,0,0,.20);color:var(--accent-2)}
+.bcell .bignum{margin-top:auto;font-size:54px;font-weight:800;line-height:1;letter-spacing:-2px;color:var(--accent)}
+.bcell.accent .bignum,.bcell.ink .bignum{color:inherit}
+.bcell .bnum{position:absolute;right:14px;bottom:8px;font-size:54px;font-weight:800;line-height:1;opacity:.10;color:currentColor}
+.bcell .btags{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto}
+.bcell .btag{font-size:12px;font-weight:700;padding:5px 10px;border-radius:7px;background:var(--surface-2);
+  border:1px solid var(--border);color:var(--text-2)}
+.bcell.accent .btag{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.25);color:#fff}
+
+/* ---------- flowchart ---------- */
+.flowchartwrap{width:100%;display:flex;justify-content:center;overflow:hidden}
+.fchart{position:relative;flex:0 0 auto}
+.fchart svg.fclines{position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible}
+.fcedge{fill:none;stroke:var(--accent);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.fcarrow{fill:var(--accent)}
+.fcnode{position:absolute;background:var(--surface);border:1.5px solid var(--border-strong);border-radius:14px;
+  padding:10px 18px;display:flex;flex-direction:column;justify-content:center;gap:4px;min-width:0;z-index:2}
+.fcnode .fct{font-size:24px;font-weight:800;color:var(--text);line-height:1.2}
+.fcnode .fcd{font-size:16px;color:var(--text-2);line-height:1.35}
+.fcnode.start,.fcnode.end{border-radius:999px;background:var(--accent-soft);border-color:var(--accent-line);text-align:center;align-items:center}
+.fcnode.start .fct,.fcnode.end .fct{color:var(--accent)}
+.fcnum{position:absolute;left:-16px;top:-14px;width:30px;height:30px;border-radius:9px;background:var(--accent);
+  color:#fff;font-size:15px;font-weight:800;display:flex;align-items:center;justify-content:center;z-index:3}
+.fcdecision{position:absolute;z-index:2;display:flex;align-items:center;justify-content:center}
+.fcdecision svg{position:absolute;inset:0;width:100%;height:100%}
+.fcdecision polygon{fill:var(--surface);stroke:var(--accent);stroke-width:2.4}
+.fcdecision .fdtext{position:relative;z-index:2;max-width:72%;text-align:center;font-size:20px;font-weight:800;
+  line-height:1.3;color:var(--text)}
+.fclabel{position:absolute;z-index:4;font-size:17px;font-weight:800;color:var(--accent);background:var(--bg1);
+  padding:2px 9px;border-radius:8px;border:1px solid var(--accent-line)}
+.fcbranch .fctag{font-size:13px;font-weight:800;color:var(--accent);letter-spacing:1px}
+
+/* ---------- product promo stage ---------- */
+.promobadge{display:inline-flex;align-items:center;gap:9px;align-self:flex-start;font-size:21px;font-weight:800;
+  letter-spacing:2px;color:#fff;background:var(--badge);padding:9px 20px;border-radius:999px}
+.promobadge .ic{width:20px;height:20px}
+.pstage{position:relative;width:100%;height:100%;min-height:560px;display:flex;align-items:center;justify-content:center}
+.pglow{position:absolute;width:720px;height:720px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,106,0,.38),rgba(255,194,75,.12) 42%,transparent 66%)}
+.pring{position:absolute;width:520px;height:520px;border-radius:50%;border:1px dashed var(--border-strong);opacity:.7}
+.pring::after{content:"";position:absolute;inset:54px;border-radius:50%;border:1px solid var(--border);opacity:.7}
+.pdev{position:relative;z-index:3;transform:rotate(-7deg)}
+.pdev-phone .phone{width:360px;height:730px;border-radius:54px}
+.pdev-phone .phone .pscreen{border-radius:44px}
+.pdev-desk .desktop{width:760px;transform:rotate(0)}
+.pdev-desk .winbody{min-height:300px}
+.pdev-desk .desktop{gap:8px}
+.pfloat{position:absolute;z-index:4;display:flex;align-items:center;gap:9px;font-size:17px;font-weight:700;
+  color:var(--text);background:var(--surface);border:1px solid var(--border-strong);border-radius:12px;
+  padding:11px 16px;box-shadow:var(--shadow);backdrop-filter:blur(6px)}
+.pfloat .ic{width:18px;height:18px;color:var(--accent)}
+.pfloat.f1{left:8px;top:88px;transform:rotate(-4deg)}
+.pfloat.f2{right:4px;top:190px;transform:rotate(3deg)}
+.pfloat.f3{right:38px;bottom:78px;transform:rotate(-3deg)}
+.pprice{position:absolute;z-index:5;left:50%;bottom:6px;transform:translateX(-50%);display:flex;align-items:baseline;gap:10px;
+  background:var(--text);color:var(--bg1);padding:12px 26px;border-radius:999px;box-shadow:var(--shadow)}
+.pprice b{font-size:30px;font-weight:800;letter-spacing:-1px}
+.pprice span{font-size:14px;opacity:.7}
+.promobar{display:flex;align-items:center;justify-content:space-between;gap:28px;margin-top:26px;
+  padding-top:24px;border-top:1px solid var(--border)}
+.promopoints{display:flex;gap:22px;flex-wrap:wrap}
+.promopoints .pp{display:flex;align-items:center;gap:9px;font-size:20px;color:var(--text-2)}
+.promopoints .pp .ic{width:19px;height:19px;color:var(--accent)}
+.promocta{font-size:22px;font-weight:800;color:var(--accent);white-space:nowrap}
+
+/* split device cards (phone / desktop explainer) */
+.splitdevice{display:flex;align-items:center;gap:38px;width:100%}
+.splitdevice .sdtext{flex:1;min-width:0;display:flex;flex-direction:column;gap:18px}
+.splitdevice .sdtext .headline{font-size:58px;line-height:1.12}
+.splitdevice .sdvis{flex:0 0 auto;display:flex;align-items:center;justify-content:center}
+.splitdevice.phone-split .sdvis{width:404px}
+.splitdevice .sdkicker{font-size:22px;font-weight:700;letter-spacing:2px;color:var(--accent)}
+.splitdevice .sdbody{font-size:22px;line-height:1.6;color:var(--text-2)}
+.splitdevice .sdpoints{display:flex;flex-direction:column;gap:10px}
+.splitdevice .sdpoint{display:flex;align-items:center;gap:10px;font-size:19px;color:var(--text)}
+.splitdevice .sdpoint .ic{width:18px;height:18px;color:var(--accent)}
+
+.bcell.accent .bico{background:rgba(255,255,255,.22);color:#fff}
+.bcell.accent .bt,.bcell.accent .num{color:#fff}
+.bcell.ink.solid .bt,.bcell.ink.solid .bignum{color:#fff}
+.bcell.ink.solid .bico{background:rgba(255,255,255,.12);color:#fff}
+
+/* fit new heroes inside cover / fills */
+.cover .phonewrap{transform:scale(.46)}
+.cover .desktop{transform:scale(.40)}
+.cover .bento{transform:scale(.40)}
+.cover .flowchartwrap{transform:scale(.40)}
+.qrcard{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:8px;width:200px}
+/* 二维码：白底 + 四周留白（quiet zone），码面 184px，扫得动比好看更重要 */
+.qrsvgbox{width:200px;height:200px;border-radius:16px;overflow:hidden;background:#fff;padding:10px;box-sizing:border-box;box-shadow:0 10px 30px rgba(0,0,0,.28)}
+.qrsvgbox .qrsvg{display:block;width:100%;height:100%}
+.qrsvg{width:100%;height:100%;display:block}
+/* 码点画面上强制纯黑纯白：主题令牌会被继承，深色主题下务必钉死颜色 */
+.qrsvg path,.qrsvg g,.qrsvg rect{fill:inherit}
+.qrsvg rect:first-child{fill:#ffffff !important}
+.qrsvg g{fill:#000000 !important}
+.qrlabel{font-size:17px;font-weight:700;color:var(--text-2);letter-spacing:.5px}
+.qrurl{font-size:15px;color:var(--text-3);font-family:var(--mono);letter-spacing:0}
+.qrcard.hollow .qrsvgbox{background:repeating-linear-gradient(135deg,rgba(127,127,127,.18) 0 6px,transparent 6px 12px),var(--surface)}
+.qrcard.hollow .qrlabel{color:var(--text-3)}
+.qr.placeholder{width:150px;height:150px;border-radius:18px;background:
+  repeating-linear-gradient(0deg,var(--text) 0 6px,transparent 6px 12px),
+  repeating-linear-gradient(90deg,var(--text) 0 6px,transparent 6px 12px);
+  border:10px solid var(--surface);box-shadow:var(--shadow);opacity:.9}
+/* promo 卡底部的扫码块：白底 + 小字链接 */
+.pqrcard{display:flex;align-items:center;gap:14px;margin-top:20px}
+.pqrcard .pqrbox{width:132px;height:132px;border-radius:14px;background:#fff;padding:8px;box-sizing:border-box;box-shadow:0 8px 24px rgba(0,0,0,.35)}
+.pqrcard .pqrbox .qrsvg{width:100%;height:100%}
+.pqrcard .pqrtxt{display:flex;flex-direction:column;gap:6px}
+.pqrcard .pqrb{font-size:19px;font-weight:800;color:var(--text)}
+.pqrcard .pqru{font-size:15px;color:var(--text-2);font-family:var(--mono)}
+
+/* promo cover: enlarge the product stage instead of shrinking the whole block */
+.cover .pstage{transform:none;min-height:0;height:460px}
+.cover .pstage .pglow{width:520px;height:520px}
+.cover .pstage .pring{width:400px;height:400px}
+.cover .pstage .pdev{transform:none}
+.cover .pstage .pdev-phone .phone{width:226px;height:458px;border-radius:40px}
+.cover .pstage .pdev-phone .phone .pscreen{border-radius:32px}
+.cover .pstage .pdev-desk{transform:scale(.46)}
+.cover .pstage .pprice{display:none}
+.cover .pglow{width:520px;height:520px}
+.cover .pfloat{display:none}
+.cover .phonewrap,.cover .desktop,.cover .bento,.cover .flowchartwrap,.cover .pstage{transform-origin:center center}
+.fill .phonewrap{height:100%}
+.fill .phonewrap .phone{max-height:100%}
+.fill .desktop{height:100%;justify-content:center}
+.fill .bento{height:100%;grid-auto-rows:1fr}
+.fill .flowchartwrap{height:100%;align-items:center}
+.fill .flowchartwrap .fchart{max-height:100%}
+.fill .pstage{height:100%}
+.main .splitdevice{height:100%}
+
 /* real screenshot frame */
 .shotwrap{width:100%;display:flex;flex-direction:column;gap:10px;align-items:flex-start}
 .shotwrap .shot{width:100%}
