@@ -11,7 +11,9 @@
 
 ## 文章
 - [article/article.md](article/article.md)
-- [article/article.html](article/article.html)
+- [article/article.html](article/article.html)（**粘贴用片段**）
+- [article/article-preview.html](article/article-preview.html)（本地预览，勿整页复制）
+- [article/粘贴说明.md](article/粘贴说明.md)
 - [article/cover.png](article/cover.png)（2.35:1）
 - [article/cover-square.png](article/cover-square.png)（1:1 方版）
 

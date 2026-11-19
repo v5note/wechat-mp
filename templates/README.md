@@ -23,7 +23,13 @@
 
 ## 卡片 variant 与数据（喂给 build.mjs 的 spec.cards[]）
 
-- cover：kicker / kickerPill / title[两行或字符串] / accent(高亮词) / sub / hero / tags[] / badge
+- cover：title[两行]（首行放结果/反常，字号自动降档）/ accent(高亮词) / sub / kicker+kickerPill(标题下方的栏目 pill) / thumbs[{variant,kicker,t,accent,big}]（首屏预览，替代 hero）/ hero（有真截图时用）/ tags[] / prize / cue / badge
+- cover.layout（首图版式，来自 references/style-cases 的 8 种骨架）：
+  `annotated-illu` / `tool-brief`（accentBg, note, hero, tiles）/ `dev-dark`（hero, points[{t,d}], strip）/
+  `color-grid`（formula, cells[{t,d}], strip）/ `bento-stack`（hero, declare）/ `layout-sample`（samples[{src,t}], strip）/
+  `diagram-poster`（hero, summary）/ `pin-red`（tiles[{t,d}], points[]）；另有 eyebrow（标题上方的胶囊标签）
+  - `tool-brief` 专属字段：`pills[{t,d}]`（底部双 pill，第一个自动实心）+ `note`；主视觉常用 `hero{type:desktop, size:sm, viewH, ui:list|board, nav, list}`
+  - `dev-dark` 专属字段：`points[{t,d}]`（2×2 能力格）+ `strip`（底部「先了解：…」边界提醒，自动加前缀）
 - point：num / label / title / body / hero
 - diagram：kicker / title / accent / hero / caption
 - compare：title / left{title,items[]} / right{title,items[]} / caption
@@ -31,7 +37,7 @@
 - grid：kicker / title / items[{num,t,desc,fields[{k,v}],tags[]}] / cols / caption
 - stat：kicker / title / body / stats[{num,label}] / caption
 - quote：quote / accent / author
-- ending：title / points[] / cta / ctaKicker / qr（传 `{url,label,logoText}` 生成**真实二维码**，`true` 只是占位）
+- ending：title / nexts[{num,t,d}]（下期预告）/ points[] / cta / ctaKicker / qr（传 `{url,label,logoText}` 生成**真实二维码**，`true` 只是占位）
 - **phone**：kicker / title / sub / points[] / hero{type:phone} / tags / layout(split 或 stack)
 - **desktop**：kicker / title / body / hero{type:desktop} / caption
 - **bento**：kicker / title / body / items[{t,d,icon,num,tags,span,tall,tone}] / cols / caption
@@ -58,6 +64,7 @@
 - **bento**：items[{t,d,icon,num,tags,span,tall,tone}] + cols
 - **flowchart**：start + steps[{t,d}] + decision{q,yes,no} + end + yesLabel/noLabel
 - **promo**：device(phone|desktop) + src（真实截图）+ tags + price + priceNote
+- **coverthumb**：src（本地图片路径）——视频号封面里把首图缩成构图帧，保证首帧与贴图首图一致
 
 图标名见 [../assets/icons/README.md](../assets/icons/README.md)。
 

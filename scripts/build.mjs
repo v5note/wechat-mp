@@ -1,18 +1,23 @@
 #!/usr/bin/env node
 // scripts/build.mjs — 按 spec.json 生成整套：贴图卡片 + 文章封面 + 正文配图 + 文案 + 发布清单
-// v0.1.0：支持 phone / desktop / bento / flowchart / promo 五种画面风格卡片与 hero
+// v0.1.1：文章改为微信可粘贴片段（仅 section/p/strong/img）+ 浏览器「复制全文」导入页
+//   支持 phone / desktop / bento / flowchart / promo 五种画面风格卡片与 hero
 // 用法: node scripts/build.mjs --spec examples/demo/v1-dark.spec.json --out examples/demo/v1-dark
 import { parseArgs } from 'node:util';
+import { execFileSync } from 'node:child_process';
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from 'node:fs';
 import { join, resolve, dirname } from 'node:path';
 import { renderHtml, ROOT } from './chrome.mjs';
 import { buildCard, hero, esc, hl, chip, dataUri } from './visuals.mjs';
-import { buildArticleHtml, buildArticleMd } from './article.mjs';
+import { buildArticleHtml, buildArticlePreview, buildArticleImport, buildArticleMd } from './article.mjs';
 import { checkVersion } from './check.mjs';
 import { buildDemoOverviews } from './preview.mjs';
 import { buildVideoScriptMd, buildStoryboardMd, videoCoverFields } from './video.mjs';
 
-const { values } = parseArgs({ options: { spec: { type: 'string' }, out: { type: 'string' } } });
+const { values } = parseArgs({ options: {
+  spec: { type: 'string' }, out: { type: 'string' },
+  'render-video': { type: 'boolean', default: false }, 'no-tts': { type: 'boolean', default: false },
+} });
 if (!values.spec || !values.out) { console.error('用法: node scripts/build.mjs --spec <spec.json> --out <dir>'); process.exit(1); }
 
 const spec = JSON.parse(readFileSync(values.spec, 'utf8'));
@@ -107,7 +112,39 @@ writeFileSync(join(outDir,'article','article.md'), artMd.replace(/\s*$/, '') + '
 const hanCount = (artMd.match(/[\u4e00-\u9fff]/g) || []).length;
 console.log('  article 汉字数:', hanCount, hanCount >= 800 ? '(OK >=800)' : '(WARN <800)');
 writeFileSync(join(outDir,'article','article.html'), buildArticleHtml(article).replace(/\s*$/, '') + '\n', 'utf8');
-console.log('  article.md / article.html written');
+writeFileSync(join(outDir,'article','article-preview.html'), buildArticlePreview(article).replace(/\s*$/, '') + '\n', 'utf8');
+writeFileSync(join(outDir,'article','article-import.html'), buildArticleImport(article).replace(/\s*$/, '') + '\n', 'utf8');
+var pasteMd = [
+  '# 粘贴到微信公众号 · 操作说明', '',
+  '> 由 scripts/build.mjs 自动生成。article.html 是**片段**源码（只有一个根 section），article-import.html 是带「复制全文」按钮的导入页。', '',
+  '## 一、正文怎么粘（推荐：导入页）', '',
+  '1. 用浏览器打开 **article-import.html**，核对排版。',
+  '2. 点顶部「**复制全文**」按钮——它复制的是**富文本**，不是源码。',
+  '3. 到公众号编辑器正文区 **Ctrl+V**（macOS 为 Cmd+V），样式直接生效。',
+  '4. 若按钮没反应：在页面上 **Ctrl+A / Cmd+A 全选 → 复制**，效果相同（浏览器会往剪贴板同时放富文本和纯文本）。',
+  '', '## 一·备选：直接用 article.html（仅 macOS）', '',
+  '- macOS 可用 VS Code 打开 **article.html** 全选复制，粘进编辑器得到的是富文本。',
+  '- **Windows 不要用记事本打开 article.html 复制**：记事本只给剪贴板纯文本，粘过去就是满屏标签源码——这正是「粘进去不渲染」的原因。',
+  '- 其他纯文本编辑器（Notepad++ 等）同理，只复制文本，不要用。',
+  '- **不要**在浏览器里打开 article.html 后整页全选复制：会连带整页外壳一起复制，样式反而容易乱。',
+  '', '## 二、图片怎么进', '',
+  '- article.html 里的图片是占位：src 为 images/figN.png（相对路径），微信里一定会裂。',
+  '- 粘完文字后，在编辑器里按图注顺序用「图片」按钮上传 article/images/fig' + (figIndex ? '1 → fig' + figIndex : 'N') + '，替换对应占位位置。',
+  '- 题图/封面不走正文：用 article/cover.png（2.35:1）设封面，分享卡片的 1:1 图用 cover-square.png。',
+  '', '## 三、会被微信清理、已经提前规避的写法', '',
+  '- 整页外壳（doctype / html / head / body / title）：article.html 不输出。',
+  '- h1、h2、figure、figcaption、hr、table、blockquote：全部改写成 p/span/strong/img。',
+  '- font-family、letter-spacing、max-width、margin auto：从根节点去掉；字体会回到微信默认，这是正常现象。',
+  '- <style>、<script>、外链字体：一律不输出。',
+  '', '## 四、粘贴后逐项核对', '',
+  '- [ ] 标题仍是加粗大字；小标题是「一、二、三」编号的蓝色加粗。',
+  '- [ ] 图注「图N：…」在图下方、灰色居中。',
+  '- [ ] 分割线两侧留白正常（由 1px 空段落实现）。',
+  '- [ ] 列表逐条分行，没有被并成一段。',
+  '- [ ] 手机预览：无乱码、无裂图、无多余空行。',
+  ''].join('\n');
+writeFileSync(join(outDir,'article','粘贴说明.md'), pasteMd, 'utf8');
+console.log('  article.md / article.html / article-preview.html / article-import.html / 粘贴说明.md written');
 
 // 4.5) 可选：视频号产出（口播稿 + 分镜 + 竖版封面）
 var videoInfo = null;
@@ -120,6 +157,27 @@ if(spec.video){
   writeFileSync(join(outDir,'video','分镜.md'), buildStoryboardMd(v).replace(/\s*$/, '') + '\n', 'utf8');
   videoInfo = { cover: 'video/cover.png', script: 'video/口播稿.md', storyboard: 'video/分镜.md' };
   console.log('  video -> cover.png + 口播稿.md + 分镜.md');
+  // 可选：--render-video 和 --no-tts 透传给 video-render.mjs，产出 video/video.mp4
+  // 渲染后再按**实际成片时长**重画封面，保证封面上的「▶ 视频号 · Ns」与视频一致
+  if (values['render-video']) {
+    var vrArgs = ['scripts/video-render.mjs', '--spec', resolve(values.spec), '--out', outDir];
+    if (values['no-tts']) vrArgs.push('--no-tts');
+    try {
+      var vrOut = execFileSync(process.execPath, vrArgs, { cwd: ROOT, encoding: 'utf8' });
+      console.log('  ' + vrOut.trim().split('\n').join('\n  '));
+      videoInfo.video = 'video/video.mp4';
+      var durMatch = vrOut.match(/([\d.]+)s \u00b7/);
+      if (durMatch) {
+        v.duration = String(Math.ceil(Number(durMatch[1]))) + 's';
+        var vf2 = videoCoverFields(v, brand);
+        vf2.THEME = 't-' + theme;
+        renderHtml(fill(tplVideo, vf2), join(outDir,'video','cover.png'), 1080, 1920, extraCss);
+        console.log('  cover 时长标签已按实际成片更新为 ' + v.duration);
+      }
+    } catch (e) {
+      console.warn('  ⚠ 视频渲染失败（可单独跑 node scripts/video-render.mjs 重试）：' + String(e.message).split('\n')[0]);
+    }
+  }
 }
 
 // 5) 文案.md
@@ -148,7 +206,14 @@ L.push('## 贴图逐图文案脚本');
 L.push('');
 cards.forEach(function(c,i){
   L.push('### 图' + (i+1) + ' · ' + (c.variant||''));
-  if(c.kicker){ L.push('- 眉标：' + c.kicker); }
+  if(c.thumbs && c.thumbs.length){
+    L.push('- 首屏预览：' + c.thumbs.map(function(t){ return (t.kicker ? t.kicker + '→' : '') + (t.t || t.title || ''); }).join(' / ') + '（缩略只放关键词）');
+  }
+  if(c.nexts && c.nexts.length){
+    L.push('- 下期预告：' + c.nexts.map(function(n){ return n.t; }).join(' / '));
+  }
+  if(c.layout){ L.push('- 首图版式：' + c.layout + '（见 references/style-cases）'); }
+  if(c.kicker){ L.push('- 眉标：' + c.kicker + (c.variant === 'cover' ? '（放在标题下方）' : '')); }
   if(c.label){ L.push('- 标签：' + c.label); }
   if(c.title){ L.push('- 标题：' + (Array.isArray(c.title)?c.title.join(' / '):c.title)); }
   if(c.accent){ L.push('- 强调词：' + c.accent); }
@@ -179,8 +244,18 @@ C.push('- [ ] 摘要 ≤54 字（当前 ' + (spec.summary||'').length + ' 字）
 C.push('- [ ] 正文 ≥800 字（当前 ' + hanCount + ' 字），含「文字介绍 + 配图」的图文长文');
 C.push('- [ ] 封面：2.35:1（1080×460）与 1:1 方版（1080×1080）各一张；正文配图 ' + figIndex + ' 张（≥3），编号连续');
 C.push('- [ ] 每图有「图N：」图注；段落 ≤4 行');
-C.push('- [ ] HTML 为内联样式，粘贴到微信编辑器不丢样式');
+C.push('- [ ] article.html 是片段（仅一个根 <section>、只用 p/span/strong/img），不含 doctype/html/head/body 与 h1/h2/figure/hr/table');
+C.push('- [ ] **粘贴方式**：浏览器打开 article-import.html → 点「复制全文」→ 粘进编辑器（拿到富文本）；别用记事本等纯文本编辑器打开 article.html 复制，那样粘进去是源码。细则见 article/粘贴说明.md');
+C.push('- [ ] **配图要手动上传（必做）**：article.html 里的图片是相对路径 images/figN.png，粘进编辑器后图片会失效；按图注顺序把 ' + figIndex + ' 张配图从 article/images/ 逐张上传并插入（fig1 → fig' + figIndex + '）');
+C.push('- [ ] 上传后点「预览」，确认图注「图N：…」与图片一一对应、编号连续');
+C.push('- [ ] 封面：在编辑器里单独选 2.35:1 封面；公众号后台若要求 1:1 分享图，用 cover-square.png');
+C.push('- [ ] 原创声明：勾选「原创」并填作者；正文里不要出现「本文由 XX 生成」这类元信息');
 C.push('- [ ] 手机预览：无乱码、无失效图片');
+C.push('');
+C.push('## 发布前再核一遍（最容易被漏的）');
+C.push('- [ ] 贴图按「图片消息」发时配文只有一段：用 文案.md 里的 ≤100 字配文，别贴整篇正文');
+C.push('- [ ] 结尾卡/文末的「下期预告」必须与真实排期一致，不一致就先删掉（不承诺不存在的内容）');
+C.push('- [ ] 文中数字（主题数 / 字数 / 尺寸）与当前版本仓库一致');
 C.push('');
 C.push('## 交付前自检：见 references/publish-checklist.md C 节');
 writeFileSync(join(outDir,'发布清单.md'), C.join('\n') + '\n', 'utf8');
@@ -194,7 +269,10 @@ cardFiles.forEach(function(p,i){ I.push('- [' + 'cards/card-' + String(i+1).padS
 I.push('');
 I.push('## 文章');
 I.push('- [article/article.md](article/article.md)');
-I.push('- [article/article.html](article/article.html)');
+I.push('- [article/article.html](article/article.html)（**粘贴用片段**）');
+I.push('- [article/article-import.html](article/article-import.html)（**打开后点「复制全文」**）');
+I.push('- [article/article-preview.html](article/article-preview.html)（本地预览，勿整页复制）');
+I.push('- [article/粘贴说明.md](article/粘贴说明.md)');
 I.push('- [article/cover.png](article/cover.png)（2.35:1）');
 I.push('- [article/cover-square.png](article/cover-square.png)（1:1 方版）');
 I.push('');
@@ -202,6 +280,7 @@ if(videoInfo){
   I.push('');
   I.push('## 视频号（可选）');
   I.push('- [video/cover.png](video/cover.png)（1080×1920 竖版封面）');
+  if (existsSync(join(outDir,'video','video.mp4'))) I.push('- [video/video.mp4](video/video.mp4)（可直接上传 · [字幕.ass](video/字幕.ass) · [渲染说明](video/渲染说明.md)）');
   I.push('- [video/口播稿.md](video/口播稿.md) · [video/分镜.md](video/分镜.md)');
 }
 I.push('');

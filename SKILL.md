@@ -4,7 +4,7 @@ description: 微信公众号内容生产工坊（贴图 + 长文 + 可选视频�
 allowed-tools: Bash, Read, Write, Edit, Glob, Grep
 metadata:
   author: "wechat-mp"
-  version: "0.1.0"
+  version: "0.1.1"
   homepage: "https://github.com/v5note/wechat-mp"
   repository: "https://github.com/v5note/wechat-mp"
   license: "MIT"
@@ -40,14 +40,22 @@ metadata:
 
 **默认**：2 个版本 × 2 种格式 = **4 个公众号样例**。
 
-| 版本 | 贴图（图片消息 / 小绿书） | 文章（图文消息长文） |
-|---|---|---|
-| V1 深色科技版 | 5–9 张 3:4 卡片图 + 逐图文案 | 长文 + 封面 + 3–5 张正文配图 |
-| V2 浅色清新版 | 5–9 张 3:4 卡片图 + 逐图文案 | 长文 + 封面 + 3–5 张正文配图 |
+**配色铁律：两版必须一浅一深。** 一版用**深色系**主题（深底 + 浅字），另一版用**浅色系**主题（浅底 + 深字）；
+**禁止两版同属一个色系**（如 aurora + sky、dark + ocean、cream + bento 这类「同色近亲」）。原因：两版是给发布方做 A/B 选型的，
+两个色系相近的版本等于没做对照，也看不出不同读者群的接受度。主题明暗由 `scripts/palette.mjs` 按 `tokens.css` 的 `--bg1/--text` 自动判定，`check.mjs` 会卡。
+
+| 版本 | 配色 | 贴图（图片消息 / 小绿书） | 文章（图文消息长文） |
+|---|---|---|---|
+| V1 深色版 | **深色系**主题（如 `ocean` / `dark` / `midnight` / `forest`） | 5–9 张 3:4 卡片图 + 逐图文案 | 长文 + 封面 + 3–5 张正文配图 |
+| V2 浅色版 | **浅色系**主题（如 `aurora` / `sky` / `cream` / `light`） | 5–9 张 3:4 卡片图 + 逐图文案 | 长文 + 封面 + 3–5 张正文配图 |
+
+先后顺序可以换（先浅后深也行），但**必须一浅一深**。唯一例外：题材本身锁定了一种明暗（例如品牌只允许深色），
+这时另一版用**同明暗下的不同画面风格 + 不同骨架**，并在 Brief 里写明「为什么只能用一种明暗」。
 
 **进阶**（题材有明确最佳风格时）：按 [style-catalog](references/style-catalog.md) 显式挑 1 套「画面风格 + 主题 + 骨架」，做 1 个高完成度样例；
 手机 / 电脑 / 卡片 / 流程图 / 产品宣传图可作为主画面，`phone` / `desktop` / `bento` / `flowchart` / `promo` 卡与同名 hero 直接组合。
-需要时再加 **1 个视频号产出**（`video/cover.png` + `口播稿.md` + `分镜.md`）。
+需要时再加 **1 个视频号产出**：默认三件套（`video/cover.png` + `口播稿.md` + `分镜.md`）；
+用户要「能直接发的视频」时加 `--render-video`，再产出 1080×1920 的 `video/video.mp4`（`scripts/video-render.mjs`，需本机 ffmpeg；TTS 为机器音，需在交付说明里讲清楚）。
 
 每个样例都要带齐四件套：
 1. **标题备选**：文章 3–5 条、贴图 2–3 条（≤20 字），标注推荐项。
@@ -55,7 +63,8 @@ metadata:
 3. **正文**：文章给 Markdown 正文；贴图给逐图文案脚本（每张卡的文字、层级、落点）。
 4. **配图 / 发布清单**：图注（图1、图2…）、图片规格、按 [publish-checklist](references/publish-checklist.md) 的清单。
 
-两版共用同一主题与同一份事实，只换**视觉主题与语气**，便于 A/B 选型；但**两版不是换皮**（结构至少一处不同）。
+两版共用同一个主题内容与同一份事实，换的是**明暗 + 画面风格 + 骨架 + 语气**，便于 A/B 选型；但**两版不是换皮**（结构至少一处不同）。
+两条一起过才算合格的两版：**一条一浅一深，一条结构不同**——只换配色是换皮；两版都浅色或都深色，同样不合格。
 
 ## 输入与智能路由
 
@@ -114,7 +123,9 @@ metadata:
 **完成标准**：PNG 全部生成、尺寸正确（贴图 1080×1440；封面 1080×460 + 1080×1080）；主体不越安全区；逐张目检无溢出/断行/遮挡；`build.mjs` 末尾自动校验 0 fail；按 [polish-loop](references/polish-loop.md) 至少走 1–2 轮并记录 `polish-log.md`。
 
 ### 第 5 步 · 文章排版
-用 [templates/article-body.html](templates/article-body.html) 产出**微信可直接粘贴**的内联样式 HTML，并同步 Markdown 正文（两者内容一致，图注齐全）。
+用 [templates/article-body.html](templates/article-body.html) 产出**微信可直接粘贴**的 HTML **片段**（`article.html`，只有根 `<section>`）+ 同源的 Markdown 正文 + 本地预览页 `article-preview.html` + `粘贴说明.md`。
+粘贴三条铁律（见 [article-format](references/article-format.md) 第 5 节）：**不带整页外壳**、**只用 p/span/strong/img 白名单标签**（h1/h2/figure/figcaption/hr/table/blockquote 全部改写成段落）、**不写 font-family/letter-spacing/max-width**。
+交付时告诉用户粘贴走 `article-import.html` → 点「复制全文」：编辑器里若出现 `<section style=…>` 源码，说明从记事本等纯文本编辑器复制了，换成导入页即可。
 **完成标准**：≥800 字、≥3 张配图；Markdown 与 HTML 同源同内容；每个图位有「图N：…」；无外链 CSS、无脚本。
 
 ### 第 6 步 · 视频号（可选）
@@ -188,7 +199,7 @@ metadata:
 - **文章正文 ≥800 字（建议 1500–3000）**，至少 3 张配图，是「文字介绍 + 图片」交替的图文长文；不足 800 字只算贴图配文。
 - 每张卡只表达一个信息；标题最多两行；每卡强调色只用一种。
 - 颜色、字号、间距一律取 [assets/tokens.css](assets/tokens.css) 的令牌，不手写魔法值。
-- 文章 HTML 只用内联样式；不引外部字体/脚本；图片按顺序编号并配「图N：」图注。
+- **文章 HTML 是可粘贴片段**：只用内联样式 + 白名单标签 `section/p/span/strong/img/br`，不输出 doctype/html/head/body，不用 `h1/h2/figure/figcaption/hr/table/blockquote/div`，不写 `font-family/letter-spacing/max-width/margin:auto`（微信会清理）；`check.mjs` 会卡这条。图片按顺序编号并配「图N：」图注，正文图用相对路径，粘贴后手动上传。粘贴必须走 `article-import.html` 的「复制全文」（富文本），禁止从记事本/纯文本编辑器复制 article.html（会粘成源码）。
 - **二维码要真**：结尾卡/宣传卡的 `qr` 传官网或 GitHub 地址（`{url,label,logoText}`），由 `scripts/qr.mjs` 生成可扫码的真码；码地址必须与 `article.links` 一致，白底、≥112px，不用占位图案。
 - 版面安全区：四周 ≥64px，主标题不贴边，底部标签不压图。
 - **画面风格硬规格**：手机真机框 404×820；桌面窗口 936 宽；流程图 936 宽（2–4 步 + 1 判断）；Bento 3–4 列；宣传图一屏一产品一价格一 CTA。
@@ -196,5 +207,9 @@ metadata:
 - **示意要诚实**：手机/电脑窗口内的 UI 与数字、宣传图价格必须标「示意」或有真实来源；真实截图优先用 `shot`。
 - **事实与品牌**：真实产品/数据/评价必须有来源；真实品牌必须有官方 logo/截图，缺失用诚实占位并标注「示意图」。
 - **反模板装饰**：非序列不用 01/02/03；不用中点式「A · B · C」；不把全大写小标签当装饰；`NEW`/`免费` 这类徽章只在 brief 明确需要时才加。
+- **首图是钩子**：封面卡标题用 `hook` 字号阶（116/104/92px，比内页大 1–2 档），首行放结果或反常；必须有 `thumbs` 首屏预览（「往下还有」+ 关键词缩略）或真实截图主视觉；缩到 320px 宽仍能读出一句结论。
+- **首图版式从参考库里挑**：8 种版面骨架（工具速评 / 深色技术 / 手绘标注 / 彩色格 / 叠层宣言 / 样张拼贴 / 单图知识海报 / 红系拼贴）见 [style-cases](references/style-cases/README.md)，用 `cards[0].layout` 指定，详见 [image-design-system](references/image-design-system.md) 4.1。
+- **两版一浅一深**：默认两版必须一个深色系主题、一个浅色系主题，**不许两个浅色或两个深色**，也不许同色系近亲搭配（见上方「配色铁律」）。
 - **两版不是换皮**：至少一版的卡片顺序、主视觉类型或文体不同；只换配色/语气不算两版。
+- **两版一次校验**：`node scripts/validate-pair.mjs --all`（或成对跑 `check.mjs`）必须 0 fail，配色与结构两条同时过。
 - **交付不通过不出门**：`check.mjs` 有 fail 必须修；`polish-log.md` 建议记录至少 1 轮。

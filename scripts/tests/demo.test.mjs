@@ -32,13 +32,37 @@ test('article-body palette is a subset of article-tokens', () => {
 test('SKILL keeps the article + card contract and quality gates', () => {
   const s = readFileSync('SKILL.md', 'utf8');
   assert.match(s, /metadata:\s*\n\s*author:/);
-  assert.match(s, /version:\s*"0\.1\.0"/);
+  assert.match(s, /version:\s*"0\.1\.\d+"/);
   assert.ok(s.includes('2 个版本 × 2 种格式'));
   assert.ok(s.includes('4 个公众号样例'));
   assert.ok(s.includes('贴图') && s.includes('文章'));
   assert.ok(s.includes('style-catalog') && s.includes('video-format'), 'missing style/video docs');
   for (const f of ['facts.md', 'brand-spec.md', 'polish-log.md']) {
     assert.ok(s.includes(f), 'missing quality gate ' + f);
+  }
+});
+
+test('article.html is a paste-ready fragment, not a full page', () => {
+  for (const dir of [join(demo, 'v1-dark'), join(demo, 'v2-light'), 'examples/cases/wechat-mp-self/out/v2-sky', 'examples/cases/wechat-mp-self/out/v1-ocean']) {
+    const html = readFileSync(join(dir, 'article', 'article.html'), 'utf8');
+    assert.ok(!/<!(doctype|DOCTYPE)/.test(html), dir + ': 不应含 doctype');
+    for (const tag of ['html', 'head', 'body', 'title', 'h1', 'h2', 'figure', 'figcaption', 'hr', 'table', 'blockquote', 'div']) {
+      assert.ok(!new RegExp('<' + tag + '(\\s|>)').test(html), dir + ': 不应含 <' + tag + '>');
+    }
+    assert.ok(html.trimStart().startsWith('<section'), dir + ': 根节点应为 <section>');
+    assert.ok(!/font-family|letter-spacing|max-width/.test(html), dir + ': 不应写微信会清理的属性');
+  }
+});
+
+test('article-import.html is a rich-text copy page, not a raw dump', () => {
+  for (const dir of [join(demo, 'v1-dark'), 'examples/cases/wechat-mp-self/out/v2-sky']) {
+    const p = join(dir, 'article', 'article-import.html');
+    assert.ok(existsSync(p), dir + ': 缺少 article-import.html');
+    const html = readFileSync(p, 'utf8');
+    assert.match(html, /<button[^>]*onclick="cp\(\)"/, dir + ': 缺「复制全文」按钮');
+    assert.match(html, /id="wx"/, dir + ': 缺复制内容区 #wx');
+    const inner = html.slice(html.indexOf('<div id="wx">'));
+    assert.ok(inner.trimStart().startsWith('<div id="wx"><section'), dir + ': 复制区内应是片段');
   }
 });
 
@@ -124,6 +148,12 @@ test('reference-style cases pass automated check', () => {
     const dir = join('examples/cases', c, 'out');
     const r = checkVersion(dir);
     assert.equal(r.errs.length, 0, c + ': ' + r.errs.join('; '));
+  }
+  // 自举案例：一期两版（v1-ocean 深色 / v2-sky 浅色），放在 out/ 的子目录里
+  for (const v of ['v1-ocean', 'v2-sky']) {
+    const dir = join('examples/cases/wechat-mp-self/out', v);
+    const r = checkVersion(dir);
+    assert.equal(r.errs.length, 0, 'wechat-mp-self/' + v + ': ' + r.errs.join('; '));
   }
 });
 

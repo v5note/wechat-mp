@@ -2,6 +2,8 @@
    wechat-mp · design tokens + card components
    All visual specs come from references/image-design-system.md
    Themes: .t-dark (V1 深色科技版) / .t-light (V2 浅色清新版)
+   明暗标签：data-theme="light|dark"，20 套主题各记一次；两版交付必须一浅一深。
+   新增主题时在文件末尾「明暗标签」表里登记，scripts/check.mjs 会比对。
    ============================================================ */
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -84,7 +86,10 @@ body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-f
   radial-gradient(720px 520px at -12% 112%,rgba(56,225,214,.10),transparent 60%)}
 .t-light .card .bg,.t-light .bg{background-image:radial-gradient(rgba(16,24,40,.05) 1px,transparent 1px);background-size:28px 28px}
 .page{position:absolute;inset:0;padding:var(--safe);display:flex;flex-direction:column;z-index:2}
+/* 页脚钉在底部：主区内容再高也不会把页脚顶走（headline.hook 等大字号首图需要） */
+.card .page>.ft{position:absolute;left:var(--safe);right:var(--safe);bottom:var(--safe)}
 .main{flex:1;display:flex;flex-direction:column;justify-content:center;min-height:0}
+.main:has(.covercard){justify-content:flex-start}
 
 /* ---------- header ---------- */
 .hd{display:flex;align-items:center;justify-content:space-between;flex:0 0 auto}
@@ -102,6 +107,10 @@ body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-f
 .headline{font-size:92px;font-weight:800;line-height:1.07;letter-spacing:-2px}
 .headline.sm{font-size:76px}
 .headline.xs{font-size:64px}
+/* 封面钩子标题：在六宫格里第一眼认得出（详见 image-design-system 4.1） */
+.headline.hook{font-size:116px;line-height:1.02;letter-spacing:-4px}
+.headline.hook2{font-size:104px;line-height:1.04;letter-spacing:-3px}
+.headline.hook3{font-size:92px;line-height:1.08;letter-spacing:-3px}
 .acc{color:var(--accent)}
 .sub{font-size:32px;font-weight:500;line-height:1.5;color:var(--text-2)}
 .body{font-size:28px;line-height:1.72;color:var(--text-2);letter-spacing:.5px}
@@ -252,8 +261,10 @@ body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-f
 .fill .stack .slayer{flex:0 0 auto}
 .fill .tiles{height:auto;align-self:center}
 .fill .tile{justify-content:center}
-.t-light .mcard,.t-light .mnav,.t-light .mchart{background:#EDF2FC}
-.t-light .ml{background:#DCE3F0}
+.t-light .mcard,.t-light .mnav,.t-light .mchart,
+.t-magazine .mcard,.t-magazine .mnav,.t-magazine .mchart,
+.t-mono .mcard,.t-mono .mnav,.t-mono .mchart{background:var(--surface-2)}
+.t-light .ml,.t-magazine .ml,.t-mono .ml{background:var(--border-strong)}
 
 /* ============================================================
    参考风格库主题（见 references/style-catalog.md）
@@ -444,6 +455,97 @@ body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-f
 .kvrow:nth-child(even){background:var(--surface-2)}
 .kvk{width:190px;flex:0 0 auto;color:var(--text-3);font-weight:700}
 .kvv{color:var(--text)}
+
+/* ---------- 封面卡：首屏钩子 ---------- */
+.covercard{display:flex;flex-direction:column;flex:1;min-height:0}
+.covercard .kpay{margin-top:16px;display:flex}
+.covercard .kpay .kicker{align-self:flex-start}
+.covercard .hook{margin-top:22px}
+.covercard .prize{margin-top:18px;font-size:32px;font-weight:700;color:var(--accent);line-height:1.35}
+.covercard .vis{padding-top:40px;flex:1;display:flex;flex-direction:column;justify-content:center;min-height:0}
+.covercard .stats .stat{padding:24px 18px}
+.covercard .stats .num{font-size:72px}
+.covercard .hlite{background:#fff;border-color:var(--border-strong);box-shadow:0 14px 34px rgba(20,40,80,.10)}
+.covercard .hlite .clrow{border:none;background:transparent}
+.covercard .hlite .cltxt{font-size:24px}
+
+/* 首屏预览：把后面几张卡缩成小样，证明「往下有内容」 */
+.scrollcue{margin-top:36px;display:flex;align-items:center;gap:14px;color:var(--text-3);font-size:22px;letter-spacing:1px}
+.scrollcue i{display:block;width:12px;height:12px;border-right:3px solid var(--accent);border-bottom:3px solid var(--accent);transform:rotate(45deg);animation:none}
+.nexts{display:flex;flex-direction:column;gap:14px;width:100%}
+.nexts-hd{font-size:22px;letter-spacing:2px;color:var(--text-3)}
+.next{display:flex;align-items:center;gap:16px;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px 22px}
+.next .nx{width:40px;height:40px;flex:0 0 auto;border-radius:11px;background:var(--accent-soft);border:1px solid var(--accent-line);
+  color:var(--accent);font-size:20px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.next .nt{font-size:26px;font-weight:800;color:var(--text)}
+.next .nd{font-size:21px;color:var(--text-2);margin-left:auto}
+.coverthumb{width:100%;display:flex;justify-content:center}
+.coverthumb img{width:86%;border-radius:18px;border:1px solid var(--border-strong);box-shadow:0 30px 70px rgba(0,0,0,.35);display:block}
+.thumbs{display:flex;align-items:flex-start;gap:16px;width:100%}
+.thumbs .thumbs-hd{flex:0 0 auto;width:84px;font-size:22px;line-height:1.5;color:var(--text-3);letter-spacing:1px;padding-top:4px}
+.thumbs .thumb{flex:1;position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--border-strong);
+  background:linear-gradient(165deg,var(--surface-2),var(--bg2));aspect-ratio:3/4;box-shadow:0 16px 36px rgba(0,0,0,.12)}
+.thumbs .thumb .tb{position:absolute;left:14px;right:14px}
+.thumbs .thumb .tb-k{top:12px;font-size:12px;letter-spacing:1px;color:var(--text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.thumbs .thumb .tb-t{top:32px;font-size:19px;font-weight:800;line-height:1.3;color:var(--text)}
+.thumbs .thumb .tb-t em{font-style:normal;color:var(--accent)}
+.thumbs .thumb .tb-a{bottom:12px;height:46px;border-radius:8px;background:var(--accent-soft);border:1px solid var(--accent-line)}
+.thumbs .thumb .tb-b{bottom:12px;left:14px;width:60%;height:8px;border-radius:4px;background:var(--border-strong)}
+.thumbs .thumb .tb-c{bottom:28px;left:14px;width:80%;height:8px;border-radius:4px;background:var(--border)}
+.thumbs .thumb.rm{display:flex;align-items:center;justify-content:center}
+.thumbs .thumb.rm .tb-more{font-size:22px;font-weight:700;color:var(--accent)}
+.thumbs .thumb.ending{background:linear-gradient(165deg,var(--accent-soft),var(--bg1))}
+.thumbs .thumb.ending .tb-qr{position:absolute;right:12px;bottom:12px;width:38px;height:38px;border-radius:6px;background:#fff;
+  background-image:repeating-linear-gradient(0deg,#111 0 4px,transparent 4px 8px),repeating-linear-gradient(90deg,#111 0 4px,transparent 4px 8px)}
+
+/* ---------- 首图版面（cover.layout，见 references/style-cases） ---------- */
+.covercard .hband{display:inline-flex;align-items:center;gap:14px;align-self:flex-start;margin-top:8px;
+  background:var(--accent);color:#fff;font-size:26px;font-weight:800;letter-spacing:1px;padding:12px 22px;border-radius:999px}
+.covercard .hsub2{margin-top:18px;font-size:30px;line-height:1.6;color:var(--text-2)}
+.covercard .hline{display:flex;align-items:center;gap:16px;margin-top:22px}
+.covercard .hline i{flex:1;height:2px;background:var(--accent-line);display:block}
+.covercard .hrow{display:flex;gap:22px;width:100%;align-items:stretch}
+.covercard .hrow .hshot{flex:1 1 58%;min-width:0}
+.covercard .hrow .hside{flex:1 1 42%;display:flex;flex-direction:column;gap:16px;justify-content:center}
+.covercard .hgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px;width:100%}
+.covercard .hcell{background:var(--surface);border:1px solid var(--border-strong);border-radius:14px;padding:16px 18px;
+  font-size:22px;line-height:1.45;color:var(--text-2)}
+.covercard .hcell b{display:block;font-size:24px;color:var(--text);margin-bottom:6px}
+.t-light .covercard .hcell,.t-aurora .covercard .hcell,.t-sky .covercard .hcell,.t-baize .covercard .hcell,.t-cream .covercard .hcell,.t-blueprint .covercard .hcell,.t-ios .covercard .hcell,.t-bento .covercard .hcell,.t-magazine .covercard .hcell,.t-mono .covercard .hcell,.t-rose .covercard .hcell{background:#fff}
+.covercard .hbar{display:flex;gap:12px;width:100%;margin-top:18px}
+.covercard .hbar .hchip{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;
+  font-size:22px;font-weight:800;padding:14px 10px;border-radius:12px;background:var(--surface);border:1px solid var(--border-strong);color:var(--text)}
+.covercard .hbar .hchip.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.covercard .tbn{margin-top:20px;font-size:24px;line-height:1.5;color:var(--text-2);letter-spacing:.3px}
+.covercard .tbpills{display:flex;gap:18px;width:100%;margin-top:22px}
+.covercard .tbp{flex:1;border-radius:999px;padding:20px 26px;display:flex;flex-direction:column;align-items:center;gap:6px;border:2px solid var(--text)}
+.covercard .tbp b{font-size:30px;font-weight:800;color:var(--text)}
+.covercard .tbp span{font-size:19px;color:var(--text-2)}
+.covercard .tbp.solid{background:var(--text);border-color:var(--text)}
+.covercard .tbp.solid b{color:var(--bg1)}
+.covercard .tbp.solid span{color:var(--bg1);opacity:.75}
+.covercard .ddnote{margin-top:18px;border-left:5px solid var(--accent);background:var(--surface);border-radius:0 12px 12px 0;
+  padding:16px 20px;font-size:23px;line-height:1.5;color:var(--text-2)}
+.covercard .ddnote b{color:var(--accent)}
+.covercard .note{margin-top:18px;font-size:21px;line-height:1.5;color:var(--text-2);border-left:4px solid var(--accent);padding-left:14px}
+.covercard .stamp{position:absolute;right:0;top:0;font-size:20px;font-weight:800;color:var(--accent);
+  border:2px solid var(--accent);border-radius:10px;padding:6px 12px;transform:rotate(-6deg);letter-spacing:1px}
+.covercard .board{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;width:100%}
+.covercard .tilelogo{background:var(--surface);border:1px solid var(--border-strong);border-radius:16px;padding:18px 12px;
+  display:flex;flex-direction:column;align-items:center;gap:10px;font-size:19px;font-weight:700;color:var(--text);text-align:center;line-height:1.25}
+.t-light .covercard .tilelogo,.t-aurora .covercard .tilelogo,.t-sky .covercard .tilelogo,.t-baize .covercard .tilelogo,.t-cream .covercard .tilelogo,.t-blueprint .covercard .tilelogo,.t-ios .covercard .tilelogo,.t-bento .covercard .tilelogo,.t-rose .covercard .tilelogo,.t-magazine .covercard .tilelogo,.t-mono .covercard .tilelogo{background:#fff}
+.covercard .tilelogo .nm{background:var(--accent);color:#fff;width:44px;height:44px;border-radius:12px;display:flex;
+  align-items:center;justify-content:center;font-size:20px;font-weight:800}
+.covercard .bandline{margin-top:16px;background:var(--accent);color:#fff;border-radius:12px;padding:14px 20px;
+  font-size:23px;font-weight:800;text-align:center}
+.covercard .mix{font-size:70px;font-weight:800;line-height:1.1;letter-spacing:-2px;color:var(--text)}
+.covercard .mix .na{color:var(--text-3);font-weight:800}
+.covercard .desk{box-shadow:0 26px 60px rgba(0,0,0,.18)}
+.covercard .vis .desktop.sm .winbody{height:var(--winbody,270px)}
+.covercard .thumb4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;width:100%}
+.covercard .thumb4 .s{aspect-ratio:3/4;border-radius:10px;border:1px solid var(--border-strong);overflow:hidden;background:var(--surface-2)}
+.covercard .thumb4 .s img{width:100%;height:100%;object-fit:cover;display:block}
+.covercard .thumb4 .cap{font-size:18px;color:var(--text-2);text-align:center;margin-top:6px}
 
 /* big stats */
 .stats{display:flex;gap:20px;width:100%}
@@ -710,7 +812,24 @@ body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-f
 .wintabs{margin-left:auto;display:flex;gap:6px}
 .wintab{font-size:11px;color:var(--text-3);padding:5px 10px;border-radius:7px;background:var(--surface)}
 .wintab.on{color:var(--accent);background:var(--accent-soft)}
-.winbody{display:flex;min-height:430px}
+.winbody{display:flex;height:var(--winbody,430px);min-height:0}
+.desktop.sm{gap:8px}
+.desktop.sm .menubar{height:28px;font-size:11px;padding:0 12px}
+.desktop.sm .winbar{height:var(--winhead,40px)}
+.desktop.sm .winside{width:150px;padding:10px 8px;gap:4px}
+.desktop.sm .wnav{height:26px;font-size:12px}
+.desktop.sm .winc{padding:14px;gap:10px}
+.desktop.sm .dstat b{font-size:20px}
+.desktop.sm .dstat span{font-size:10px;margin-top:4px}
+.desktop.sm .ddock i{width:28px;height:28px}
+.desktop.sm .dchart{min-height:80px}
+.llist{display:flex;flex-direction:column;gap:8px}
+.lrow{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:10px;font-size:20px;font-weight:700;
+  color:var(--text-2);border:1px solid var(--border)}
+.lrow.on{color:var(--accent);background:var(--accent-soft);border-color:var(--accent-line)}
+.lrow .lno{width:26px;height:26px;border-radius:8px;background:var(--surface-2);display:flex;align-items:center;
+  justify-content:center;font-size:14px;font-weight:800;color:var(--text-3)}
+.lrow.on .lno{background:var(--accent);color:#fff}
 .winside{width:190px;flex:0 0 auto;background:var(--surface-2);border-right:1px solid var(--border);
   padding:14px 12px;display:flex;flex-direction:column;gap:6px}
 .wnav{height:32px;border-radius:8px;display:flex;align-items:center;gap:9px;padding:0 10px;font-size:13px;color:var(--text-2)}
@@ -801,7 +920,7 @@ body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-f
 .pdev-phone .phone{width:360px;height:730px;border-radius:54px}
 .pdev-phone .phone .pscreen{border-radius:44px}
 .pdev-desk .desktop{width:760px;transform:rotate(0)}
-.pdev-desk .winbody{min-height:300px}
+.pdev-desk .winbody{min-height:300px;height:auto}
 .pdev-desk .desktop{gap:8px}
 .pfloat{position:absolute;z-index:4;display:flex;align-items:center;gap:9px;font-size:17px;font-weight:700;
   color:var(--text);background:var(--surface);border:1px solid var(--border-strong);border-radius:12px;
@@ -900,3 +1019,17 @@ body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-f
 .shot img{width:100%;display:block}
 
 
+
+/* ============================================================
+   明暗标签（两版交付必须一浅一深，见 SKILL.md「两版不是换皮」）
+   data-theme="light" 浅色系：浅底 + 深字；data-theme="dark" 深色系：深底 + 浅字。
+   这里只做登记，不改任何视觉；新增主题必须补一行，scripts/check.mjs 会比对。
+   ============================================================ */
+.t-dark[data-theme="dark"], .t-night-cyan[data-theme="dark"], .t-guofeng[data-theme="dark"],
+.t-forest[data-theme="dark"], .t-ocean[data-theme="dark"], .t-cyber[data-theme="dark"],
+.t-midnight[data-theme="dark"], .t-desk[data-theme="dark"], .t-promo[data-theme="dark"]{color-scheme:dark}
+
+.t-light[data-theme="light"], .t-magazine[data-theme="light"], .t-mono[data-theme="light"],
+.t-aurora[data-theme="light"], .t-cream[data-theme="light"], .t-sky[data-theme="light"],
+.t-rose[data-theme="light"], .t-baize[data-theme="light"], .t-ios[data-theme="light"],
+.t-bento[data-theme="light"], .t-blueprint[data-theme="light"]{color-scheme:light}

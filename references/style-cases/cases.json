@@ -1,0 +1,435 @@
+{
+ "meta": {
+  "collected": "2026-11-19",
+  "source": "用户提供的 35 条公众号贴图链接（小绿书 / 图片消息）",
+  "method": "headless Chrome 以浏览器身份抓取正文，取出每篇首图与正文图，人工归纳版面结构；原图不复制进仓库（pin-red 保留一张作对照）",
+  "usage": "只提炼结构规则，不复制内容；产出配图仍按 assets/tokens.css 令牌渲染",
+  "note": "抓取时微信对非浏览器请求返回「环境异常」，需用浏览器 UA + data-src 取图；图源为 mmbiz.qpic.cn，下载需带 Referer"
+ },
+ "styles": [
+  {
+   "id": "tool-brief",
+   "name": "工具速评",
+   "accounts": "show-me / Skills Manager",
+   "look": "浅底 + 深色超大等线标题 + 一句话定位副标 + 真产品截图（或真实界面）居中 + 底部黑/描边 pill 卖点条",
+   "serve": "开源工具、Skill、组件的首图",
+   "recipe": [
+    "kicker 一行小字标品类与许可",
+    "主标题两行，第一行讲结论或疑问",
+    "副标 ≤2 行讲给谁、做什么",
+    "主区放真截图/真界面，占屏 40–50%",
+    "底部 2 个 pill：最硬的背书 + 最实的决定项"
+   ]
+  },
+  {
+   "id": "dev-dark",
+   "name": "深色技术",
+   "accounts": "Supabase / Aegis / magpie",
+   "look": "深底（墨绿/藏蓝/近黑）+ 冷色高亮标题 + 亮色描边的流转图或窗口截图 + 圆角面板网格 + 底部一行边界提醒",
+   "serve": "后端、平台、基建类项目",
+   "recipe": [
+    "深底 + 右侧色光",
+    "标题里只亮一个关键词",
+    "主区用流程图或窗口截图做技术锚点",
+    "2×2 能力面板，每格标题带一色",
+    "底部一行『先了解：…』的边界说明，建立信任"
+   ]
+  },
+  {
+   "id": "annotated-illu",
+   "name": "手绘标注",
+   "accounts": "show-me / 阿蓝蓝 / 任天真",
+   "look": "浅色渐变或柔和光晕底 + 手写体小注/箭头/波浪线 + 说明性插图或产品图 + 柔和彩虹字",
+   "serve": "工具、清单、网站推荐",
+   "recipe": [
+    "留白多、元素少",
+    "2–4 处手写小注，指向画面里真正重要的位置",
+    "标题一轮廓或渐变，副标一实心黑",
+    "底部或右侧放 6 格 logo/图标墙"
+   ]
+  },
+  {
+   "id": "color-grid",
+   "name": "彩色格",
+   "accounts": "Prompt 常用框架",
+   "look": "白卡 + 蓝色锯齿边 + 彩色圆角格（每格一色）+ 编号 01/02 + 行内小图标 + 底部收藏条",
+   "serve": "清单、框架、模板",
+   "recipe": [
+    "一格一个编号，颜色区分类别",
+    "格子内部：标题 + 3–5 行要点",
+    "顶部一句话公式横条",
+    "底部『收藏起来，反复用』的 CTA 条"
+   ]
+  },
+  {
+   "id": "bento-stack",
+   "name": "叠层宣言",
+   "accounts": "TANSOR LAB",
+   "look": "近黑底满屏产品/编辑器 + 上方叠一块宣言卡『绝妙想法，立刻实现！』+ 域名 pill + 橙色 CTA 按钮 + 像素风标签",
+   "serve": "有产品界面、要露出场景的地方",
+   "recipe": [
+    "界面铺底做质感",
+    "顶部一块宣言卡压住界面",
+    "一句话口号，动词收尾",
+    "橙色/单一亮色 CTA 按钮"
+   ]
+  },
+  {
+   "id": "layout-sample",
+   "name": "样张拼贴",
+   "accounts": "350 种排版 · 阿蓝蓝",
+   "look": "米白底 + 黑体大标题（一处下划线高亮）+ 说明段落 + 4 张竖版样张并排 + 样张下小字标签 + 底部标来源",
+   "serve": "作品集、图鉴、合集",
+   "recipe": [
+    "标题两行，第二行下划线",
+    "一段 3 行说明讲清工具怎么用",
+    "4 张样张等高并排，下配标签",
+    "底部写清图源与出处"
+   ]
+  },
+  {
+   "id": "diagram-poster",
+   "name": "单图知识海报",
+   "accounts": "AI Agent 完整架构",
+   "look": "米白底 + 点线箭头把模块串成一个整体 + 主模块用彩色半透明块 + 侧栏多级小标题 + 底部总结句",
+   "serve": "原理图解、架构总览",
+   "recipe": [
+    "先定一条主干（目标→步骤→产物）",
+    "分支挂在主干两侧，用虚线与箭头",
+    "颜色只区分层级或状态",
+    "底部一句总结把整图讲完"
+   ]
+  },
+  {
+   "id": "pin-red",
+   "name": "红系拼贴",
+   "accounts": "Pin UI",
+   "look": "纯白点阵底 + 正红胶囊标签 + 红色 logo 气泡 + 品牌视觉块拼进标题 + 手写波浪下划线 + 倾斜卡片拼贴 + 底部 4 宫格要点",
+   "serve": "组件库、设计资源、有鲜明品牌色的新品",
+   "recipe": [
+    "左上 logo 气泡，右上页码 pill",
+    "标题里用品牌图块当字（如 Pinterest 图标）",
+    "波浪线标出标题落点",
+    "倾斜卡片做产品拼贴",
+    "底部 4 个图标 + 标题 + 一句话"
+   ]
+  }
+ ],
+ "cases": [
+  {
+   "id": "sc-01",
+   "url": "https://mp.weixin.qq.com/s/XMoevdJYCHhAD66vvN5dIg",
+   "title": "这个 Skill，专治 AI 废话！",
+   "project": "show-me Skill",
+   "style": "annotated-illu",
+   "thumb": null,
+   "note": "只看结构，不存原图"
+  },
+  {
+   "id": "sc-02",
+   "url": "https://mp.weixin.qq.com/s/dgiaU0yRHHvUd_HTYqZkhQ",
+   "title": "后端功能要拼几套？试试Supabase",
+   "project": "Supabase",
+   "style": "dev-dark",
+   "thumb": null,
+   "note": "只看结构，不存原图"
+  },
+  {
+   "id": "sc-03",
+   "url": "https://mp.weixin.qq.com/s/-gCYpUTpxpTiDJF_yGeIcQ",
+   "title": "一页 HTML 回答｜免费开源",
+   "project": "answer-me-with-html",
+   "style": "annotated-illu",
+   "thumb": null,
+   "note": "只看结构，不存原图"
+  },
+  {
+   "id": "sc-04",
+   "url": "https://mp.weixin.qq.com/s/-O18hh_aZ6SEdL2JmdUMow",
+   "title": "Graphify：把代码库变成可查询的知识图",
+   "project": "Graphify",
+   "style": "tool-brief",
+   "thumb": null,
+   "note": "只看结构，不存原图"
+  },
+  {
+   "id": "sc-05",
+   "url": "https://mp.weixin.qq.com/s/Qq7OM9S0eFBKdGeRsBudWg",
+   "title": "免费开源文件管家！FTP、NAS、压缩包都能用",
+   "project": "muCommander",
+   "style": "dev-dark",
+   "thumb": null,
+   "note": "只看结构，不存原图"
+  },
+  {
+   "id": "sc-06",
+   "url": "https://mp.weixin.qq.com/s/r9BhbW2VxpfhvHfe4YYQ6A",
+   "title": "CLI-Anything 让任何软件妙变 CLI",
+   "project": "CLI-Anything",
+   "style": "tool-brief",
+   "thumb": null,
+   "note": "只看结构，不存原图"
+  },
+  {
+   "id": "sc-07",
+   "url": "https://mp.weixin.qq.com/s/3yYB_bLz1GOYybKWbUnzBg",
+   "title": "350 种构图，全给你编好号了",
+   "project": "阿蓝蓝",
+   "style": "layout-sample",
+   "thumb": null,
+   "note": "只看结构，不存原图"
+  },
+  {
+   "id": "sc-08",
+   "url": "https://mp.weixin.qq.com/s/-dX14HbTvYpVxvqdqoC_Jg",
+   "title": "AI Agent 的完整架构，建议收藏",
+   "project": "架构图解",
+   "style": "diagram-poster",
+   "thumb": null,
+   "note": "只看结构，不存原图"
+  },
+  {
+   "id": "sc-09",
+   "url": "https://mp.weixin.qq.com/s/tLP5hH0DRXLcKciSYawrgg",
+   "title": "grill-me：拷问想法，再动手开发",
+   "project": "撒撒的糖盒",
+   "style": "annotated-illu",
+   "thumb": null,
+   "note": "只看结构，不存原图"
+  },
+  {
+   "id": "sc-10",
+   "url": "https://mp.weixin.qq.com/s/ACc3lvqM8h3wwxJm2nJk5w",
+   "title": "指标、日志、链路，在一个页面里查",
+   "project": "可观测性工具",
+   "style": "dev-dark",
+   "thumb": null,
+   "note": "只看结构，不存原图"
+  },
+  {
+   "id": "sc-11",
+   "url": "https://mp.weixin.qq.com/s/Au9cTRX_Peooi7QJQKXXeQ",
+   "title": "TANSOR LAB ｜ 探索实验室",
+   "project": "TANSOR LAB",
+   "style": "bento-stack",
+   "thumb": null,
+   "note": "只看结构，不存原图"
+  },
+  {
+   "id": "sc-12",
+   "url": "https://mp.weixin.qq.com/s/hWZlr1F_R6aoR0yqCefohg",
+   "title": "Wake 把 agent 会话收进一个窗口",
+   "project": "Wake",
+   "style": "tool-brief",
+   "thumb": null,
+   "note": "只看结构，不存原图"
+  },
+  {
+   "id": "sc-13",
+   "url": "https://mp.weixin.qq.com/s/_rDuxlMUKtfUsHwNhwig3Q",
+   "title": "发个接口请求而已，Hoppscotch 不用登录",
+   "project": "Hoppscotch",
+   "style": "tool-brief",
+   "thumb": null,
+   "note": "只看结构，不存原图"
+  },
+  {
+   "id": "sc-14",
+   "url": "https://mp.weixin.qq.com/s/6yhOHXOktryPtRxNj8_WsA",
+   "title": "book-to-skill：技术书变技能",
+   "project": "book-to-skill",
+   "style": "tool-brief",
+   "thumb": null,
+   "note": "只看结构，不存原图"
+  },
+  {
+   "id": "sc-15",
+   "url": "https://mp.weixin.qq.com/s/5U5wKVk3j4By0OuZLSHs9Q",
+   "title": "homelab-diagram：画拓扑图",
+   "project": "homelab-diagram",
+   "style": "diagram-poster",
+   "thumb": null,
+   "note": "只看结构，不存原图"
+  },
+  {
+   "id": "sc-16",
+   "url": "https://mp.weixin.qq.com/s/6mYEGt1J93ZLqQMJvjjkIA",
+   "title": "AI 工具越多 Skill 越乱：是时候统一收编了",
+   "project": "Skills Manager",
+   "style": "tool-brief",
+   "thumb": null,
+   "note": "只看结构，不存原图"
+  },
+  {
+   "id": "sc-17",
+   "url": "https://mp.weixin.qq.com/s/X7JOXiIbLPf5bhXoleFagg",
+   "title": "GitNexus — 让 Agent 看懂整个代码库",
+   "project": "GitNexus",
+   "style": "dev-dark",
+   "thumb": null,
+   "note": "只看结构，不存原图"
+  },
+  {
+   "id": "sc-18",
+   "url": "https://mp.weixin.qq.com/s/jBboFB_WzaWB5MWo9Ht02Q",
+   "title": "diagram-design：AI 也能画品牌级图表",
+   "project": "diagram-design",
+   "style": "annotated-illu",
+   "thumb": null,
+   "note": "只看结构，不存原图"
+  },
+  {
+   "id": "sc-19",
+   "url": "https://mp.weixin.qq.com/s/cDEq1osW4FxxPkUyNgvJew",
+   "title": "HTTP 202 之后，Agent 交付了吗？",
+   "project": "Aegis · Agent SLO",
+   "style": "dev-dark",
+   "thumb": null,
+   "note": "只看结构，不存原图"
+  },
+  {
+   "id": "sc-20",
+   "url": "https://mp.weixin.qq.com/s/EXkEIXCZ25pIMZaRwp0njA",
+   "title": "写代码或做内容，都有必要建「知识图谱」",
+   "project": "知识图谱图解",
+   "style": "diagram-poster",
+   "thumb": null,
+   "note": "只看结构，不存原图"
+  },
+  {
+   "id": "sc-21",
+   "url": "https://mp.weixin.qq.com/s/JqclFNkydrYEUr04e5QgKQ",
+   "title": "FnCal 日历更新啦",
+   "project": "FnCal",
+   "style": "tool-brief",
+   "thumb": null,
+   "note": "只看结构，不存原图"
+  },
+  {
+   "id": "sc-22",
+   "url": "https://mp.weixin.qq.com/s/eTaRByOCxIRQdQe9WFvp-w",
+   "title": "UI 原型设计的概念",
+   "project": "UI 设计干货",
+   "style": "annotated-illu",
+   "thumb": null,
+   "note": "只看结构，不存原图"
+  },
+  {
+   "id": "sc-23",
+   "url": "https://mp.weixin.qq.com/s/ylJUQq2x3E3bIYNFBh_4Zw",
+   "title": "B端深色UI怎么做出高级感？总结了6个关键点",
+   "project": "B 端深色 UI",
+   "style": "dev-dark",
+   "thumb": null,
+   "note": "只看结构，不存原图"
+  },
+  {
+   "id": "sc-24",
+   "url": "https://mp.weixin.qq.com/s/y_-cGu8uMDmM5Y17JHeRQQ",
+   "title": "不会写提示词，这 8 个框架直接抄",
+   "project": "Prompt 常用框架",
+   "style": "color-grid",
+   "thumb": null,
+   "note": "只看结构，不存原图"
+  },
+  {
+   "id": "sc-25",
+   "url": "https://mp.weixin.qq.com/s/etNY6AusjJqv8phTM3cSxg",
+   "title": "B端工作台首页UI设计｜Web系统设计｜案例分享",
+   "project": "B 端工作台",
+   "style": "layout-sample",
+   "thumb": null,
+   "note": "只看结构，不存原图"
+  },
+  {
+   "id": "sc-26",
+   "url": "https://mp.weixin.qq.com/s/fk4-UHWiHVDe0jjjXbdrtA",
+   "title": "给个网址，AI扒出整套设计！",
+   "project": "design-extract",
+   "style": "tool-brief",
+   "thumb": null,
+   "note": "只看结构，不存原图"
+  },
+  {
+   "id": "sc-27",
+   "url": "https://mp.weixin.qq.com/s/ryLsLKE6YTtK7nMQLjdMqQ",
+   "title": "Vibe Coding必看，别再让AI凭感觉做动效了",
+   "project": "任天真AI设计室",
+   "style": "annotated-illu",
+   "thumb": null,
+   "note": "只看结构，不存原图"
+  },
+  {
+   "id": "sc-28",
+   "url": "https://mp.weixin.qq.com/s/LtE4ZRUV_qjuQAvksA_fZA",
+   "title": "如何为后台系统构建一个 Design skill",
+   "project": "Design skill",
+   "style": "diagram-poster",
+   "thumb": null,
+   "note": "只看结构，不存原图"
+  },
+  {
+   "id": "sc-29",
+   "url": "https://mp.weixin.qq.com/s/a-2kwkcuEFyOedNDjQwgiQ",
+   "title": "BriRing_APP风格设计",
+   "project": "BriRing",
+   "style": "layout-sample",
+   "thumb": null,
+   "note": "只看结构，不存原图"
+  },
+  {
+   "id": "sc-30",
+   "url": "https://mp.weixin.qq.com/s/HvFWXcr_M9kdtqUJzayrJg",
+   "title": "UX/UI Prompt：给 AI 抄的界面零件",
+   "project": "UX/UI Prompt",
+   "style": "color-grid",
+   "thumb": null,
+   "note": "只看结构，不存原图"
+  },
+  {
+   "id": "sc-31",
+   "url": "https://mp.weixin.qq.com/s/vhXToHeIb5diCBx4HvfUyA",
+   "title": "一个入口全接管，喂饱全端免费额度",
+   "project": "Magpie",
+   "style": "dev-dark",
+   "thumb": null,
+   "note": "只看结构，不存原图"
+  },
+  {
+   "id": "sc-32",
+   "url": "https://mp.weixin.qq.com/s/bxWKYbFbba3Pkoo3kXxFsg",
+   "title": "前端UI设计师找灵感就看这8个网站",
+   "project": "灵感网站",
+   "style": "annotated-illu",
+   "thumb": null,
+   "note": "只看结构，不存原图"
+  },
+  {
+   "id": "sc-33",
+   "url": "https://mp.weixin.qq.com/s/o4HwflJ_85ORWJA_7FzNQA",
+   "title": "职业教育类网站UI设计｜教育培训｜灵感分享",
+   "project": "教育培训 UI",
+   "style": "layout-sample",
+   "thumb": null,
+   "note": "只看结构，不存原图"
+  },
+  {
+   "id": "sc-34",
+   "url": "https://mp.weixin.qq.com/s/Lby15yLC6n75LuQRqpgJlw",
+   "title": "高端Web开发必上的8个灵感网站",
+   "project": "高端 Web 灵感",
+   "style": "annotated-illu",
+   "thumb": null,
+   "note": "只看结构，不存原图"
+  },
+  {
+   "id": "sc-35",
+   "url": "https://mp.weixin.qq.com/s/o0HY0ye_6iqGnoFmLuLB8Q",
+   "title": "推荐一个非常新的开源 UI 组件库",
+   "project": "Pin UI",
+   "style": "pin-red",
+   "thumb": "assets/style-cases/pin-red/pin-ui-lead.jpg",
+   "note": "红色图片主题；仓库只保存这一张作对照，其余只记结构"
+  }
+ ]
+}

@@ -283,6 +283,13 @@ function deskContent(o){
     }).join('\n');
     return '<div class="dcode">' + lines + '</div>';
   }
+  if(ui === 'list') {
+    // 关键词清单：首图里用，只放名词与数字，不放句子
+    const lines = (o.list || ['五步出稿清单', '2 版本 × 2 格式', '视频号三件套']).map(function(t, i){
+      return '<div class="lrow' + (i === 0 ? ' on' : '') + '"><span class="lno">' + (i + 1) + '</span><span>' + esc(t) + '</span></div>';
+    }).join('');
+    return '<div class="llist">' + lines + '</div>';
+  }
   if(ui === 'board') {
     const col = function(n, extra){
       let s = '<div class="mcard" style="flex:1;gap:8px">';
@@ -292,7 +299,11 @@ function deskContent(o){
     return '<div class="drow" style="flex:1">' + col(3) + col(4) + col(2) + '</div>';
   }
   const stats = o.stats || [{ num: '42', label: '模块' }, { num: '128', label: '依赖' }, { num: '3', label: '待处理' }];
-  const statHtml = stats.map(function(s){ return '<div class="dstat"><b>' + esc(s.num) + '</b><span>' + esc(s.label) + '</span></div>'; }).join('');
+  const statHtml = stats.map(function(s){
+    var big = s.num != null ? s.num : s.v;
+    var lb = s.label != null ? s.label : s.k;
+    return '<div class="dstat"><b>' + esc(big) + '</b><span>' + esc(lb) + '</span></div>';
+  }).join('');
   const heights = [42, 66, 52, 78, 58, 88, 70, 62];
   const bars = heights.map(function(h){ return '<i class="mbar" style="height:' + h + '%"></i>'; }).join('');
   return '<div class="dstatrow">' + statHtml + '</div>' +
@@ -302,7 +313,10 @@ function deskContent(o){
 }
 export function desktop(o){
   o = o || {};
-  const nav = o.nav || [
+  // 可选尺寸：viewH 控制窗口正文高度，size=sm 时整体更紧凑（首图里用）
+  var winStyle = '';
+  if (o.size === 'sm' || o.viewH) winStyle = '--winbody:' + (o.viewH || 270) + 'px;--winhead:' + (o.size === 'sm' ? 40 : 50) + 'px';
+  var nav = o.nav || [
     { icon: 'grid', t: '概览' }, { icon: 'layers', t: '项目' }, { icon: 'branch', t: '架构图' },
     { icon: 'chart', t: '调用链' }, { icon: 'cube', t: '设置' }
   ];
@@ -313,7 +327,7 @@ export function desktop(o){
     return '<span class="wintab' + (i === 0 ? ' on' : '') + '">' + esc(t) + '</span>';
   }).join('');
   const dock = o.dock === false ? '' : '<div class="ddock"><i class="on"></i><i></i><i></i><i></i><i></i></div>';
-  return '<div class="desktop">' +
+  return '<div class="desktop' + (o.size === 'sm' ? ' sm' : '') + '"' + (winStyle ? ' style="' + winStyle + '"' : '') + '>' +
     '<div class="menubar"><span class="mblogo">◆</span><span class="mbmenu">文件</span><span class="mbmenu">编辑</span>' +
     '<span class="mbmenu">视图</span><span class="mbmenu">窗口</span><span class="mbmenu">帮助</span>' +
     '<span class="mbright">' + esc(o.time || '9:41') + '</span></div>' +
@@ -524,19 +538,162 @@ export function hero(h){
   if(h.type === 'promo'){ return promoStage(h); }
   if(h.type === 'compare'){ return compareBlock(h.left || {}, h.right || {}); }
   if(h.type === 'shot'){ return shotFrame(h.url, h.caption, h.src); }
+  if(h.type === 'coverthumb'){ return '<div class="coverthumb"><img src="' + dataUri(h.src) + '"></div>'; }
   return '';
 }
 
 // ---------- card MAIN builders ----------
+// 封面卡 = 首屏钩子：大标题 + 一句钩子副标 + 首屏预览 + 卖点条
+// 设计依据见 references/image-design-system.md 4.1；标题字号按最长一行长度自动降档，保证两行不挤。
+function hookClass(title){
+  var maxLen = Math.max.apply(null, (title||['']).map(function(l){ return String(l).length; }));
+  if(maxLen <= 7) return 'headline hook';
+  if(maxLen <= 10) return 'headline hook2';
+  return 'headline hook3';
+}
+
+function badgePill(t){
+  var on = /^★/.test(String(t));
+  return '<span class="chip' + (on ? ' accent' : '') + '">' + esc(String(t).replace(/^★\s*/, on ? '★ ' : '')) + '</span>';
+}
+
+// 首屏预览：缩略图按规范只能出现关键词预览或图形占位，不塞正文（4.1 缩略图规则）
+function coverThumbs(items){
+  if(!items || !items.length) return '';
+  var cells = items.map(function(it){
+    if(it.variant === 'ending'){
+      return '<div class="thumb ending"><div class="tb tb-k">结尾</div><div class="tb tb-t">' + hl(it.title||'关注', '') + '</div><div class="tb-qr"></div></div>';
+    }
+    var big = it.big ? '<div class="tb tb-a"></div>' : '<div class="tb tb-c"></div><div class="tb tb-b"></div>';
+    return '<div class="thumb"><div class="tb tb-k">' + esc(it.kicker||'') + '</div><div class="tb tb-t">' + hl(it.t||'', it.accent||'') + '</div>' + big + '</div>';
+  }).join('');
+  var more = items.more ? '<div class="thumb rm"><div class="tb-more">+' + esc(items.more) + ' 张</div></div>' : '';
+  return '<div class="thumbs"><div class="thumbs-hd">往下<br>还有</div>' + cells + more + '</div>';
+}
+
+// 首图版面（cover.layout）：8 种来自 references/style-cases 的版面骨架
+// 未指定 layout 时走默认骨架（大标题 + 副标 + 首屏预览/主视觉 + 卖点条）
+function layoutEyebrow(o){
+  var bg = o.eyebrow;
+  if(!bg) return '';
+  return '<div class="hband">' + esc(bg) + '</div>';
+}
+function layoutStrip(o){ return o.strip ? '<div class="bandline">' + esc(o.strip) + '</div>' : ''; }
+function layoutNote(o){ return o.note ? '<div class="note">' + esc(o.note) + '</div>' : ''; }
+function layoutBar(o){
+  if(!o.bar || !o.bar.length) return '';
+  return '<div class="hbar">' + o.bar.map(function(b, i){ return '<div class="hchip' + (i === 1 ? ' on' : '') + '">' + esc(b) + '</div>'; }).join('') + '</div>';
+}
+
+// annotated-illu / tool-brief：浅底大标题 + 说明 + 主视觉，手写感靠小注实现
+function coverAnnotated(o){
+  var out = '';
+  if(o.accentBg){ out += '<div class="hband">' + esc(o.accentBg) + '</div>'; }
+  if(o.note) out += '<div class="note">' + esc(o.note) + '</div>';
+  if(o.hero) out += hero(o.hero);
+  if(o.tiles && o.tiles.length){
+    out += '<div class="board">' + o.tiles.slice(0, 6).map(function(t){
+      return '<div class="tilelogo"><span class="nm">' + esc(t.badge || (t.name || '?').slice(0, 1)) + '</span><span>' + esc(t.name || t.t) + '</span></div>';
+    }).join('') + '</div>';
+  }
+  return out;
+}
+
+// tool-brief（工具速评）：眉标 → 超大两行标题 → 两行定位 → 真截图/多端窗口 → 底部双 pill
+function coverToolBrief(o){
+  var out = '';
+  if(o.hero){ out += hero(o.hero); }
+  if(o.note){ out += '<div class="tbn">' + esc(o.note) + '</div>'; }
+  if(o.pills && o.pills.length){
+    out += '<div class="tbpills">' + o.pills.map(function(p, i){
+      return '<div class="tbp' + (i === 0 ? ' solid' : '') + '"><b>' + esc(p.t) + '</b>' + (p.d ? '<span>' + esc(p.d) + '</span>' : '') + '</div>';
+    }).join('') + '</div>';
+  }
+  return out;
+}
+
+// dev-dark（深色技术）：截图/流转图 + 2×2 能力格 + 底部边界提醒
+function coverDevDark(o){
+  var pts = (o.points || []).slice(0, 4).map(function(p){
+    return '<div class="hcell"><b>' + esc(p.t) + '</b>' + esc(p.d || '') + '</div>';
+  }).join('');
+  var out = '';
+  if(o.hero){ out += hero(o.hero); }
+  out += '<div class="hgrid">' + pts + '</div>';
+  if(o.strip){ out += '<div class="ddnote"><b>先了解：</b>' + esc(o.strip.replace(/^先了解[:：]\s*/, '')) + '</div>'; }
+  return out;
+}
+
+// color-grid：编号格 + 一句话条
+function coverColorGrid(o){
+  var cells = (o.cells || []).slice(0, 6).map(function(c, i){
+    return '<div class="hcell" style="border-top:5px solid var(--accent)"><b>' + esc(String(i + 1).padStart(2, '0') + '  ' + c.t) + '</b>' + esc(c.d || '') + '</div>';
+  }).join('');
+  var bar = '';
+  if(o.formula){ bar = '<div class="bandline">' + esc(o.formula) + '</div>'; }
+  return bar + '<div class="hgrid">' + cells + '</div>' + layoutStrip(o);
+}
+
+// bento-stack：主视觉铺底 + 宣言卡
+function coverBentoStack(o){
+  return (o.hero ? hero(o.hero) : '') + (o.declare ? '<div class="bandline">' + esc(o.declare) + '</div>' : '');
+}
+
+// layout-sample：4 张样张并排
+function coverLayoutSample(o){
+  if(!o.samples || !o.samples.length) return '';
+  return '<div class="thumb4">' + o.samples.slice(0, 4).map(function(s){
+    return '<div><div class="s">' + (s.src ? '<img src="' + dataUri(s.src) + '">' : '') + '</div><div class="cap">' + esc(s.t || '') + '</div></div>';
+  }).join('') + '</div>' + layoutStrip(o);
+}
+
+// diagram-poster：一张图解做主体
+function coverDiagramPoster(o){
+  return (o.hero ? hero(o.hero) : '') + (o.summary ? '<div class="note">' + esc(o.summary) + '</div>' : '');
+}
+
+// pin-red：品牌图块入标题 + 点阵 + 4 宫格要点
+function coverPinRed(o){
+  var out = '';
+  if(o.tiles && o.tiles.length){
+    out += '<div class="hgrid" style="grid-template-columns:repeat(4,1fr);gap:10px">' + o.tiles.slice(0, 4).map(function(t){
+      return '<div class="hcell" style="text-align:center;padding:14px 8px"><b style="font-size:22px">' + esc(t.t) + '</b>' + esc(t.d || '') + '</div>';
+    }).join('') + '</div>';
+  }
+  if(o.points) out += o.points.map(function(p){ return '<div class="note">' + esc(p) + '</div>'; }).join('');
+  return out;
+}
+
+const COVER_LAYOUTS = {
+  'annotated-illu': coverAnnotated,
+  'tool-brief': coverToolBrief,
+  'dev-dark': coverDevDark,
+  'color-grid': coverColorGrid,
+  'bento-stack': coverBentoStack,
+  'layout-sample': coverLayoutSample,
+  'diagram-poster': coverDiagramPoster,
+  'pin-red': coverPinRed,
+};
+
 export function buildCover(c){
   var title = (c.title||[]).map(function(l){ return hl(l, c.accent); }).join('<br>');
-  var out = '<div class="col" style="gap:0">';
-  if(c.kicker){ out += '<div class="kicker">' + esc(c.kicker) + '</div>'; }
-  out += '<h1 class="headline mt-m">' + title + '</h1>';
-  if(c.sub){ out += '<div class="sub mt-m">' + esc(c.sub) + '</div>'; }
-  if(c.hero){ out += '<div class="mt-l" style="flex:1;display:flex;align-items:flex-end">' + hero(c.hero) + '</div>'; }
-  if(c.tags){ out += '<div class="tags mt-m">' + c.tags.map(chip).join('') + '</div>'; }
-  return out + '</div>';
+  var out = '<div class="col covercard" style="gap:0">';
+  if(c.eyebrow){ out += layoutEyebrow(c); }
+  out += '<h1 class="' + hookClass(c.title) + '" style="margin-top:' + (c.eyebrow ? '18px' : '0') + '">' + title + '</h1>';
+  if(c.prize){ out += '<div class="prize">' + esc(c.prize) + '</div>'; }
+  if(c.sub){ out += '<div class="sub mt-s">' + esc(c.sub) + '</div>'; }
+  if(c.kicker){ out += '<div class="kpay">' + (c.kickerPill === false ? '<div class="kicker">' + esc(c.kicker) + '</div>' : '<div class="kicker pill">' + esc(c.kicker) + '</div>') + '</div>'; }
+  if(c.cue){ out += '<div class="scrollcue"><i></i><span>' + esc(c.cue) + '</span></div>'; }
+  var layoutFn = c.layout && COVER_LAYOUTS[c.layout];
+  if(layoutFn){ out += '<div class="vis">' + layoutFn(c) + '</div>'; }
+  else {
+  out += '<div class="vis">';
+  if(c.hero){ out += hero(c.hero); }
+  else if(c.thumbs){ out += coverThumbs(c.thumbs); }
+  }
+  if(c.tags){ out += '<div class="tags' + (c.hero || c.thumbs || c.layout ? ' mt-m' : '') + '">' + c.tags.map(function(t){ return badgePill(t); }).join('') + '</div>'; }
+  out += '</div></div>';
+  return out;
 }
 
 export function buildPoint(c){
@@ -577,6 +734,11 @@ export function buildCompare(c){
 export function buildEnding(c){
   var out = '';
   if(c.title){ out += '<h2 class="headline sm">' + titleHtml(c.title, c.accent) + '</h2>'; }
+  if(c.nexts && c.nexts.length){
+    out += '<div class="nexts mt-l"><div class="nexts-hd">下期预告</div>' + c.nexts.map(function(n){
+      return '<div class="next"><span class="nx">' + esc(n.num||'') + '</span><span class="nt">' + esc(n.t||'') + '</span>' + (n.d ? '<span class="nd">' + esc(n.d) + '</span>' : '') + '</div>';
+    }).join('') + '</div>';
+  }
   if(c.points && c.points.length){
     var li = c.points.map(function(p){ return '<div class="ri"><span class="ck">' + ic('check') + '</span>' + esc(p) + '</div>'; }).join('');
     out += '<div class="recap mt-l">' + li + '</div>';

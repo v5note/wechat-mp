@@ -4,7 +4,8 @@
 
 ## 1. 微信排版参数（正文默认值）
 
-微信编辑器会剥离绝大多数 CSS，只认**内联样式**。以下为默认参数，模板已内置：
+微信编辑器会剥离绝大多数 CSS，只认**内联样式**；比内联样式更关键的是：它还会按**标签白名单**清洗 DOM、丢弃整页外壳。
+两条同时满足才算「能粘」。以下为默认参数，样式统一来自 [../scripts/article-tokens.mjs](../scripts/article-tokens.mjs)：
 
 | 元素 | 参数 |
 |---|---|
@@ -102,13 +103,75 @@
     项目地址：https://...
     参考：...
 
-## 5. 内联 HTML 规则（交给微信编辑器）
+## 5. 可粘贴 HTML 规则（交给微信编辑器）
 
-- 所有样式写成 style="..." 内联在元素上；不写 <style>、<script>、外链字体。
-- 图片用 <img style="width:100%;border-radius:10px">；图注用 <p style="...">
-- 标题/正文/引用/表格都给出完整内联样式（见模板）。
-- 产出两份：article.md（Markdown 源）与 article.html（可粘贴 HTML），内容一致。
-- 正文中不要出现 Markdown 语法残留（** **、## 等），HTML 版要渲染后的样子。
+**这一节是硬规则，check.mjs 会卡。** 目标：article.html 打开就是一段能直接粘的片段，粘过去后「看着一样」。
+
+### 5.1 结构：只输出片段，不输出整页
+
+- article.html **只含一个根 `<section>`**，不写 `<!doctype>`、`<html>`、`<head>`、`<title>`、`<body>`。
+  整页文档会在粘贴时把 head/body 的样式一起打包，编辑器按「整页网页」处理，结果往往是空、纯文本或样式全丢。
+- 根节点**不写** `max-width`、`margin:0 auto`、`padding` 居中容器——微信不保留，还会挤压正文宽度。
+- 本地要看效果，用 `article-preview.html`（带整页外壳的预览页）；**复制粘贴用 article.html，不要用预览页**。
+
+### 5.2 标签：只用白名单
+
+| 需要的东西 | 不要用 | 改成 |
+|---|---|---|
+| 大标题 / 小节标题 | `<h1>` `<h2>` | `<p><strong …></strong></p>` |
+| 图片 + 图注 | `<figure><figcaption>` | `<p><img></p>` + `<p>图N：…</p>` |
+| 引用块 | `<blockquote>` | 带左边框的 `<p>` |
+| 分割线 | `<hr>` | `<p style="margin:28px 0;height:1px;border-top:1px solid #E5E7EB"></p>` |
+| 表格 | `<table>` | 表头加粗段落 + `· 列名：值` 分条段落 |
+| 容器 | `<div>` | `<section>` |
+| 列表 | `<ul><li>` | `· ` + `<p>` |
+
+白名单：`section / p / span / strong / b / em / i / img / br`。
+
+### 5.3 样式：只写会被保留的属性
+
+- 保留：`color`、`font-size`、`font-weight`、`line-height`、`margin`、`padding`、`background`、`border`、`border-radius`、`text-align`、`width`。
+- **会被清理，写了也不生效**：`font-family`、`letter-spacing`、`max-width`、`margin:0 auto`、`position`、`display:flex/grid`、CSS 变量。
+- 不写 `<style>`、`<script>`、外链字体与外部样式表。
+- 图片：`<img style="width:100%;height:auto;display:block"`，不加圆角（配图 PNG 自带画布）。
+
+### 5.4 图片：必须手动上传
+
+- HTML 里的图是**占位**：`src="images/figN.png"` 是相对路径，粘贴后一定裂图（编辑器没有基准目录）。
+- 正确顺序：先粘文字，再按图注顺序用编辑器「图片」按钮上传 `article/images/fig1..N`。
+- 封面不进正文：`cover.png`（2.35:1）用编辑器设封面，`cover-square.png` 备 1:1 分享图。
+
+### 5.5 粘贴操作（最容易翻车的一步）
+
+**判断贴没贴对**：如果编辑器里出现一串 `<section style="...">`、`<p style=...>` 这样的**标签源码**，说明粘进去的是**纯文本**，不是富文本——这是最常见的失败，产出的 HTML 没问题，问题在剪贴板的来源。
+
+> 平台提醒：macOS 官方微信客户端会把 HTML 富文本剪贴板**二次转换**成样式更少的版本；遇到「顶部条/目录框底色、圆角、浅灰图注样式丢了」，不是文件的问题。此时改用**微信公众平台网页版编辑器**粘贴，或把结构改为「纯文字 + 图片」的极简版。
+
+推荐做法（跨平台通用）：
+
+1. 浏览器打开 **article-import.html**，核对排版；
+2. 点顶部「**复制全文**」按钮（复制的是渲染后的富文本）；
+3. 到公众号编辑器正文区 Ctrl+V / Cmd+V。
+
+备选与禁止：
+
+- macOS：VS Code 等**富文本编辑器**打开 article.html 全选复制，也可以。
+- **禁止**用记事本（Windows）/ TextEdit 纯文本模式（macOS）/ Notepad++ / Sublime 等**纯文本编辑器**打开复制：剪贴板里只有文本，粘过去就是源码。
+- **不要**在浏览器里打开 article.html 后整页全选复制：会连带整页外壳一起复制，样式反而容易乱（导入页没有这个问题，因为它的内容区只含片段）。
+
+每次粘贴后核对：小标题蓝色加粗、图注在图下方、分割线留白、列表逐条分行。
+
+### 5.6 产出文件
+
+| 文件 | 用途 |
+|---|---|
+| article.html | **粘贴用片段**（只有根 section），源码 |
+| article-import.html | **浏览器打开、点「复制全文」**的导入页（富文本剪贴板，跨平台可用） |
+| article-preview.html | 本地预览页（含整页外壳），只看不复制 |
+| article.md | Markdown 源，与 HTML 同源同内容 |
+| 粘贴说明.md | 本次产物的粘贴步骤 + 逐项核对清单 |
+
+正文中不要出现 Markdown 语法残留（`** **`、`##` 等），HTML 版要渲染后的样子。
 
 ## 6. 参考文章骨架（来自 15 篇实战）
 

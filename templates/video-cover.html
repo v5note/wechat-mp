@@ -10,7 +10,9 @@
   background:linear-gradient(165deg,var(--bg1),var(--bg2) 58%,var(--bg3));color:var(--text)}
 .vid .page{padding:120px 84px 96px;display:flex;flex-direction:column}
 .vid .hd{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between}
-.vid .mid{flex:1;display:flex;flex-direction:column;justify-content:center;gap:30px;min-height:0}
+.vid .mid{flex:1;display:flex;flex-direction:column;justify-content:flex-start;gap:26px;min-height:0;padding-top:36px}
+/* 视频号封面主体避开顶部 220px 状态栏与底部 360px 操作区；大标题紧跟品牌行，画面重心在上半屏 */
+.vid .ttl{max-width:912px}
 .vid .kicker{font-size:28px}
 .vid .ttl{font-size:98px;font-weight:800;line-height:1.1;letter-spacing:-3px}
 .vid .sub{font-size:34px;line-height:1.5;color:var(--text-2)}

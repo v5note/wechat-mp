@@ -1,0 +1,20 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Sub,Hiragino Sans GB,64,&H00FFFFFF,&H00FFFFFF,&H00181208,&H99000000,-1,0,0,0,100,100,1,0,3,9,0,2,80,80,150,1
+Style: Foot,Hiragino Sans GB,34,&H00B8C4D8,&H00FFFFFF,&H00181208,&H99000000,0,0,0,0,100,100,0,0,3,4,0,2,80,80,86,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:04.30,Sub,,0,0,0,,最耗时的是排版
+Dialogue: 0,0:00:04.30,0:00:13.30,Sub,,0,0,0,,配图 封面 摘要
+Dialogue: 0,0:00:13.30,0:00:29.30,Sub,,0,0,0,,规范先行 脚本出图
+Dialogue: 0,0:00:29.30,0:00:41.30,Sub,,0,0,0,,0 fail 才交付
+Dialogue: 0,0:00:41.30,0:00:46.30,Sub,,0,0,0,,仓库看评论区
+Dialogue: 0,0:00:00.00,0:00:46.30,Foot,,0,0,0,,开源 · wechat-mp

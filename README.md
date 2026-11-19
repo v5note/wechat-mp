@@ -69,7 +69,7 @@
 - ✅ **可选视频号产出**：`spec.video` 生成竖版封面（1080×1920）+ 口播稿 + 分镜表，见 [video-format](references/video-format.md)。
 - ✅ **内容与版式分离**：改一个 `spec.json` 即可整体重出，文案与图片同源。
 - ✅ **规格受控**：贴图固定 1080×1440（3:4），封面 1080×460（2.35:1）+ 1:1 方版 1080×1080，正文配图宽 1080。
-- ✅ **微信可直接粘贴**：文章 HTML 只用内联样式，无外链 CSS / 脚本，粘贴不丢样式。
+- ✅ **微信可直接粘贴**：`article.html` 只输出一个根 `<section>` 片段，只用 `p/span/strong/img` 白名单标签（h1/h2/figure/hr/table 全部改写），另配 `article-import.html`——浏览器打开点「复制全文」即得富文本，跨平台粘贴不变成源码。`check.mjs` 会卡这条。
 - ✅ **自动校验 + 预览**：`check.mjs` 检查尺寸/字数/图片引用/图注/md-html 同源，`preview.mjs` 生成总览图，坏产物不交付。
 - ✅ **内置视觉组件**：浏览器框、代码窗、流程图、编号步骤、分层图、图标卡、字段卡片墙、勾选清单、数据大字、真实截图框等，开箱即用。
 - ✅ **真实产品案例**：支持 `shot` 真实截图与 `logoImg` 品牌 logo；白泽案例使用官方 logo 与真实管理后台截图。
@@ -111,7 +111,7 @@
 
 ![参考风格案例头图](assets/case-banner.png)
 
-从上面的参考素材提炼风格后，仓库另附 6 个高完成度案例（除白泽为真实产品外，其余为演示虚构项目，用于展示版式与写法）：
+从上面的参考素材提炼风格后，仓库另附 6 个高完成度案例（除白泽为真实产品外，其余为演示虚构项目，用于展示版式与写法）；外加 1 个**自举案例**：用这套管线给 wechat-mp 自己做一期公众号（两版一深一浅）。
 
 | 案例 | 风格 | 体裁 | 产出 |
 |---|---|---|---|
@@ -121,11 +121,13 @@
 | [baize-baize](examples/cases/baize-baize/) | 白泽品牌紫（baize，**真实产品**） | Agent 运行时推荐 | 9 张贴图（真实后台截图）+ 1465 字文章 + 视频号 |
 | [cyber-agentbench](examples/cases/cyber-agentbench/) | 暗黑霓虹合集（cyber） | 合集 / 榜单 | 6 张贴图 + 928 字文章 + 视频号 |
 | [style-gallery](examples/cases/style-gallery/) | 产品宣传图（promo）+ 五类画面 | 产品宣发 / 手机 / 电脑 / 卡片 / 流程图 | 9 张贴图 + 1625 字文章 + 4 张配图 |
+| [wechat-mp-self](examples/cases/wechat-mp-self/) | ocean 深色 + sky 浅色（**自举：给本项目自己做**，一深一浅） | 项目推荐 / 清单 | 16 张贴图（两版各 8）+ 1518 与 1405 字文章 + 两个视频号 |
 
 ![深度绿色开源案例贴图墙](examples/cases/forest-stackbase/overview.png)
 ![白泽真实案例贴图墙](examples/cases/baize-baize/overview.png)
 ![霓虹合集案例贴图墙](examples/cases/cyber-agentbench/overview.png)
 ![六类画面风格案例贴图墙](examples/cases/style-gallery/overview.png)
+![自举案例：给本项目自己做一期公众号](examples/cases/wechat-mp-self/overview.png)
 
 > 头图由 `node scripts/case-banner.mjs` 生成（1600×720），素材取自 6 个案例的封面卡。
 
@@ -195,7 +197,10 @@ v1-dark/
 │   ├── cover-square.png   （文章封面 1:1 方版，1080×1080）
 │   ├── images/fig1..N.png （正文配图，≥3 张）
 │   ├── article.md         （Markdown 正文）
-│   └── article.html       （微信可粘贴的内联样式 HTML）
+│   ├── article.html       （粘贴用片段：仅一个根 <section>，白名单标签）
+│   ├── article-import.html（浏览器打开 → 点「复制全文」→ 粘进公众号）
+│   ├── article-preview.html（本地预览页，只看不复制）
+│   └── 粘贴说明.md        （粘贴步骤 + 粘贴后核对清单）
 ├── video/                 （可选）cover.png + 口播稿.md + 分镜.md
 ├── 文案.md                （标题备选 · 摘要 · 逐图文案脚本）
 ├── 发布清单.md            （图片张数 / 顺序 / 图注 / 上传检查）
@@ -297,7 +302,7 @@ wechat-mp/
 │   └── tests/             # node --test 不变量测试
 ├── references/            # 规范与手册（风格库 / 视频 / 事实核查 / 品牌资产 / 方向 / 打磨环）
 ├── examples/demo/         # 两版四样例示范产出
-└── examples/cases/        # 6 个参考风格案例（forest / rose / cream / baize / cyber / style-gallery）
+└── examples/cases/        # 6 个参考风格案例（forest / rose / cream / baize / cyber / style-gallery）+ 自举案例 wechat-mp-self
 ```
 
 ## 环境要求
@@ -340,9 +345,26 @@ A：安装 Chrome / Chromium，或用 `CHROME_BIN` 指向任意 Chromium 内核�
 **Q：想加一种新卡片或新视觉组件？**
 A：按 [templates/README.md](templates/README.md) 的「新增一种卡片」步骤：在 `visuals.mjs` 加构建函数 → 在 `buildCard()` 注册 variant → 在 `image-design-system.md` 补原型规格。
 
+**Q：文章粘进公众号后显示成 `<section style=…>` 源码怎么办？**
+A：这说明剪贴板里是纯文本（常见于用记事本打开 `article.html` 复制）。改用浏览器打开 `article/article-import.html`，点「复制全文」再粘即可。详见 [article-format](references/article-format.md) 第 5.5 节。
+
 **Q：为什么贴图是 1080×1440？**
 A：3:4 是公众号图片消息与小绿书的高适配比例，竖屏展示更完整，详见 [image-design-system.md](references/image-design-system.md)。
 
+## 更新日志
+
+### v0.1.1（2026-11-19）
+
+- **修复：文章粘贴进公众号不渲染。** `article.html` 不再输出整页文档（doctype/html/head/body/title）与居中限宽容器，只输出一个根 `<section>` 片段；`h1/h2/figure/figcaption/hr/table/blockquote/div` 全部改写为 `p/span/strong/img`。
+- **新增 `article-import.html`**：浏览器打开后点「复制全文」即得富文本剪贴板，解决用记事本等纯文本编辑器复制导致「粘进去是源码」的问题。
+- **新增 `article-preview.html` 与 `粘贴说明.md`**：本地预览页与每次构建自动生成的粘贴步骤 / 核对清单。
+- **`check.mjs` 新增硬校验**：整页外壳、非白名单标签、微信会清理的 CSS 属性、缺失粘贴说明，均会报错或警告。
+- 文档同步：`article-format.md` 第 5 节重写为「可粘贴 HTML 规则」，`publish-checklist.md` 与 `SKILL.md` 补齐粘贴铁律。
+- 回归测试：`node --test` 新增「article.html 必须是可粘贴片段」「article-import.html 必须是复制页」两条用例。
+
+### v0.1.0
+
+- 首个版本：20 套主题、6 类画面风格、真实二维码、CI 校验。
 ## License
 
 本项目基于 [MIT License](LICENSE) 开源。示例产出中的「Atlas」「Stackbase」「Mosaic UI」「Agent 经纬」等项目与数据均为演示虚构；「白泽 Baize」为真实产品案例，事实来自官方仓库/文档，截图由用户提供（测试数据）。参考素材仅用于提炼风格规则，不复制其内容。

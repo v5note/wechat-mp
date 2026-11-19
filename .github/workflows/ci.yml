@@ -66,8 +66,15 @@ jobs:
       - name: check.mjs (all demo + cases)
         run: |
           dirs="examples/demo/v1-dark examples/demo/v2-light"
-          for d in examples/cases/*/out; do dirs="$dirs $d"; done
+          # 注意：examples/cases/wechat-mp-self/out 只是容器目录（里面分 v1-ocean / v2-sky），本身不是一期
+          for d in examples/cases/*/out; do [ -f "$d/文案.md" ] && dirs="$dirs $d"; done
+          # 自举案例的一期里含两个版本（ocean / sky），放在 out/ 的子目录下
+          for d in examples/cases/*/out/*/; do
+            [ -f "$d/index.md" ] && dirs="$dirs $d"
+          done
           node scripts/check.mjs $dirs
+      - name: validate-pair.mjs (两版一浅一深)
+        run: node scripts/validate-pair.mjs --all
 
   test:
     name: Unit tests
